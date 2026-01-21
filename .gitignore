@@ -1,0 +1,26 @@
+# --- Python & Django ---
+__pycache__/
+*.py[cod]
+.env
+.venv/
+db.sqlite3
+media/
+
+# --- LaTeX (Memoria) ---
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.pdf
+*.blg
+*.bbl
+*.fdb_latexmk
+*.fls
+*.nav
+*.snm
+
+# --- OS & IDE ---
+.vscode/
+.idea/
+.DS_Store
