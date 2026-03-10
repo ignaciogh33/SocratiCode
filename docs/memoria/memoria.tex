@@ -1,0 +1,72 @@
+% arara: pdflatex: {shell: yes}
+% arara: makeglossaries
+% arara: makeindex: {style: tfgtfmthesisuam.ist}
+% arara: bibtex
+% arara: pdflatex: {shell: yes}
+% arara: pdflatex: {shell: yes}
+% arara: clean: {files: [memoria.aux, memoria.log, memoria.out, memoria.toc, memoria.idx, memoria.ilg, memoria.ind, memoria.blg, memoria.bbl, memoria.fdb_latexmk, memoria.fls, memoria.glo, memoria.ist, memoria.mw, memoria.xdy, memoria.synctex.gz]}
+
+\documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg]{tfgtfmthesisuam}
+
+% ============================================================
+% DATOS DEL TFG - Rellenar con tus datos reales
+% ============================================================
+\advisor{Dra. Ada Lovelace}  % TODO: Nombre real del tutor/a
+\levelin{Ingeniería Informática}
+\title{Desarrollo de un Tutor Socrático basado en LLMs para la enseñanza de Programación}
+\subtitle{Una aproximación pedagógica con Inteligencia Artificial}  % TODO: Ajustar si es necesario
+\author{Ignacio García}
+\privateaddress{UAM - EPS}
+\copyrightdate{Junio de 2026}  % TODO: Ajustar fecha de defensa
+
+% ============================================================
+% DEDICATORIA Y CITA
+% ============================================================
+\dedication{A mi familia y profesores, por su apoyo incondicional.}  % TODO: Personalizar
+\famouscite{Solo sé que no sé nada.\\[0.1em] \begin{flushright}Sócrates\end{flushright}}
+
+% ============================================================
+% SECCIONES PRELIMINARES
+% ============================================================
+% \prefacefile{prefacio}  % Descomentar si se desea incluir prefacio
+\ackfile{agradecimientos}
+\resumenfile{resumen}
+\abstractfile{abstract}
+
+% ============================================================
+% PALABRAS CLAVE
+% ============================================================
+\keywords{Inteligencia Artificial, LLM, Tutor Socrático, Educación, Programación Web}  % TODO: Ajustar
+\palabrasclave{Artificial Intelligence, LLM, Socratic Tutor, Education, Web Programming}  % TODO: Ajustar
+
+% ============================================================
+% DATOS DE PORTADA
+% ============================================================
+\coverdata
+{
+  Escuela Politécnica Superior \\
+  Universidad Autónoma de Madrid \\
+  C\textbackslash Francisco Tomás y Valiente nº 11
+}
+
+% ============================================================
+% CONFIGURACIÓN DE BIBLIOGRAFÍA Y DIRECTORIOS
+% ============================================================
+\bibliographyconfig{bibliografia}  % Fichero .bib propio de la memoria
+\datadir{data}
+\graphicsdir{img}
+\logosdir{img}
+\codesdir{codes}
+
+% ============================================================
+% DOCUMENTO
+% ============================================================
+\begin{document}
+
+\chapter{Introducción\label{CAP:INTRO}}{introduccion}
+\chapter{Estado del Arte\label{CAP:ESTADO_ARTE}}{estado_arte}
+\chapter{Diseño del Sistema\label{CAP:DISENO}}{diseno}
+\chapter{Implementación\label{CAP:IMPLEMENTACION}}{implementacion}
+\chapter{Conclusiones y Trabajo Futuro\label{CAP:CONCLUSIONES}}{conclusiones}
+
+\end{document}

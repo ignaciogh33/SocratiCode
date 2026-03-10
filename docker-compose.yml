@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Base de Datos
+  db:
+    image: postgres:15-alpine
+    container_name: tutor_db
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=tutor_django
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Compilador Seguro
+  compiler:
+    image: ghcr.io/engineer-man/piston
+    container_name: tutor_compiler
+    tmpfs:
+      - /tmp
+
+volumes:
+  postgres_data:

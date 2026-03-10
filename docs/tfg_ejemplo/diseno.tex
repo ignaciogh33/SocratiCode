@@ -1,0 +1,32 @@
+\section{Requisitos del Sistema}
+Para garantizar el éxito del proyecto, se ha realizado una fase previa de elicitación y análisis de requisitos, dividiendo las necesidades del sistema en funcionales y no funcionales.
+
+\subsection{Requisitos Funcionales}
+Los requisitos funcionales describen los comportamientos y funciones específicas que el sistema debe poder realizar:
+\begin{itemize}
+    \item \textbf{Gestión de Usuarios:} El sistema debe permitir el registro, autenticación (login) y cierre de sesión de forma segura.
+    \item \textbf{Interfaz de Chat Socrático:} Debe existir una interfaz de chat en tiempo real donde el usuario pueda interactuar con la IA de forma natural e intuitiva.
+    \item \textbf{Renderizado de Código:} El chat debe ser capaz de renderizar fragmentos de código enviados por la IA o por el usuario, incluyendo soporte para resaltado de sintaxis (\textit{syntax highlighting}) en lenguajes populares como Python, JavaScript o C++.
+    \item \textbf{Gestión de Sesiones:} El sistema debe mantener un historial persistente de conversaciones, permitiendo al usuario retomar hilos de chat anteriores.
+    \item \textbf{Ajuste del Comportamiento (Prompting):} El sistema debe inyectar internamente las directrices del tutor socrático en cada nueva conversación sin que el usuario tenga que configurarlo manualmente.
+\end{itemize}
+
+\subsection{Requisitos No Funcionales}
+Los requisitos no funcionales definen los atributos de calidad, rendimiento y restricciones del sistema:
+\begin{itemize}
+    \item \textbf{Rendimiento y Latencia:} El tiempo de respuesta del chatbot no debe exceder los 3 segundos en condiciones normales de red, ofreciendo una experiencia interactiva fluida.
+    \item \textbf{Usabilidad:} El diseño de la interfaz web debe ser responsivo (\textit{responsive design}), adaptándose tanto a pantallas de escritorio como a dispositivos móviles.
+    \item \textbf{Seguridad y Privacidad:} Las contraseñas en la base de datos deben almacenarse utilizando algoritmos de *hashing* robustos (como bcrypt). Además, los diálogos con la IA no deben exponer datos personales.
+    \item \textbf{Mantenibilidad:} El código backend y frontend debe estar correctamente modularizado y seguir patrones de diseño estándar (como MVC y programación basada en componentes).
+\end{itemize}
+
+\section{Arquitectura}
+La aplicación sigue un patrón Cliente-Servidor clásico. El cliente es una SPA (Single Page Application) desarrollada en React, mientras que el servidor expone una API REST construida con Node.js y Express. La base de datos elegida es PostgreSQL para almacenar los historiales.
+
+\section{Diseño del \textit{System Prompt}}
+Esta sección es el núcleo del sistema. El \textit{system prompt} define que la IA debe adoptar el rol de "Tutor Socrático de Programación". Para ello se han establecido reglas estrictas:
+\begin{enumerate}
+    \item Nunca proporcionar fragmentos de código de más de tres líneas a menos que sea para corregir un error sintáctico ínfimo.
+    \item Responder siempre con una pregunta que invite a la reflexión.
+    \item Animar al alumno cuando acierte.
+\end{enumerate}
