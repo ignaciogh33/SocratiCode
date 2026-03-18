@@ -36,9 +36,18 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 
 ### 🤖 Chat (Tutor Socrático)
 
+> **Nota:** Todos los endpoints de chat requieren autenticación JWT (`Authorization: Bearer <access_token>`).
+
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | `POST` | `/api/chat/` | Enviar un mensaje al tutor socrático |
+| `GET` | `/api/chat/sessions/` | Listar las sesiones de chat del usuario autenticado |
+| `POST` | `/api/chat/sessions/create/` | Crear una nueva sesión de chat vacía |
+| `GET` | `/api/chat/sessions/<id>/` | Obtener detalle de una sesión con todos sus mensajes |
+| `DELETE` | `/api/chat/sessions/<id>/delete/` | Eliminar una sesión y sus mensajes |
+| `PATCH` | `/api/chat/sessions/<id>/rename/` | Renombrar una sesión de chat |
+
+#### Enviar mensaje
 
 **Body (JSON):**
 
@@ -49,12 +58,109 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 }
 ```
 
+> Si no se envía `session_id`, se crea automáticamente una nueva sesión para el usuario.
+
 **Respuesta (200 OK):**
 
 ```json
 {
     "response": "Respuesta del tutor socrático...",
     "session_id": 1
+}
+```
+
+#### Listar sesiones
+
+`GET /api/chat/sessions/`
+
+**Respuesta (200 OK):**
+
+```json
+[
+    {
+        "id": 2,
+        "title": "Bucles en Python",
+        "created_at": "2026-03-18T00:30:00Z",
+        "last_message": "¿Cómo funcionan los bucles for en Python?"
+    },
+    {
+        "id": 1,
+        "title": "Funciones recursivas",
+        "created_at": "2026-03-17T20:00:00Z",
+        "last_message": "Explícame qué es una función recursiva..."
+    }
+]
+```
+
+#### Crear sesión
+
+`POST /api/chat/sessions/create/`
+
+**Respuesta (201 Created):**
+
+```json
+{
+    "id": 3,
+    "title": "Nueva conversación",
+    "created_at": "2026-03-18T00:35:00Z",
+    "last_message": null
+}
+```
+
+#### Detalle de sesión (con mensajes)
+
+`GET /api/chat/sessions/1/`
+
+**Respuesta (200 OK):**
+
+```json
+{
+    "id": 1,
+    "title": "Funciones recursivas",
+    "created_at": "2026-03-17T20:00:00Z",
+    "messages": [
+        {
+            "id": 1,
+            "role": "user",
+            "content": "¿Qué es una función recursiva?",
+            "created_at": "2026-03-17T20:00:05Z"
+        },
+        {
+            "id": 2,
+            "role": "assistant",
+            "content": "Buena pregunta. ¿Conoces algún proceso que se repita a sí mismo?",
+            "created_at": "2026-03-17T20:00:08Z"
+        }
+    ]
+}
+```
+
+#### Eliminar sesión
+
+`DELETE /api/chat/sessions/1/delete/`
+
+**Respuesta:** `204 No Content`
+
+#### Renombrar sesión
+
+`PATCH /api/chat/sessions/1/rename/`
+
+**Body (JSON):**
+
+```json
+{
+    "title": "Bucles en Python"
+}
+```
+
+**Respuesta (200 OK):**
+
+```json
+{
+    "id": 1,
+    "title": "Bucles en Python",
+    "created_at": "2026-03-17T20:00:00Z",
+    "last_message": "¿Cómo funcionan los bucles for en Python?"
 }
 ```
 

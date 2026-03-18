@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-# User = get_user_model() # Descomentar cuando se implemente la gestión de usuarios
+User = get_user_model()
 
 class ChatSession(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions')
+    title = models.CharField(max_length=200, default='Nueva conversación')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
