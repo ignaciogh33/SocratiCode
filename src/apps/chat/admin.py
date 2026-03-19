@@ -1,12 +1,12 @@
 from django.contrib import admin
-from src.models import ChatSession, Message
+from .models import ChatSession, Message
 
 
 class MessageInline(admin.TabularInline):
     """Muestra los mensajes dentro de la página de una sesión."""
     model = Message
     extra = 0  # No mostrar filas vacías para añadir
-    readonly_fields = ('role', 'content', 'created_at')
+    readonly_fields = ('role', 'content', 'created_at', 'moderated')
     ordering = ('created_at',)
 
 
@@ -25,8 +25,8 @@ class ChatSessionAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'session', 'role', 'short_content', 'created_at')
-    list_filter = ('role', 'created_at')
+    list_display = ('id', 'session', 'role', 'short_content', 'created_at', 'moderated')
+    list_filter = ('role', 'created_at', 'moderated')
     search_fields = ('content',)
     readonly_fields = ('created_at',)
 

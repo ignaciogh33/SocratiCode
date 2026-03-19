@@ -22,6 +22,7 @@ class Message(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    moderated = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Mensaje {self.id} ({self.role}) en Sesión {self.session_id}"

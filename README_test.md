@@ -28,3 +28,15 @@ uv run python src/manage.py test apps.chat
 | `test_rename_session` | `PATCH` cambia el título correctamente |
 | `test_rename_empty_title_returns_400` | Título vacío → **400** |
 | `test_rename_other_user_session_returns_404` | Renombrar sesión ajena → **404** |
+
+## Tests de moderación (`ModerationTest`)
+
+> Estos tests usan `unittest.mock.patch` para simular las respuestas de Ollama sin necesidad de tener el modelo corriendo.
+
+| Test | Qué comprueba |
+|------|--------------| 
+| `test_safe_response_passes_moderation` | Una respuesta segura pasa la moderación y se guarda con `moderated=False` |
+| `test_unsafe_response_is_blocked` | Una respuesta insegura se bloquea, se guarda con `moderated=True` y el cliente recibe el mensaje predeterminado |
+| `test_moderation_failure_blocks_by_default` | Si el moderador falla (excepción), se bloquea la respuesta (fail-safe) |
+| `test_moderated_field_in_session_detail` | El campo `moderated` aparece correctamente en la respuesta de detalle de sesión |
+

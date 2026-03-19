@@ -123,13 +123,15 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
             "id": 1,
             "role": "user",
             "content": "¿Qué es una función recursiva?",
-            "created_at": "2026-03-17T20:00:05Z"
+            "created_at": "2026-03-17T20:00:05Z",
+            "moderated": false
         },
         {
             "id": 2,
             "role": "assistant",
             "content": "Buena pregunta. ¿Conoces algún proceso que se repita a sí mismo?",
-            "created_at": "2026-03-17T20:00:08Z"
+            "created_at": "2026-03-17T20:00:08Z",
+            "moderated": false
         }
     ]
 }
@@ -241,6 +243,25 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 
 ---
 
+## Moderación de Contenido
+
+Todas las respuestas del LLM pasan por una capa de moderación antes de llegar al estudiante. El sistema usa el mismo modelo `llama3.2` con un system prompt independiente que evalúa si la respuesta es apropiada.
+
+**Flujo:**
+
+1. El LLM principal genera la respuesta con contexto socrático
+2. Un segundo prompt (sin contexto de la conversación) evalúa si el contenido es apropiado
+3. Si es apropiado → se envía al estudiante
+4. Si no es apropiado o el moderador falla → se bloquea y se devuelve un mensaje predeterminado
+
+> **Fail-safe:** Si el moderador falla (timeout, error), la respuesta se bloquea por defecto.
+
+Los mensajes bloqueados se guardan con `moderated: true` para auditoría. Se pueden filtrar desde el panel de admin.
+
+---
+
 ## Panel de Administración
 
 Accede a `http://127.0.0.1:8000/admin/` con las credenciales de superusuario para gestionar usuarios, sesiones de chat y mensajes.
+
+Desde el panel puedes filtrar mensajes por el campo **Moderated** para revisar los que fueron bloqueados por la capa de moderación.

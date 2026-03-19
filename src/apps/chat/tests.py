@@ -141,3 +141,99 @@ class ChatSessionEndpointTest(TestCase):
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class ModerationTest(TestCase):
+    """Tests de la capa de moderación de contenido."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def _mock_ollama_response(self, content):
+        """Helper: crea un mock de respuesta de ollama.chat."""
+        return {'message': {'content': content}}
+
+    @staticmethod
+    def _make_side_effect(ai_text, moderation_verdict):
+        """Crea un side_effect para ollama.chat que devuelve
+        ai_text en la 1ª llamada y moderation_verdict en la 2ª."""
+        responses = iter([
+            {'message': {'content': ai_text}},
+            {'message': {'content': moderation_verdict}},
+        ])
+        return lambda **kwargs: next(responses)
+
+    def test_safe_response_passes_moderation(self):
+        """Una respuesta segura pasa la moderación y se guarda con moderated=False."""
+        from unittest.mock import patch
+        side_effect = self._make_side_effect('¿Qué crees que hace un bucle?', 'OK')
+
+        with patch('apps.chat.views.ollama.chat', side_effect=side_effect):
+            response = self.client.post(
+                '/api/chat/',
+                {'prompt': '¿Qué es un bucle?'},
+                format='json'
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['response'], '¿Qué crees que hace un bucle?')
+        msg = Message.objects.filter(role='assistant').first()
+        self.assertFalse(msg.moderated)
+
+    def test_unsafe_response_is_blocked(self):
+        """Una respuesta insegura se bloquea y se guarda con moderated=True."""
+        from unittest.mock import patch
+        from apps.chat.views import MODERATED_RESPONSE
+        side_effect = self._make_side_effect('contenido inapropiado', 'NO')
+
+        with patch('apps.chat.views.ollama.chat', side_effect=side_effect):
+            response = self.client.post(
+                '/api/chat/',
+                {'prompt': 'dime algo malo'},
+                format='json'
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['response'], MODERATED_RESPONSE)
+        msg = Message.objects.filter(role='assistant').first()
+        self.assertTrue(msg.moderated)
+        # El contenido original se guarda para auditoría
+        self.assertEqual(msg.content, 'contenido inapropiado')
+
+    def test_moderation_failure_blocks_by_default(self):
+        """Si el moderador falla, se bloquea la respuesta (fail-safe)."""
+        from unittest.mock import patch, MagicMock
+        from apps.chat.views import MODERATED_RESPONSE
+
+        # 1ª llamada OK (LLM principal), 2ª llamada lanza excepción (moderador)
+        mock_chat = MagicMock()
+        mock_chat.side_effect = [
+            {'message': {'content': 'respuesta normal'}},
+            Exception('Ollama timeout'),
+        ]
+
+        with patch('apps.chat.views.ollama.chat', mock_chat):
+            response = self.client.post(
+                '/api/chat/',
+                {'prompt': 'hola'},
+                format='json'
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['response'], MODERATED_RESPONSE)
+
+    def test_moderated_field_in_session_detail(self):
+        """El campo 'moderated' aparece en la respuesta de detalle de sesión."""
+        session = ChatSession.objects.create(user=self.user)
+        Message.objects.create(
+            session=session, role='assistant',
+            content='respuesta', moderated=False
+        )
+
+        response = self.client.get(f'/api/chat/sessions/{session.id}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('moderated', response.data['messages'][0])
+        self.assertFalse(response.data['messages'][0]['moderated'])
+

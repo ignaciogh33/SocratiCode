@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'apps.chat',
-    'users',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +142,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# Feature flag para activar o desactivar la moderación de contenido (LLM 2)
+# y ganar velocidad de respuesta.
+LLM_MOD = True

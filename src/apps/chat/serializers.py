@@ -22,7 +22,7 @@ class ChatResponseSerializer(serializers.Serializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'role', 'content', 'created_at']
+        fields = ['id', 'role', 'content', 'created_at', 'moderated']
 
 
 class ChatSessionSerializer(serializers.ModelSerializer):

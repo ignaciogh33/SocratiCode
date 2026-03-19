@@ -25,3 +25,4 @@ media/
 .idea/
 .DS_Store
 .pyre_configuration
+token.txt
