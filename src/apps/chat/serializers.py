@@ -12,6 +12,18 @@ class ChatInputSerializer(serializers.Serializer):
         max_length=2000, 
         error_messages={'max_length': 'El mensaje es demasiado largo (máx 2000 caracteres).'}
     )
+    code_context = serializers.CharField(
+        required=False, allow_blank=True, default="",
+        help_text="Código actual en el editor del alumno (enviado automáticamente por el frontend)",
+    )
+    last_output = serializers.CharField(
+        required=False, allow_blank=True, default="",
+        help_text="Última salida de ejecución (stdout/stderr)",
+    )
+    language = serializers.CharField(
+        required=False, allow_blank=True, default="python",
+        help_text="Lenguaje del editor (python, c, javascript, etc.)",
+    )
 
 
 class ChatResponseSerializer(serializers.Serializer):

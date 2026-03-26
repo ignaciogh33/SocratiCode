@@ -18,13 +18,18 @@ uv sync
 # 2. Levantar servicios (PostgreSQL + Piston)
 docker compose up -d
 
-# 3. Aplicar migraciones
+# 3. Instalar runtime de Python en Piston
+curl -X POST http://localhost:2000/api/v2/packages \
+  -H "Content-Type: application/json" \
+  -d '{"language": "python", "version": "3.10.0"}'
+
+# 4. Aplicar migraciones
 uv run python src/manage.py migrate
 
-# 4. Crear superusuario
+# 5. Crear superusuario
 uv run python src/manage.py createsuperuser
 
-# 5. Arrancar el servidor
+# 6. Arrancar el servidor
 uv run python src/manage.py runserver
 ```
 
@@ -54,9 +59,14 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 ```json
 {
     "session_id": 1,
-    "prompt": "¿Cómo funcionan los bucles for en Python?"
+    "prompt": "¿Cómo funcionan los bucles for en Python?",
+    "code_context": "for i in range(10):\n    print(i)",
+    "last_output": "0\n1\n2\n...",
+    "language": "python"
 }
 ```
+
+> Los campos `code_context`, `last_output` y `language` son **opcionales**. El frontend los envía automáticamente con el contenido actual del editor y la última salida de ejecución, para que el LLM tenga contexto del código del alumno sin que este tenga que copiarlo.
 
 > Si no se envía `session_id`, se crea automáticamente una nueva sesión para el usuario.
 
@@ -168,6 +178,49 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 
 ---
 
+### ⚙️ Compilador (Piston)
+
+> **Nota:** Requiere autenticación JWT (`Authorization: Bearer <access_token>`).
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/api/compiler/execute/` | Ejecutar código vía Piston |
+
+#### Ejecutar código
+
+**Body (JSON):**
+
+```json
+{
+    "source_code": "print('hola mundo')",
+    "language": "python3",
+    "version": "3.10.0"
+}
+```
+
+> Los campos `language` y `version` son obligatorios. Piston devuelve error 400 si no se envían.
+
+**Respuesta (200 OK):**
+
+```json
+{
+    "stdout": "hola mundo\n",
+    "stderr": "",
+    "exit_code": 0,
+    "language": "python3"
+}
+```
+
+**Errores posibles:**
+
+| Código | Causa |
+|--------|-------|
+| `400` | `source_code` vacío o lenguaje no instalado en Piston |
+| `503` | Piston no está arrancado |
+| `504` | Timeout de ejecución |
+
+---
+
 ### 🔐 Autenticación (JWT)
 
 | Método | Endpoint | Descripción |
@@ -240,6 +293,18 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 | **Parar temporalmente un modelo** | `ollama stop llama3.2` |
 | **Iniciar servicio general (Linux)** | `sudo systemctl start ollama` |
 | **Detener servicio general (Linux)** | `sudo systemctl stop ollama` |
+
+---
+
+## Comandos de Piston
+
+| Acción | Comando |
+|---|---|
+| **Instalar un runtime** | `curl -X POST http://localhost:2000/api/v2/packages -H "Content-Type: application/json" -d '{"language": "python", "version": "3.10.0"}'` |
+| **Listar runtimes instalados** | `curl http://localhost:2000/api/v2/runtimes` |
+| **Probar ejecución directa** | `curl -X POST http://localhost:2000/api/v2/execute -H "Content-Type: application/json" -d '{"language": "python3", "version": "3.10.0", "files": [{"content": "print(42)"}]}'` |
+
+> **Nota:** Piston corre en Docker con `privileged: true` y expone su API en el puerto `2000`. Los runtimes se instalan vía API REST, no por CLI.
 
 ---
 

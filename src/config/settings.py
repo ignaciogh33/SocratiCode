@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'apps.chat',
     'apps.users',
+    'apps.compiler',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,6 @@ SIMPLE_JWT = {
 # Feature flag para activar o desactivar la moderación de contenido (LLM 2)
 # y ganar velocidad de respuesta.
 LLM_MOD = True
+
+# URL del servicio Piston para ejecución de código
+PISTON_URL = "http://localhost:2000"

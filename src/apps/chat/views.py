@@ -101,6 +101,23 @@ def chat_view(request):
     for msg in history_objs:
         messages_payload.append({'role': msg.role, 'content': msg.content})
 
+    # Inyectar contexto de código del editor (enviado automáticamente por el frontend)
+    code_context = serializer.validated_data.get('code_context', '')
+    last_output = serializer.validated_data.get('last_output', '')
+    language = serializer.validated_data.get('language', 'python')
+
+    if code_context:
+        context_parts = [
+            f"El alumno tiene este código en el editor:\n```{language}\n{code_context}\n```"
+        ]
+        if last_output:
+            context_parts.append(
+                f"La última salida de ejecución fue:\n```\n{last_output}\n```"
+            )
+
+        context_msg = "\n\n".join(context_parts)
+        messages_payload.insert(1, {'role': 'system', 'content': context_msg})
+
     # 3. LLAMADA A LA IA (Síncrona)
     try:
         if settings.DEBUG:
