@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.chat',
     'apps.users',
     'apps.compiler',
+    'adrf',
 ]
 
 MIDDLEWARE = [

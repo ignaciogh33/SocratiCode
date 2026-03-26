@@ -29,8 +29,8 @@ uv run python src/manage.py migrate
 # 5. Crear superusuario
 uv run python src/manage.py createsuperuser
 
-# 6. Arrancar el servidor
-uv run python src/manage.py runserver
+# 6. Arrancar el servidor (ASGI para streaming async)
+cd src && uv run uvicorn config.asgi:application --reload --port 8000
 ```
 
 El servidor estará disponible en `http://127.0.0.1:8000/`.
@@ -70,7 +70,25 @@ El servidor estará disponible en `http://127.0.0.1:8000/`.
 
 > Si no se envía `session_id`, se crea automáticamente una nueva sesión para el usuario.
 
-**Respuesta (200 OK):**
+**Respuesta (200 OK, SSE Streaming):**
+
+El endpoint devuelve `text/event-stream` con tokens SSE:
+
+```
+data: {"token": "¿"}
+data: {"token": "Qué "}
+data: {"token": "crees "}
+data: {"token": "que hace?"}
+data: {"session_id": 1}
+data: [DONE]
+```
+
+Si el input del alumno es bloqueado por el moderador:
+
+```
+data: {"response": "Lo siento, no puedo procesar ese mensaje...", "session_id": 1}
+data: [DONE]
+```
 
 ```json
 {
