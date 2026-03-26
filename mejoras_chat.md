@@ -33,7 +33,7 @@ Este documento guarda un plan de acción para llevar el sistema de chat actual (
 * **Plan de Implementación:**
   1. Diseñar una función auxiliar ligera en utilidades para medir los tokens reales aproximados. *(Como usar `tiktoken` en OpenAI, se puede estimar 1 token = 4 caracteres, o usar herramientas exactas para LLaMA).*
   2. Al construir el array `messages_payload`, iterar el historial de chat (desde el mensaje *más reciente* hasta el *más antiguo*).
-  3. Ir sumando el recuento de caracteres/tokens en cada iteración y romper el bucle (usar un simple `break`) cuando se aproxime a la memoria máxima tolerada (por ejemplo, ~3500 palabras de contexto extra).
+  3. Ir sumando el recuento de caracteres/tokens en cada iteración y romper el bucle (usar un simple `break`) cuando se aproxime a la memoria máxima tolerada (por ejemplo, ~3500 palabras de contexto extra). 
 
 ## 5. Moderación Rápida "En Segundo Plano" (Celery Task Worker)
 * **El Problema:** Tu sistema actual requiere que `LLM_MOD` inspeccione cada mensaje antes de poder responder al usuario de forma segura. Eso duplica tu latencia estructural de espera.
