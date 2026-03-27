@@ -9,9 +9,11 @@ from rest_framework.permissions import IsAuthenticated  # type: ignore
 from rest_framework.response import Response  # type: ignore
 from django.shortcuts import get_object_or_404
 from .models import ChatSession, Message
+from config.pagination import SessionPagination, MessagePagination
 from .serializers import (
     ChatInputSerializer,
     ChatSessionSerializer, ChatSessionDetailSerializer,
+    MessageSerializer,
 )
 
 SYSTEM_PROMPT = "Eres un tutor socrático. No des la solución, da pistas."
@@ -79,7 +81,7 @@ def _get_or_create_session(session_id, user):
     if session_id:
         session = ChatSession.objects.filter(id=session_id, user=user).first()
         if not session:
-            return None, Response({"error": "Sesión no encontrada."}, status=404)
+            return None, Response({"error": "Sesión no encontrada.", "details": None}, status=404)
         return session, None
     else:
         session = ChatSession.objects.create(user=user)
@@ -125,8 +127,7 @@ def _mark_user_message_moderated(session_id):
 async def chat_view(request):
     """Endpoint principal del chat."""
     serializer = ChatInputSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     session_id = serializer.validated_data.get('session_id')
     user_text = serializer.validated_data['prompt']
@@ -217,7 +218,7 @@ async def chat_view(request):
                 yield f"data: {json.dumps({'token': token})}\n\n"
 
         except Exception as e:
-            yield f"data: {json.dumps({'error': f'Error en motor IA: {str(e)}'})}\n\n"
+            yield f"data: {json.dumps({'error': f'Error en motor IA: {str(e)}', 'details': None})}\n\n"
 
         # Señal de fin + session_id
         yield f"data: {json.dumps({'session_id': safe_session_id})}\n\n"
@@ -247,8 +248,10 @@ async def chat_view(request):
 def list_sessions(request):
     """Lista las sesiones de chat del usuario autenticado."""
     sessions = ChatSession.objects.filter(user=request.user).order_by('-created_at')
-    serializer = ChatSessionSerializer(sessions, many=True)
-    return Response(serializer.data)
+    paginator = SessionPagination()
+    result_page = paginator.paginate_queryset(sessions, request)
+    serializer = ChatSessionSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['POST'])
@@ -262,10 +265,22 @@ def create_session(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def session_detail(request, session_id):
-    """Devuelve el detalle de una sesión con todos sus mensajes."""
+    """Devuelve el detalle resumen de una sesión."""
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     serializer = ChatSessionDetailSerializer(session)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_session_messages(request, session_id):
+    """Devuelve los mensajes paginados de una sesión específica."""
+    session = get_object_or_404(ChatSession, id=session_id, user=request.user)
+    messages = session.messages.order_by('-created_at')
+    paginator = MessagePagination()
+    result_page = paginator.paginate_queryset(messages, request)
+    serializer = MessageSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['DELETE'])
@@ -284,7 +299,7 @@ def rename_session(request, session_id):
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     title = request.data.get('title')
     if not title or not title.strip():
-        return Response({"error": "El campo 'title' es obligatorio."}, status=400)
+        return Response({"error": "El campo 'title' es obligatorio.", "details": None}, status=400)
     session.title = title.strip()[:200]
     session.save(update_fields=['title'])
     return Response(ChatSessionSerializer(session).data)

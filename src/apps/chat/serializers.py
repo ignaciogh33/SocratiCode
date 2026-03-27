@@ -50,8 +50,6 @@ class ChatSessionSerializer(serializers.ModelSerializer):
 
 
 class ChatSessionDetailSerializer(serializers.ModelSerializer):
-    messages = MessageSerializer(many=True, read_only=True)
-
     class Meta:
         model = ChatSession
-        fields = ['id', 'title', 'created_at', 'messages']
+        fields = ['id', 'title', 'created_at']

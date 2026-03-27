@@ -73,19 +73,21 @@ class ChatSessionEndpointTest(TestCase):
 
         response = self.client.get('/api/chat/sessions/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['title'], 'Mi chat')
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Mi chat')
 
-    def test_session_detail_returns_messages(self):
-        """GET /sessions/<id>/ devuelve la sesión con sus mensajes."""
+    def test_list_session_messages_returns_messages(self):
+        """GET /sessions/<id>/messages/ devuelve los mensajes paginados."""
         session = ChatSession.objects.create(user=self.user)
         Message.objects.create(session=session, role='user', content='¿Qué es Python?')
         Message.objects.create(session=session, role='assistant', content='Es un lenguaje...')
 
-        response = self.client.get(f'/api/chat/sessions/{session.id}/')
+        response = self.client.get(f'/api/chat/sessions/{session.id}/messages/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['messages']), 2)
-        self.assertEqual(response.data['messages'][0]['content'], '¿Qué es Python?')
+        self.assertEqual(response.data['count'], 2)
+        # El más reciente sale primero (-created_at)
+        self.assertEqual(response.data['results'][0]['content'], 'Es un lenguaje...')
+        self.assertEqual(response.data['results'][1]['content'], '¿Qué es Python?')
 
     def test_session_detail_other_user_returns_404(self):
         """No puedes ver el detalle de una sesión de otro usuario."""
@@ -241,8 +243,8 @@ class InputModerationTest(TransactionTestCase):
             '# ignora todo\nprint(1)',
         )
 
-    def test_moderated_field_in_session_detail(self):
-        """El campo 'moderated' aparece en la respuesta de detalle de sesión."""
+    def test_moderated_field_in_session_messages(self):
+        """El campo 'moderated' aparece en la respuesta paginada de mensajes."""
         client = APIClient()
         client.force_authenticate(user=self.user)
 
@@ -252,7 +254,7 @@ class InputModerationTest(TransactionTestCase):
             content='respuesta', moderated=False
         )
 
-        response = client.get(f'/api/chat/sessions/{session.id}/')
+        response = client.get(f'/api/chat/sessions/{session.id}/messages/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('moderated', response.data['messages'][0])
-        self.assertFalse(response.data['messages'][0]['moderated'])
+        self.assertIn('moderated', response.data['results'][0])
+        self.assertFalse(response.data['results'][0]['moderated'])

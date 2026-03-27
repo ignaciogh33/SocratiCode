@@ -12,8 +12,7 @@ def execute_code(request):
     """Ejecuta código del alumno vía Piston. No pasa por Ollama."""
     # 1. VALIDACIÓN
     serializer = ExecuteInputSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     source_code = serializer.validated_data['source_code']
     language = serializer.validated_data['language']
@@ -51,24 +50,24 @@ def execute_code(request):
 
     except requests.ConnectionError:
         return Response(
-            {"error": "No se pudo conectar con el servicio de ejecución de código."},
+            {"error": "No se pudo conectar con el servicio de ejecución de código.", "details": None},
             status=503,
         )
     except requests.Timeout:
         return Response(
-            {"error": "El servicio de ejecución de código tardó demasiado."},
+            {"error": "El servicio de ejecución de código tardó demasiado.", "details": None},
             status=504,
         )
     except Exception as e:
         return Response(
-            {"error": f"Error inesperado: {str(e)}"},
+            {"error": f"Error inesperado: {str(e)}", "details": None},
             status=500,
         )
 
     # 3. PROCESAR RESPUESTA DE PISTON
     if "message" in piston_data:
         return Response(
-            {"error": piston_data["message"]},
+            {"error": piston_data["message"], "details": None},
             status=400,
         )
 
