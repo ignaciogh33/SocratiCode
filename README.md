@@ -1,350 +1,157 @@
 # SocratiCode
 
-LLM como tutor socrático para el aprendizaje de programación.
+Plataforma educativa interactiva donde un LLM actúa como tutor socrático para la enseñanza de programación. 
 
-## Requisitos
+## 🏗️ Arquitectura del Proyecto
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (gestor de paquetes)
-- Docker (para PostgreSQL y Piston)
-- Ollama con el modelo `llama3.2`
+El proyecto sigue una arquitectura desacoplada:
+- **Backend (API REST + SSE)**: Desarrollado en Django y Django REST Framework. Funciona de manera asíncrona mediante ASGI para soportar flujos continuos.
+- **Motor de IA**: Usa Ollama en local con el modelo `llama3.2` para streaming de respuestas token a token.
+- **Ejecución de Código Aislado**: Motor Piston ejecutado en Docker (ejecución segura de código arbitrario).
+- **Frontend *(En Preparación)***: Aplicación SPA basada en Vue y Vite (se alojará separada del core de Django).
 
-## Instalación
+---
 
+## 🚀 Requisitos e Instalación Local
+
+### 1. Dependencias Base
+- Python 3.12+ con el gestor de paquetes [uv](https://docs.astral.sh/uv/)
+- Docker y Docker Compose
+- [Ollama](https://ollama.ai/) instalado localmente con el modelo `llama3.2` (`ollama run llama3.2`)
+
+### 2. Variables de Entorno (`.env`)
+Antes de levantar el backend, debes crear un archivo `.env` dentro de la carpeta `src/` para proteger las credenciales:
+```env
+SECRET_KEY=tu_clave_secreta_aqui
+DEBUG=True
+DATABASE_URL=postgres://admin:secret@localhost:5433/tutor_django
+PISTON_URL=http://localhost:2000
+LLM_MOD=True
+```
+
+### 3. Despliegue Rápido
+Desde la raíz del proyecto (`/SocratiCode`):
 ```bash
-# 1. Instalar dependencias
+# 1. Instalar dependencias de Python
 uv sync
 
-# 2. Levantar servicios (PostgreSQL + Piston)
+# 2. Levantar servicios locales (PostgreSQL + Piston API)
 docker compose up -d
 
-# 3. Instalar runtime de Python en Piston
+# 3. Instalar runtime de Python dentro del contenedor de Piston
 curl -X POST http://localhost:2000/api/v2/packages \
   -H "Content-Type: application/json" \
   -d '{"language": "python", "version": "3.10.0"}'
 
-# 4. Aplicar migraciones
-uv run python src/manage.py migrate
+# 4. Aplicar migraciones y crear superusuario
+cd src
+uv run python manage.py migrate
+uv run python manage.py createsuperuser
 
-# 5. Crear superusuario
-uv run python src/manage.py createsuperuser
-
-# 6. Arrancar el servidor (ASGI para streaming async)
-cd src && uv run uvicorn config.asgi:application --reload --port 8000
+# 5. Arrancar el servidor en modo ASGI (Necesario para SSE)
+uv run uvicorn config.asgi:application --reload --port 8000
 ```
-
-El servidor estará disponible en `http://127.0.0.1:8000/`.
 
 ---
 
-## API Endpoints
+## 📚 API Endpoints
 
-### 🤖 Chat (Tutor Socrático)
+> **Atención:** Todos los endpoints (excepto los de Login/Registro base) requieren autenticación mediante cabecera HTTP: `Authorization: Bearer <access_token>`.
 
-> **Nota:** Todos los endpoints de chat requieren autenticación JWT (`Authorization: Bearer <access_token>`).
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `POST` | `/api/chat/` | Enviar un mensaje al tutor socrático |
-| `GET` | `/api/chat/sessions/` | Listar las sesiones de chat del usuario autenticado |
-| `POST` | `/api/chat/sessions/create/` | Crear una nueva sesión de chat vacía |
-| `GET` | `/api/chat/sessions/<id>/` | Obtener detalle de una sesión con todos sus mensajes |
-| `DELETE` | `/api/chat/sessions/<id>/delete/` | Eliminar una sesión y sus mensajes |
-| `PATCH` | `/api/chat/sessions/<id>/rename/` | Renombrar una sesión de chat |
-
-#### Enviar mensaje
-
-**Body (JSON):**
-
+### 🚨 Formato de Errores Estandarizado
+Toda la API (incluyendo autenticación) captura excepciones y devuelve un formato de error predecible para facilitar el desarrollo del frontend:
 ```json
 {
-    "session_id": 1,
-    "prompt": "¿Cómo funcionan los bucles for en Python?",
-    "code_context": "for i in range(10):\n    print(i)",
-    "last_output": "0\n1\n2\n...",
-    "language": "python"
+  "error": "Mensaje principal del problema.",
+  "details": {
+    "campo_especifico": ["Detalle del error de validación"]
+  }
 }
 ```
 
-> Los campos `code_context`, `last_output` y `language` son **opcionales**. El frontend los envía automáticamente con el contenido actual del editor y la última salida de ejecución, para que el LLM tenga contexto del código del alumno sin que este tenga que copiarlo.
+---
 
-> Si no se envía `session_id`, se crea automáticamente una nueva sesión para el usuario.
+### 🤖 Chat (Tutor Socrático)
 
-**Respuesta (200 OK, SSE Streaming):**
+Flujo de streaming en tiempo real (Server-Sent Events) y gestión paginada del historial de chat.
 
-El endpoint devuelve `text/event-stream` con tokens SSE:
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/api/chat/` | Enviar mensaje y recibir streaming SSE |
+| `GET` | `/api/chat/sessions/` | Listar sesiones *(Paginadas a 15 items)* |
+| `POST` | `/api/chat/sessions/create/` | Crear una sesión vacía |
+| `GET` | `/api/chat/sessions/<id>/` | Obtener datos base de una sesión |
+| `GET` | `/api/chat/sessions/<id>/messages/` | Obtener historial de mensajes *(Paginados a 50, más recientes primero)* |
+| `DELETE` | `/api/chat/sessions/<id>/delete/` | Borrar sesión |
+| `PATCH` | `/api/chat/sessions/<id>/rename/` | Renombrar sesión |
 
+#### Petición de Streaming (`POST /api/chat/`)
+El frontend envía el prompt actual, y opcionalmente, el contexto extraído del editor del estudiante.
+```json
+{
+    "session_id": 1,
+    "prompt": "¿Por qué falla este bucle en C?",
+    "code_context": "for(int i=0; i<10; i--) { ... }",
+    "last_output": "Segmentation Fault",
+    "language": "c"
+}
 ```
-data: {"token": "¿"}
-data: {"token": "Qué "}
-data: {"token": "crees "}
-data: {"token": "que hace?"}
+**Respuesta:** Flujo constante de eventos `text/event-stream`.
+```text
+data: {"token": "P"}
+data: {"token": "ar"}
+data: {"token": "ece"}
+...
 data: {"session_id": 1}
 data: [DONE]
 ```
 
-Si el input del alumno es bloqueado por el moderador:
-
-```
-data: {"response": "Lo siento, no puedo procesar ese mensaje...", "session_id": 1}
-data: [DONE]
-```
-
-```json
-{
-    "response": "Respuesta del tutor socrático...",
-    "session_id": 1
-}
-```
-
-#### Listar sesiones
-
-`GET /api/chat/sessions/`
-
-**Respuesta (200 OK):**
-
-```json
-[
-    {
-        "id": 2,
-        "title": "Bucles en Python",
-        "created_at": "2026-03-18T00:30:00Z",
-        "last_message": "¿Cómo funcionan los bucles for en Python?"
-    },
-    {
-        "id": 1,
-        "title": "Funciones recursivas",
-        "created_at": "2026-03-17T20:00:00Z",
-        "last_message": "Explícame qué es una función recursiva..."
-    }
-]
-```
-
-#### Crear sesión
-
-`POST /api/chat/sessions/create/`
-
-**Respuesta (201 Created):**
-
-```json
-{
-    "id": 3,
-    "title": "Nueva conversación",
-    "created_at": "2026-03-18T00:35:00Z",
-    "last_message": null
-}
-```
-
-#### Detalle de sesión (con mensajes)
-
-`GET /api/chat/sessions/1/`
-
-**Respuesta (200 OK):**
-
-```json
-{
-    "id": 1,
-    "title": "Funciones recursivas",
-    "created_at": "2026-03-17T20:00:00Z",
-    "messages": [
-        {
-            "id": 1,
-            "role": "user",
-            "content": "¿Qué es una función recursiva?",
-            "created_at": "2026-03-17T20:00:05Z",
-            "moderated": false
-        },
-        {
-            "id": 2,
-            "role": "assistant",
-            "content": "Buena pregunta. ¿Conoces algún proceso que se repita a sí mismo?",
-            "created_at": "2026-03-17T20:00:08Z",
-            "moderated": false
-        }
-    ]
-}
-```
-
-#### Eliminar sesión
-
-`DELETE /api/chat/sessions/1/delete/`
-
-**Respuesta:** `204 No Content`
-
-#### Renombrar sesión
-
-`PATCH /api/chat/sessions/1/rename/`
-
-**Body (JSON):**
-
-```json
-{
-    "title": "Bucles en Python"
-}
-```
-
-**Respuesta (200 OK):**
-
-```json
-{
-    "id": 1,
-    "title": "Bucles en Python",
-    "created_at": "2026-03-17T20:00:00Z",
-    "last_message": "¿Cómo funcionan los bucles for en Python?"
-}
-```
+### ⚖️ Moderación de Input de Seguridad
+Antes de que el modelo principal analice y responda, el input del usuario y su código atraviesan una capa síncrona de revisión (`moderate_input`). Si se detecta lenguaje obsceno, peticiones peligrosas o intentos de inyección maliciosa (Prompt Injection), la API bloquea el input y responde amablemente interrumpiendo el flujo normal.
 
 ---
 
-### ⚙️ Compilador (Piston)
+### ⚙️ Ejecución de Código (Piston)
 
-> **Nota:** Requiere autenticación JWT (`Authorization: Bearer <access_token>`).
+Ejecuta el código del alumno en *sandboxes* aislados para evitar vulnerabilidades en el host.
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `POST` | `/api/compiler/execute/` | Ejecutar código vía Piston |
+| `POST` | `/api/compiler/execute/` | Envía código fuente a Piston y devuelve stdout/stderr |
 
-#### Ejecutar código
-
-**Body (JSON):**
-
+**Body:**
 ```json
 {
-    "source_code": "print('hola mundo')",
-    "language": "python3",
+    "source_code": "print('Hola a todos')",
+    "language": "python",
     "version": "3.10.0"
 }
 ```
 
-> Los campos `language` y `version` son obligatorios. Piston devuelve error 400 si no se envían.
-
-**Respuesta (200 OK):**
-
-```json
-{
-    "stdout": "hola mundo\n",
-    "stderr": "",
-    "exit_code": 0,
-    "language": "python3"
-}
-```
-
-**Errores posibles:**
-
-| Código | Causa |
-|--------|-------|
-| `400` | `source_code` vacío o lenguaje no instalado en Piston |
-| `503` | Piston no está arrancado |
-| `504` | Timeout de ejecución |
-
 ---
 
-### 🔐 Autenticación (JWT)
+### 🔐 Autenticación y Manejo de Usuarios (JWT)
+Gestión delegada a la libería Djoser.
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `POST` | `/api/auth/jwt/create/` | Login: devuelve `access` y `refresh` tokens |
-| `POST` | `/api/auth/jwt/refresh/` | Renovar el `access` token usando el `refresh` |
-| `POST` | `/api/auth/jwt/verify/` | Verificar si un `access` token sigue siendo válido |
-
-**Login (JSON):**
-
-```json
-{
-    "username": "alumno1",
-    "password": "MiPassword123!"
-}
-```
-
-**Respuesta (200 OK):**
-
-```json
-{
-    "access": "eyJhbGciOiJIUzI1NiIs...",
-    "refresh": "eyJhbGciOiJIUzI1NiIs..."
-}
-```
+| `POST` | `/api/auth/users/` | Registrarse |
+| `POST` | `/api/auth/jwt/create/` | Login (Obtener Token) |
+| `POST` | `/api/auth/jwt/refresh/` | Renovar Token |
+| `GET` | `/api/auth/users/me/` | Perfil propio |
 
 ---
 
-### 👤 Gestión de Usuarios
+## 💡 Comandos de Ayuda Comunes
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `POST` | `/api/auth/users/` | Registro de usuario nuevo |
-| `GET` | `/api/auth/users/me/` | Ver perfil del usuario autenticado |
-| `PUT/PATCH` | `/api/auth/users/me/` | Editar perfil del usuario autenticado |
-| `DELETE` | `/api/auth/users/me/` | Eliminar cuenta propia |
-| `POST` | `/api/auth/users/set_password/` | Cambiar contraseña |
+**Ollama:**
+- Reiniciar servicio (Linux): `sudo systemctl restart ollama`
+- Ver qué corre: `ollama ps`
 
-**Registro (JSON):**
+**Django:**
+- Actualizar base de datos: `uv run python manage.py migrate`
+- Tests: `uv run python manage.py test`
 
-```json
-{
-    "username": "alumno1",
-    "email": "alumno1@ejemplo.com",
-    "password": "MiPassword123!",
-    "re_password": "MiPassword123!"
-}
-```
-
-**Cambiar contraseña (JSON):**
-
-```json
-{
-    "current_password": "MiPassword123!",
-    "new_password": "NuevaPassword456!"
-}
-```
-
-> **Nota:** Todos los endpoints que requieren autenticación necesitan la cabecera `Authorization: Bearer <access_token>`.
-
----
-
-## Comandos Básicos de Ollama
-
-| Acción | Comando en Terminal |
-|---|---|
-| **Ver modelos instalados** | `ollama list` |
-| **Comprobar si hay modelos corriendo**| `ollama ps` |
-| **Arrancar/Probar un modelo en consola**| `ollama run llama3.2` |
-| **Parar temporalmente un modelo** | `ollama stop llama3.2` |
-| **Iniciar servicio general (Linux)** | `sudo systemctl start ollama` |
-| **Detener servicio general (Linux)** | `sudo systemctl stop ollama` |
-
----
-
-## Comandos de Piston
-
-| Acción | Comando |
-|---|---|
-| **Instalar un runtime** | `curl -X POST http://localhost:2000/api/v2/packages -H "Content-Type: application/json" -d '{"language": "python", "version": "3.10.0"}'` |
-| **Listar runtimes instalados** | `curl http://localhost:2000/api/v2/runtimes` |
-| **Probar ejecución directa** | `curl -X POST http://localhost:2000/api/v2/execute -H "Content-Type: application/json" -d '{"language": "python3", "version": "3.10.0", "files": [{"content": "print(42)"}]}'` |
-
-> **Nota:** Piston corre en Docker con `privileged: true` y expone su API en el puerto `2000`. Los runtimes se instalan vía API REST, no por CLI.
-
----
-
-## Moderación de Contenido
-
-Todas las respuestas del LLM pasan por una capa de moderación antes de llegar al estudiante. El sistema usa el mismo modelo `llama3.2` con un system prompt independiente que evalúa si la respuesta es apropiada.
-
-**Flujo:**
-
-1. El LLM principal genera la respuesta con contexto socrático
-2. Un segundo prompt (sin contexto de la conversación) evalúa si el contenido es apropiado
-3. Si es apropiado → se envía al estudiante
-4. Si no es apropiado o el moderador falla → se bloquea y se devuelve un mensaje predeterminado
-
-> **Fail-safe:** Si el moderador falla (timeout, error), la respuesta se bloquea por defecto.
-
-Los mensajes bloqueados se guardan con `moderated: true` para auditoría. Se pueden filtrar desde el panel de admin.
-
----
-
-## Panel de Administración
-
-Accede a `http://127.0.0.1:8000/admin/` con las credenciales de superusuario para gestionar usuarios, sesiones de chat y mensajes.
-
-Desde el panel puedes filtrar mensajes por el campo **Moderated** para revisar los que fueron bloqueados por la capa de moderación.
+**Docker Piston:**
+- Ver logs de compilación: `docker logs piston`
+- Comprobar lenguajes: `curl http://localhost:2000/api/v2/runtimes`

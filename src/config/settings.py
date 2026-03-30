@@ -12,19 +12,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Leer archivo .env desde la raíz absoluta del monorepo
+environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ou8uxjcppcsbz)hf#u1u4lj4+^4ppw6+p=7@dpau&odxszni)1'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'users.User'
@@ -83,14 +92,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tutor_django',
-        'USER': 'admin',
-        'PASSWORD': 'secret',
-        'HOST': 'localhost',
-        'PORT': '5433',
-    }
+    'default': env.db('DATABASE_URL', default='postgres://admin:secret@localhost:5433/tutor_django')
 }
 
 
@@ -131,7 +133,14 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # CORS Configuration
+# MODO DESARROLLO (Actual): Permite Postman, Chrome local, Vue, etc.
 CORS_ALLOW_ALL_ORIGINS = True
+
+# MODO PRODUCCIÓN (o cuando decidas cerrarlo solo a Vue):
+# Comenta la línea anterior 'CORS_ALLOW_ALL_ORIGINS' y descomenta lo siguiente:
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+# ]
 
 # DRF Configuration
 REST_FRAMEWORK = {
@@ -154,7 +163,7 @@ SIMPLE_JWT = {
 
 # Feature flag para activar o desactivar la moderación de contenido (LLM 2)
 # y ganar velocidad de respuesta.
-LLM_MOD = True
+LLM_MOD = env('LLM_MOD', cast=bool, default=True)
 
 # URL del servicio Piston para ejecución de código
-PISTON_URL = "http://localhost:2000"
+PISTON_URL = env('PISTON_URL', default="http://localhost:2000")

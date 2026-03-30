@@ -1,0 +1,95 @@
+=========================================
+ EJEMPLOS DE PETICIONES API (SocratiCode)
+=========================================
+
+NOTA: Para todos los endpoints exceptuando el Registro y el Login, necesitas enviar el token JWT en la cabecera.
+Copiarás el valor "access" devuelto en el Paso 2 y reemplazarás la palabra "<TU_TOKEN>" en el resto de peticiones.
+Estos comandos 'curl' se pueden pegar directamente en la consola o importar en Postman ("Import" -> "Raw text").
+
+
+-----------------------------------------------------------
+ 1. AUTENTICACIÓN Y USUARIOS (DJOSER)
+-----------------------------------------------------------
+
+# 1.1 Registrar un nuevo usuario
+curl -X POST http://localhost:8000/api/auth/users/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "username": "estudiante",
+           "email": "estudiante@ejemplo.com",
+           "password": "PasswordFuerte123!",
+           "re_password": "PasswordFuerte123!"
+         }'
+
+# 1.2 Iniciar Sesión (Obtener JWT) -> Cópialo de la respuesta ("access")
+curl -X POST http://localhost:8000/api/auth/jwt/create/ \
+     -H "Content-Type: application/json" \
+     -d '{
+           "username": "estudiante",
+           "password": "PasswordFuerte123!"
+         }'
+
+
+-----------------------------------------------------------
+ 2. SESIONES Y MENSAJES DEL CHAT (REQUIEREN JWT)
+-----------------------------------------------------------
+
+# 2.1 Listar las sesiones de chat (Paginadas)
+curl -X GET http://localhost:8000/api/chat/sessions/ \
+     -H "Authorization: Bearer <TU_TOKEN>"
+
+# 2.2 Crear una nueva sesión de chat en blanco
+curl -X POST http://localhost:8000/api/chat/sessions/create/ \
+     -H "Authorization: Bearer <TU_TOKEN>"
+
+# 2.3 Obtener detalle base de la sesión (IDs y títulos)
+curl -X GET http://localhost:8000/api/chat/sessions/1/ \
+     -H "Authorization: Bearer <TU_TOKEN>"
+
+# 2.4 Obtener los mensajes de una sesión (Paginados y cargando de más nuevos a viejos)
+curl -X GET http://localhost:8000/api/chat/sessions/1/messages/ \
+     -H "Authorization: Bearer <TU_TOKEN>"
+
+# 2.5 Renombrar el título de una sesión
+curl -X PATCH http://localhost:8000/api/chat/sessions/1/rename/ \
+     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Content-Type: application/json" \
+     -d '{"title": "Dudas sobre Herencia en OOP"}'
+
+# 2.6 Eliminar una sesión por completo
+curl -X DELETE http://localhost:8000/api/chat/sessions/1/delete/ \
+     -H "Authorization: Bearer <TU_TOKEN>"
+
+
+-----------------------------------------------------------
+ 3. ENVIAR MENSAJES (SSTREAMING AL TUTOR SOCRÁTICO)
+-----------------------------------------------------------
+
+# 3.1 Enviar mensaje y recibir Server-Sent Events (Asíncrono)
+# Al ejecutar esto en consola, la respuesta caerá bloque a bloque "data: {"token": "..."}"
+curl -X POST http://localhost:8000/api/chat/ \
+     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "session_id": 1,
+           "prompt": "Tengo un problema con este código, falla y me da error 404.",
+           "code_context": "import requests\nr = requests.get(\"http://url-rota\")\nprint(r.text)",
+           "last_output": "Status code: 404",
+           "language": "python"
+         }'
+
+
+-----------------------------------------------------------
+ 4. COMPILADOR DE CÓDIGO (PISTON)
+-----------------------------------------------------------
+
+# 4.1 Enviar código a ejecución
+# (Recuerda que tienes que tener activo el contenedor de piston localmente para que funcione)
+curl -X POST http://localhost:8000/api/compiler/execute/ \
+     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "source_code": "def saludar(nombre):\n    return f\"Hola {nombre}!\"\n\nprint(saludar(\"SocratiCode\"))",
+           "language": "python",
+           "version": "3.10.0"
+         }'
