@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -131,6 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # CORS Configuration
 # MODO DESARROLLO (Actual): Permite Postman, Chrome local, Vue, etc.
@@ -160,6 +162,29 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': False,
+    'SEND_CONFIRMATION_EMAIL': False,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'SERIALIZERS': {
+        'user_create': 'apps.users.serializers.UserCreateSerializer',
+        'user': 'apps.users.serializers.UserSerializer',
+        'current_user': 'apps.users.serializers.UserSerializer',
+    }
+}
+
+# Email Backend (Consola para desarrollo. En producción usar SMTP real)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+DEFAULT_FROM_EMAIL = 'noreply@socraticode.com'
 
 # Feature flag para activar o desactivar la moderación de contenido (LLM 2)
 # y ganar velocidad de respuesta.

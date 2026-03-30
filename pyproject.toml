@@ -15,4 +15,5 @@ dependencies = [
     "uvicorn>=0.34.0",
     "adrf>=0.1.8",
     "django-environ>=0.13.0",
+    "whitenoise>=6.12.0",
 ]

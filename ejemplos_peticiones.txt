@@ -30,6 +30,15 @@ curl -X POST http://localhost:8000/api/auth/jwt/create/ \
          }'
 
 
+# 1.3 Actualizar Perfil (Bio, Theme, etc)
+curl -X PATCH http://localhost:8000/api/auth/users/me/ \
+     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "theme": "light",
+           "bio": "Estudiante de primer año de CS"
+         }'
+
 -----------------------------------------------------------
  2. SESIONES Y MENSAJES DEL CHAT (REQUIEREN JWT)
 -----------------------------------------------------------
