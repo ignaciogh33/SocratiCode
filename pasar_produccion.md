@@ -9,7 +9,7 @@ En tu servidor de producción, el archivo `.env` o las variables de entorno inye
 - [ ] `DATABASE_URL=postgres://usuario:contraseña@host:puerto/nombre_db` (Conectar a una base de datos segura de producción, no usar credenciales `admin:secret`).
 
 ## 2. Archivo `settings.py` (Modificaciones de Seguridad)
-Tienes que entrar a `src/config/settings.py` y revisar lo siguiente:
+Tienes que entrar a `backend/config/settings.py` y revisar lo siguiente:
 - [ ] **`ALLOWED_HOSTS`**: Ahora mismo probablemente esté vacío `[]` o aceptando todo `['*']`. Debes configurarlo explícitamente con el dominio de tu servidor, ej: `ALLOWED_HOSTS = ['api.socraticode.com', 'www.socraticode.com', 'localhost']`.
 - [ ] **Configuración de CORS**: 
   - Comentar o eliminar la línea `CORS_ALLOW_ALL_ORIGINS = True`.

@@ -7,6 +7,11 @@ db.sqlite3
 media/
 staticfiles/
 
+# --- Frontend (Vue + Vite) ---
+node_modules/
+dist/
+
+
 # --- LaTeX (Memoria) ---
 *.aux
 *.log

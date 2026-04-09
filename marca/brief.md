@@ -1,120 +1,133 @@
-### 🎨 BRIEFING DE DISEÑO DE MARCA Y UI/UX (SocratiCode)
+### **SOCRATICODE - HOJA DE ESPECIFICACIONES DE DISEÑO UI/UX**
 
-**Concepto de Marca:**
-SocratiCode no es una simple academia de programación. Es un **Tutor Personal Socrático**. La identidad visual debe transmitir **concienzuda paciencia**, **sabiduría intelectual** y **tecnología avanzada pero accesible**. No debe parecer un juguete (como Scratch), pero tampoco una herramienta de desarrollo corporativa intimidante (como VS Code puro). Es un puente entre el alumno y el conocimiento.
+#### **1. CONCEPTO DE MARCA Y MISIÓN**
 
-**Público Objetivo:** Estudiantes de programación (todas las edades), principiantes o intermedios.
+SocratiCode se define como un **Tutor Personal Socrático**, no una academia de programación. La identidad visual debe transmitir **concienzuda paciencia**, **sabiduría intelectual** y **tecnología avanzada pero accesible**. El diseño debe ser un puente entre el alumno y el conocimiento, evitando la estética infantil o la frialdad corporativa.
 
----
+#### **2. SISTEMA DE DISEÑO VISUAL (SISTEMA CORE)**
 
-#### 1. Arquitectura de Información y Pantallas
+-----
 
-La aplicación debe comportarse como una **Single Page Application (SPA)** muy fluida. Se recomienda fuertemente ofrecer un **Tema Claro (Light)** y un **Tema Oscuro (Dark)**, siendo el oscuro el predeterminado para el editor de código.
+**A. Paleta de Colores (Brand Identity - Actualizada)**
 
-**A. Pantalla Pública (Landing / Login)**
-* **Diseño:** Limpio, minimalista. Debe vender el concepto de "Aprende pensando, no copiando".
-* **Elementos:**
-    * Slogan grande y claro (ej: "Tu código. Tus pistas. Tu aprendizaje.").
-    * Formulario de Login muy sencillo (Email/Password).
-    * *(Opcional: Si el alumno se registra solo, un formulario de registro. Si no, ignorar).*
+Esta paleta utiliza grises fríos para la estructura y el acento de marca para la identidad y las acciones.
 
-**B. Pantalla Principal del Panel de Control (Dashboard)**
-* Esta es la pantalla central donde el alumno pasa el 90% del tiempo.
-* **Layout (Estructura):** Se recomienda un diseño de tres columnas:
-    1.  **Sidebar Lateral (Izquierda, estrecha):**
-        * Logo de SocratiCode arriba.
-        * Botón destacado "Nueva Conversación".
-        * Lista de chats anteriores (paginado).
-        * Botón de Configuración/Perfil y Cerrar Sesión abajo.
-    2.  **Área del Editor de Código (Centro, ancha):**
-        * Selector de Lenguaje (desplegable).
-        * El componente de Monaco Editor ocupando casi todo el alto.
-        * Botón flotante o destacado "Ejecutar Código" (Compilador).
-    3.  **Área del Chat (Derecha, ancha):**
-        * Burbujas de chat del historial (con scroll infinito).
-        * Input de texto del alumno abajo.
-        * Botón de enviar.
-* **UX Crítica:** El editor de código y el chat deben ser visibles simultáneamente sin solaparse. La IA (en el chat) hará referencia a líneas del editor central.
+* **Color de Marca (Primary):** `#94618E`
+    * *Uso:* Botones de acción principal (Enviar, Nuevo chat, Ejecutar), bordes de elementos activos, borde de la viñeta de los mensajes del alumno, nombres de usuario y el logotipo.
+* **Color Secundario (Hint):** `#B8860B`
+    * *Uso:* Exclusivo para las pistas socráticas y detalles específicos que requieran atención.
+* **Fondo Sidebar:** `#1A1515`
+    * *Uso:* Color de fondo sólido para el panel lateral izquierdo (expandido o minimizado).
+* **Fondo Chat:** `#262624`
+    * *Uso:* Color de fondo para el área de lectura de la conversación.
+* **Fondo Caja de Texto:** `#30302E`
+    * *Uso:* Fondo del input inferior donde el alumno escribe sus dudas o pega su código.
+* **Editor de Código y Terminal:**
+    * *Uso:* Se utilizarán estrictamente los colores predeterminados del componente Monaco Editor (tema oscuro).
+* **Estados del Sistema:**
+    * **Error:** `#D62828` (Alertas y fallos de compilación).
+    * **Éxito:** `#2D5A27` (Ejecución correcta).
+* **Textos:**
+    * **Sobre color pleno:** `#FFFFFF` (ej. texto blanco sobre el botón primario).
+    * **Texto de lectura:** `#D4D4D4` (Gris claro para la interfaz y el chat).
 
-**C. Configuración / Perfil (Opcional, puede ser un modal)**
-* Cambio de contraseña.
-* Selector de Tema (Claro/Oscuro).
 
----
+**B. Tipografía (Prioridad: Legibilidad y Estilo - Actualizada)**
 
-#### 2. Sistema de Diseño Visual (Colores y Tipografía)
+| Categoría | Fuente | Tamaños Específicos | Muestra Visiva |
+| :--- | :--- | :--- | :--- |
+| **UI y Chat (Sans-serif)** | **Inter** (Recomendación Principal) | H1 (36-48px), Títulos Sesión (14px semibold), Cuerpo Chat (16px), Input Text (16px). | `Inter, Helvetica, sans-serif` |
+| **Código y Output (Monospace)** | **Fira Code** (Recomendación Principal) | 14px-15px (con ligaduras de programación). | `Fira Code, Source Code Pro, monospace` |
 
-**A. Paleta de Colores (Brand Identity)**
-Buscamos colores que denoten tecnología pero también educación y confianza. Se recomienda usar una base de **Greys (Grises)** fríos para la interfaz y un color de acento intelectual.
+**La fuente de marca es la que se usa para el logo, la cual es una fuente personalizada está por definir**
 
-* **Tema Oscuro (Recomendado por defecto):**
-    * **Fondo Principal:** `#1E1E1E` (Gris oscuro tipo VS Code, reduce fatiga visual).
-    * **Fondo de Paneles/Chat:** `#252526` (Ligeramente más claro para diferenciar).
-    * **Burbuja Alumno:** `#2D2D2D` o gris oscuro con borde sutil.
-    * **Burbuja IA (Tutor):** Un toque del color de acento (ej: `#213547` o un degradado sutil).
+-----
 
-* **Tema Claro (Alternativo):**
-    * **Fondo Principal:** `#FFFFFF` (Blanco puro).
-    * **Fondo de Paneles/Chat:** `#F5F5F7` (Gris ultra claro).
-    * **Burbuja Alumno:** `#E9E9EB` (Gris suave).
-    * **Burbuja IA (Tutor):** `#D1E3F7` (Azul muy suave).
+**C. Logos de Marca (Uso Correcto - Actualizado)**
 
-* **Color de Acento (Identidad de Marca):** Un azul intelectual o morado tecnológico.
-    * **Recomendación 1 (Modern Tech):** Indigo (`#4F46E5`).
-    * **Recomendación 2 (Académico Trust):** Teal (`#008080`). *Usemos el **Indigo (`#4F46E5`)** por defecto.*
+Se ha creado una versión corregida del logo para alinearse con el nuevo color de marca `#94618E`. El logo principal es la variante de línea minimalista que integra la cara de Sócrates con un terminal prompt.
 
-* **Colores de Estado:**
-    * Error (Alertas/Stderr): `#EF4444` (Rojo).
-    * Éxito (Compilación OK): `#10B981` (Verde esmeralda).
-    * Pistas (Resaltado en chat): `#F59E0B` (Ámbar).
+| Variante de Logo | Uso Específico | Visualización Corregida |
+| :--- | :--- | :--- |
+| **Logo de Marca Principal** (Línea \#94618E) | Cabecera del sidebar, pantallas de login. Variante **minimalista de cara y prompt integrado**. |  |
+| **Logo con Texto** (Línea \#94618E + Texto) | Cabecera de sidebar cuando hay espacio, landing pages. |  |
 
-**B. Tipografía**
-La legibilidad es la prioridad número uno. Necesitamos una tipografía moderna para la interfaz y una monoespaciada para el código.
+-----
 
-1.  **UI y Chat (Sans-serif):**
-    * **Fuente:** Inter (moderna, ultra-legible en pantallas y gratuita en Google Fonts), Roboto, o Lato. Recomiendo fuertemente **Inter**.
-    * **Tamaños:**
-        * Títulos H1 (Landing): `36px` - `48px`.
-        * Títulos de Sesión (Sidebar): `14px` (Semibold).
-        * Cuerpo del Chat (Mensajes): `16px`.
-        * Input text: `16px`.
+#### **3. ARQUITECTURA DE INFORMACIÓN Y PANTALLAS ESPECÍFICAS**
 
-2.  **Editor de Código y Output (Monospace):**
-    * **Fuente:** Fira Code (gratuita, con ligaduras de programación que se ven geniales), Source Code Pro, o Monaco. Recomiendo **Fira Code**.
-    * **Tamaño:** `14px` o `15px`. El usuario debe poder hacer zoom.
+El diseño de pantallas sigue una estructura de **Single Page Application (SPA)** de tres columnas, con paneles resizables por el usuario. El tema predeterminado es **Oscuro (Dark Theme)**.
 
----
+-----
 
-#### 3. Detalles de UI/UX Específicos
+**1. PANTALLA PÚBLICA (LANDING / LOGIN)**
 
-* **Efecto de Streaming (SSE):** Los tokens de Ollama no deben aparecer de golpe. Deben aparecer suavemente, concatenándose a una velocidad de lectura natural. No usar animaciones de "fade-in" para cada letra, simplemente añadir el texto (`+=`) de forma reactiva.
-* **Renderizado de Markdown:** Los bloques de código dentro del chat (ej: ````python...````) deben tener resaltado de sintaxis dentro de la burbuja y un botón de "Copiar código" integrado.
-* **Burbujas del Chat:** Diferenciar claramente quién habla.
-    * **Alumno (User):** Burbuja alineada a la derecha, color gris neutro, avatar de "Estudiante".
-    * **IA (Socratic Tutor):** Burbuja alineada a la izquierda, borde sutil del color de acento Indigo, avatar de "Sócrates moderno" o búho de la sabiduría.
-* **Estados de Carga:** Usar un *skeleton loader* (barras grises animadas) mientras se carga la lista de sesiones inicial. Mientras la IA piensa (antes del primer token del stream), usar un indicador de "La IA está redactando pistas..." (ej: tres puntitos animados).
+  * **Diseño:** Limpio, minimalista. Concepto: "Aprende pensando, no copiando".
+  * **Elementos:**
+      * **Logo Corregido:** Variante de cara y prompt integrado en línea `#94618E`, centrado.
+      * Slogan grande: "Tu código. Tus pistas. Tu aprendizaje." (Inter).
+      * Formulario centrado: Email (placeholder con ejemplo), Password.
+      * Botón **"Iniciar Sesión"** en fondo `#94618E` con texto blanco.
+      * Links: "¿Olvidaste tu contraseña?" y "Crear una cuenta" en color `#94618E`.
 
----
+-----
 
-### 🦉 SUGERENCIAS DE LOGO PARA SOCRATICODE
+**2. PANTALLA DE PANEL DE CONTROL (EXPANDIDO)**
 
-Me pides una descripción para el logo. Aquí tienes tres opciones conceptuales para dárselas a un diseñador o usar en un generador de imágenes.
+  * **Layout:** Tres columnas, sidebar completamente visible.
+  * **Sidebar (Izquierda, estrecha, `#1A1515`):**
+      * Logo de SocratiCode corregido arriba.
+      * Botón destacado **"Nueva Conversación"** con fondo `#94618E` y texto blanco. Icono "+".
+      * Lista de chats anteriores con iconos y títulos. Chat activo resaltado sutilmente.
+      * Botón de Configuración/Perfil y Cerrar Sesión abajo. Icono para alternar sidebar.
+  * **Chat (Derecha, ancha, `#262624`):**
+      * Historial de chat con burbujas.
+      * **UX Crítica:** Editor de código y chat son visibles simultáneamente sin solaparse.
 
-**Concepto Clave:** "Unión del mundo clásico (Sócrates/Filosofía) y el mundo moderno (Código/IA)".
+-----
 
-#### Opción 1: El Sócrates Sintáctico (Intelectual y Tech)
-* **Descripción:** Un busto minimalista y abstracto de Sócrates (barba característica). El busto no está dibujado con líneas normales, sino formado por caracteres de código: corchetes `{}`, símbolos menor/mayor `< >` y barras `/`. Es como si la sabiduría de Sócrates estuviera "programada".
-* **Símbolo:** Una silueta limpia de Sócrates con una `</>` estilizada en la barba.
-* **Uso:** Muy potente para marca seria.
+**3. PANTALLA DE PANEL DE CONTROL (MINIMIZADO)**
 
-#### Opción 2: El Búho Programador (Sabiduría y Accesibilidad)
-* **Descripción:** Un búho (animal que representa la sabiduría clásica y la filosofía) con un diseño geométrico y moderno. Sus ojos grandes no son pupilas, son corchetes `{ }`. El búho está posado sobre una barra de código `_` o una barra de scroll.
-* **Símbolo:** Una cara de búho simplificada hecha de símbolos de sintaxis de programación.
-* **Uso:** Más amigable para alumnos jóvenes, transmite paciencia.
+  * **Layout:** Tres columnas, sidebar reducido a una columna de iconos para ganar espacio de contenido.
+  * **Sidebar (Izquierda, mínima, `#1A1515`):**
+      * Logo corregido simplificado.
+      * Botón "Nueva Conversación" reducido a icono "+".
+      * Iconos de chats recientes. Iconos de perfil y logout.
+      * Icono para desplegar sidebar.
+  * **Contenido:** El área del chat ocupa la mayor parte de la pantalla.
 
-#### Opción 3: La Pista Iluminada (Acción y Propósito)
-* **Descripción:** Un símbolo de cursor de terminal parpadeando (`>_`) o un prompt de Python (`>>>`). De la barra del prompt parpadeante (`_`) sale hacia arriba una chispa o un destello de luz dorado que forma una bombilla estilizada. La bombilla representa la "idea" o la "pista" socrática que te ilumina.
-* **Símbolo:** Un prompt de consola que genera una chispa dorada de idea.
-* **Uso:** Muy directo sobre lo que hace la aplicación.
+-----
 
-**Recomendación Personal:** La **Opción 1** (Sócrates sintáctico) o la **Opción 2** (Búho con ojos corchetes) son las más originales y capturan mejor la esencia "Socrática" + "Code".
+**4. PANTALLA DE PANEL DE CONTROL (CÓDIGO Y TERMINAL)**
+
+  * **Layout:** Tres columnas resizables. Sidebar completamente visible.
+  * **Área del Editor de Código (Centro, `#1E1E1E`):**
+      * Selector de Lenguaje dropdown.
+      * Componente Monaco Editor con números de línea y Fira Code (ej. Python de `image_20.png`).
+      * Botón flotante **"EJECUTAR"** con estado (ej. "EJECUTAR"). Fondo `#94618E` con texto blanco.
+  * **Área del Terminal (Inferior):**
+      * Terminal output integrado abajo del editor. Muestra la ejecución del código (ej. Fibonacci de `image_20.png`). Fira Code.
+      * Se puede abrir/cerrar desde un botón en el sidebar.
+  * **Chat (Derecha):** Visible simultáneamente.
+
+-----
+
+**5. PANTALLA DE PANEL DE CONTROL (MINIMIZADO CON CÓDIGO Y TERMINAL)**
+
+  * **Layout:** Tres columnas resizables. Sidebar reducido a iconos.
+  * **Sidebar (Izquierda, mínima, `#1A1515`):** Iconos de acceso rápido.
+  * **Contenido:** El área del editor de código y terminal output ocupan la mayor parte de la pantalla, con el chat ocupando la columna derecha.
+
+-----
+
+#### **4. DETALLES DE UI/UX ESPECÍFICOS**
+
+  * **Títulos de Sesión:** Texto "SocratiCode" en letra de marca (letra definida para el logo), color `#94618E` primary.
+  * **Avatares de Chat:**
+      * **IA Profile:** Burbuja alineada a la izquierda, borde sutil `#94618E` primary, avatar de "Modern Socrates" o sabiduría.
+      * **User Profile:** Burbuja alineada a la derecha, color gris neutro `#2D2D2D`, avatar de "Estudiante".
+  * **UX Crítica:** Editor de código y chat visibles simultáneamente sin solaparse. Drag handles para ajustar relative width chat vs código.
+  * **Efecto de Streaming SSE:** Tokens de IA aparecen de golpe suavemente concatenándose a velocidad natural reactivamente.
+  * **Renderizado de Markdown:** Bloques de código en chat con syntax highlighting y botón "Copiar código".
+  * **Estados de Carga:** *Skeleton loader* para sesiones, tres puntos animados para IA pensando.
+  * **Ajustes Adicionales:** El usuario puede modificar tamaño de sidebar, abrir/cerrar terminal y output desde sidebar, ajustar chat/código.

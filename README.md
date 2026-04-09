@@ -20,7 +20,7 @@ El proyecto sigue una arquitectura desacoplada:
 - [Ollama](https://ollama.ai/) instalado localmente con el modelo `llama3.2` (`ollama run llama3.2`)
 
 ### 2. Variables de Entorno (`.env`)
-Antes de levantar el backend, debes crear un archivo `.env` dentro de la carpeta `src/` para proteger las credenciales:
+Antes de levantar el backend, debes crear un archivo `.env` dentro de la carpeta `backend/` para proteger las credenciales:
 ```env
 SECRET_KEY=tu_clave_secreta_aqui
 DEBUG=True
@@ -44,7 +44,7 @@ curl -X POST http://localhost:2000/api/v2/packages \
   -d '{"language": "python", "version": "3.10.0"}'
 
 # 4. Aplicar migraciones y crear superusuario
-cd src
+cd backend
 uv run python manage.py migrate
 uv run python manage.py createsuperuser
 
