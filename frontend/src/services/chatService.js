@@ -70,12 +70,13 @@ export const chatService = {
    *
    * @param {Object} payload - { session_id, prompt, code_context, last_output, language }
    * @param {Function} onToken - callback(token: string) llamado por cada token recibido
+   * @param {Function} onModerated - callback(response: string) si la respuesta fue moderada
    * @param {Function} onDone - callback(sessionId: number) al finalizar el stream
    * @param {Function} onError - callback(error: string) en caso de error
    * @param {AbortSignal} signal - para cancelar el stream
    * @returns {Promise<void>}
    */
-  async sendMessage(payload, { onToken, onDone, onError, signal } = {}) {
+  async sendMessage(payload, { onToken, onModerated, onDone, onError, signal } = {}) {
     const token = localStorage.getItem('access_token')
 
     try {
@@ -133,8 +134,12 @@ export const chatService = {
               onToken?.(parsed.token)
             }
 
-            // Respuesta moderada (viene completa)
-            if (parsed.response !== undefined) {
+            // Respuesta moderada por el moderador de output
+            if (parsed.moderated) {
+              onModerated?.(parsed.response)
+            }
+            // Respuesta moderada de input (viene completa, sin flag moderated)
+            else if (parsed.response !== undefined) {
               onToken?.(parsed.response)
             }
 
