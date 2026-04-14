@@ -285,7 +285,7 @@ async def chat_view(request):
                 await sync_to_async(Message.objects.create)(
                     session_id=safe_session_id,
                     role="assistant",
-                    content=full_response,
+                    content=MODERATED_RESPONSE,
                     moderated=True,
                 )
             return
