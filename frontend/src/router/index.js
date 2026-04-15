@@ -15,6 +15,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/perfil',
+    name: 'Profile',
+    component: () => import('../views/ProfileView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     // Redirect cualquier ruta desconocida
     path: '/:pathMatch(.*)*',
     redirect: '/',
