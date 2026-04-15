@@ -3,7 +3,7 @@
     <!-- Avatar -->
     <div class="message-bubble__avatar">
       <template v-if="message.role === 'assistant'">
-        <img src="../../assets/images/logo-circular.png" alt="Sócrates" class="message-bubble__avatar-img" />
+        <img src="../../assets/images/logo-circular.svg" alt="Sócrates" class="message-bubble__avatar-img" />
       </template>
       <template v-else>
         <div class="message-bubble__avatar-user">
@@ -17,11 +17,8 @@
 
     <!-- Content -->
     <div class="message-bubble__content">
-      <div class="message-bubble__header">
-        <span class="message-bubble__author">
-          {{ message.role === 'assistant' ? 'Sócrates' : 'Tú' }}
-        </span>
-        <span v-if="message.moderated" class="message-bubble__moderated" title="Mensaje moderado">
+      <div class="message-bubble__header" v-if="message.moderated">
+        <span class="message-bubble__moderated" title="Mensaje moderado">
           ⚠️
         </span>
       </div>
@@ -108,6 +105,12 @@ const renderedContent = computed(() => {
   flex-direction: row-reverse;
 }
 
+.message-bubble--user .message-bubble__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 /* ─── Avatar ─── */
 .message-bubble__avatar {
   flex-shrink: 0;
@@ -117,8 +120,7 @@ const renderedContent = computed(() => {
 .message-bubble__avatar-img {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  border: 1.5px solid var(--color-primary);
+  object-fit: contain;
 }
 
 .message-bubble__avatar-user {
@@ -144,16 +146,6 @@ const renderedContent = computed(() => {
   margin-bottom: 4px;
 }
 
-.message-bubble__author {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.message-bubble--assistant .message-bubble__author {
-  color: var(--color-primary);
-}
-
 .message-bubble__moderated {
   font-size: 12px;
 }
@@ -164,6 +156,14 @@ const renderedContent = computed(() => {
   color: var(--color-text-body);
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.message-bubble--user .message-bubble__body {
+  background-color: var(--color-primary-light);
+  border: 1px solid rgba(148, 97, 142, 0.3);
+  padding: 14px 20px;
+  border-radius: 24px;
+  border-top-right-radius: 2px;
 }
 
 /* ─── Streaming cursor ─── */

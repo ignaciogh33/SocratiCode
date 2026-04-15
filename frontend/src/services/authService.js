@@ -49,4 +49,25 @@ export const authService = {
     })
     return data // { access }
   },
+  /**
+   * Actualizar datos del perfil del usuario
+   * PATCH /auth/users/me/
+   */
+  async updateProfile({ username, bio, theme }) {
+    const { data } = await api.patch('/auth/users/me/', { username, bio, theme })
+    return data
+  },
+
+  /**
+   * Cambiar contraseña del usuario
+   * POST /auth/users/set_password/
+   */
+  async changePassword({ current_password, new_password, re_new_password }) {
+    const { data } = await api.post('/auth/users/set_password/', {
+      current_password,
+      new_password,
+      re_new_password,
+    })
+    return data
+  },
 }

@@ -92,6 +92,47 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
+     * Actualizar datos del perfil.
+     */
+    async updateProfile(profileData) {
+      this.isLoading = true
+      this.error = null
+      try {
+        const updated = await authService.updateProfile(profileData)
+        this.user = { ...this.user, ...updated }
+        return updated
+      } catch (err) {
+        const data = err.response?.data
+        this.error = data?.error || data?.username?.[0] || 'Error al actualizar el perfil'
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    /**
+     * Cambiar contraseña del usuario.
+     */
+    async changePassword(passwordData) {
+      this.isLoading = true
+      this.error = null
+      try {
+        await authService.changePassword(passwordData)
+      } catch (err) {
+        const data = err.response?.data
+        this.error =
+          data?.current_password?.[0] ||
+          data?.new_password?.[0] ||
+          data?.non_field_errors?.[0] ||
+          data?.error ||
+          'Error al cambiar la contraseña'
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    /**
      * Intentar restaurar sesión al arrancar la app.
      */
     async initialize() {

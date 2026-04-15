@@ -1,10 +1,7 @@
 <template>
-  <div class="dashboard" :class="{ 'dashboard--sidebar-collapsed': sidebarCollapsed }">
+  <div class="dashboard" :class="{ 'dashboard--sidebar-collapsed': uiStore.sidebarCollapsed }">
     <!-- Sidebar -->
-    <AppSidebar
-      :collapsed="sidebarCollapsed"
-      @toggle="sidebarCollapsed = !sidebarCollapsed"
-    />
+    <AppSidebar />
 
     <!-- Main content area -->
     <div class="dashboard__content">
@@ -41,14 +38,15 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useChatStore } from '../stores/chat'
 import { useEditorStore } from '../stores/editor'
+import { useUIStore } from '../stores/ui'
 import AppSidebar from '../components/layout/AppSidebar.vue'
 import ChatPanel from '../components/chat/ChatPanel.vue'
 import CodeEditor from '../components/editor/CodeEditor.vue'
 
 const chatStore = useChatStore()
 const editorStore = useEditorStore()
+const uiStore = useUIStore()
 
-const sidebarCollapsed = ref(false)
 const editorWidth = ref(50) // porcentaje
 let isResizing = false
 
