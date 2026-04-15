@@ -1,28 +1,44 @@
 <template>
-  <aside class="sidebar" :class="{ 'sidebar--collapsed': collapsed }">
+  <aside class="sidebar" :class="{ 'sidebar--collapsed': uiStore.sidebarCollapsed }">
     <!-- Header: Logo + Toggle -->
-    <div class="sidebar__header">
-      <div class="sidebar__brand" v-if="!collapsed">
-        <img src="../../assets/images/logo-circular.png" alt="SocratiCode" class="sidebar__logo" />
-        <span class="sidebar__brand-name">SocratiCode</span>
-      </div>
-      <img v-else src="../../assets/images/logo-circular.png" alt="SC" class="sidebar__logo sidebar__logo--small" />
-      <button class="sidebar__toggle" @click="$emit('toggle')" :title="collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </button>
+    <div class="sidebar__header" :class="{ 'sidebar__header--collapsed': uiStore.sidebarCollapsed }">
+      <!-- Expanded Mode -->
+      <template v-if="!uiStore.sidebarCollapsed">
+        <div class="sidebar__brand">
+          <img src="../../assets/images/logo-circular.svg" alt="SocratiCode" class="sidebar__logo" />
+          <span class="sidebar__brand-name">SocratiCode</span>
+        </div>
+        <button class="sidebar__toggle" @click="uiStore.toggleSidebar" title="Minimizar sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </template>
+
+      <!-- Collapsed Mode -->
+      <template v-else>
+        <button class="sidebar__logo-toggle" @click="uiStore.toggleSidebar" title="Expandir sidebar">
+          <img src="../../assets/images/logo-circular.svg" alt="SC" class="sidebar__logo sidebar__logo--small" />
+          <div class="sidebar__logo-hover">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </div>
+        </button>
+      </template>
     </div>
 
     <!-- New conversation button -->
-    <button class="sidebar__new-chat" @click="handleNewChat" :title="collapsed ? 'Nueva conversación' : ''">
+    <button class="sidebar__new-chat" @click="handleNewChat" :title="uiStore.sidebarCollapsed ? 'Nueva conversación' : ''">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
-      <span v-if="!collapsed">Nueva conversación</span>
+      <span v-if="!uiStore.sidebarCollapsed">Nueva conversación</span>
     </button>
 
     <!-- Toggle editor button -->
@@ -31,7 +47,7 @@
         <polyline points="16,18 22,12 16,6"/>
         <polyline points="8,6 2,12 8,18"/>
       </svg>
-      <span v-if="!collapsed">{{ editorStore.editorVisible ? 'Ocultar editor' : 'Mostrar editor' }}</span>
+      <span v-if="!uiStore.sidebarCollapsed">{{ editorStore.editorVisible ? 'Ocultar editor' : 'Mostrar editor' }}</span>
     </button>
 
     <!-- Sessions list -->
@@ -39,7 +55,7 @@
       <!-- Skeleton loading -->
       <template v-if="chatStore.isLoadingSessions && chatStore.sessions.length === 0">
         <div v-for="i in 5" :key="i" class="sidebar__session-skeleton">
-          <SkeletonLoader :width="collapsed ? '32px' : '100%'" height="38px" />
+          <SkeletonLoader :width="uiStore.sidebarCollapsed ? '32px' : '100%'" height="38px" />
         </div>
       </template>
 
@@ -50,14 +66,9 @@
           :key="session.id"
           :class="['sidebar__session', { 'sidebar__session--active': session.id === chatStore.activeSessionId }]"
           @click="chatStore.setActiveSession(session.id)"
-          :title="collapsed ? session.title : ''"
+          :title="uiStore.sidebarCollapsed ? session.title : ''"
         >
-          <!-- Session icon -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="sidebar__session-icon">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-
-          <template v-if="!collapsed">
+          <template v-if="!uiStore.sidebarCollapsed">
             <!-- Edit mode -->
             <input
               v-if="editingSessionId === session.id"
@@ -93,13 +104,21 @@
 
     <!-- Footer -->
     <div class="sidebar__footer">
-      <button class="sidebar__footer-btn" :title="collapsed ? 'Cerrar sesión' : ''" @click="handleLogout">
+      <button class="sidebar__footer-btn sidebar__footer-btn--profile" :title="uiStore.sidebarCollapsed ? 'Perfil' : ''" @click="router.push({ name: 'Profile' })">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span v-if="!uiStore.sidebarCollapsed">Perfil</span>
+      </button>
+
+      <button class="sidebar__footer-btn sidebar__footer-btn--logout" :title="uiStore.sidebarCollapsed ? 'Cerrar sesión' : ''" @click="handleLogout">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
           <line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
-        <span v-if="!collapsed">Cerrar sesión</span>
+        <span v-if="!uiStore.sidebarCollapsed">Cerrar sesión</span>
       </button>
     </div>
   </aside>
@@ -111,17 +130,14 @@ import { useRouter } from 'vue-router'
 import { useChatStore } from '../../stores/chat'
 import { useAuthStore } from '../../stores/auth'
 import { useEditorStore } from '../../stores/editor'
+import { useUIStore } from '../../stores/ui'
 import SkeletonLoader from '../ui/SkeletonLoader.vue'
-
-defineProps({
-  collapsed: { type: Boolean, default: false },
-})
-defineEmits(['toggle'])
 
 const router = useRouter()
 const chatStore = useChatStore()
 const authStore = useAuthStore()
 const editorStore = useEditorStore()
+const uiStore = useUIStore()
 
 const editingSessionId = ref(null)
 const editTitle = ref('')
@@ -205,8 +221,7 @@ function handleLogout() {
 .sidebar__logo {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -220,11 +235,65 @@ function handleLogout() {
   color: var(--color-text-muted);
   transition: all var(--transition-fast);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .sidebar__toggle:hover {
   background-color: var(--color-surface-input);
   color: var(--color-text-body);
+}
+
+.sidebar__logo-toggle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 auto;
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.sidebar__logo-toggle:hover {
+  background-color: var(--color-surface-input);
+}
+
+.sidebar__logo-toggle .sidebar__logo {
+  transition: opacity var(--transition-fast);
+  width: 32px;
+  height: 32px;
+}
+
+.sidebar__logo-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  color: var(--color-text-body);
+}
+
+.sidebar__logo-toggle:hover .sidebar__logo {
+  opacity: 0;
+}
+
+.sidebar__logo-toggle:hover .sidebar__logo-hover {
+  opacity: 1;
 }
 
 /* ─── New Chat Button ─── */
@@ -375,13 +444,15 @@ function handleLogout() {
 /* ─── Footer ─── */
 .sidebar__footer {
   padding: 12px;
-  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sidebar__footer-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   width: 100%;
   padding: 8px 14px;
@@ -391,10 +462,30 @@ function handleLogout() {
   transition: all var(--transition-fast);
   white-space: nowrap;
   overflow: hidden;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.sidebar__footer-btn svg {
+  flex-shrink: 0;
+}
+
+.sidebar--collapsed .sidebar__footer-btn {
+  justify-content: center;
+  padding: 8px;
 }
 
 .sidebar__footer-btn:hover {
   background-color: var(--color-surface-input);
   color: var(--color-text-body);
+}
+
+.sidebar__footer-btn--profile:hover {
+  color: var(--color-primary);
+}
+
+.sidebar__footer-btn--logout:hover {
+  color: var(--color-error);
 }
 </style>

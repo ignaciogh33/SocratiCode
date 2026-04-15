@@ -10,7 +10,7 @@
       <!-- Logo -->
       <div class="login-view__brand">
         <img
-          src="../assets/images/logo-circular.png"
+          src="../assets/images/logo-circular.svg"
           alt="SocratiCode"
           class="login-view__logo"
         />
@@ -227,11 +227,9 @@ async function handleRegister(data) {
 }
 
 .login-view__logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--color-primary);
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
 }
 
 .login-view__title {
