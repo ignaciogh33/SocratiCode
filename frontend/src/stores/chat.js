@@ -179,6 +179,16 @@ export const useChatStore = defineStore('chat', {
           if (msg) msg.content = this.streamBuffer
         },
 
+        onModerated: (response) => {
+          // Reemplazar TODO el contenido acumulado con el mensaje de moderación
+          this.streamBuffer = response
+          const msg = this.messages.find((m) => m.id === assistantMessage.id)
+          if (msg) {
+            msg.content = response
+            msg.moderated = true
+          }
+        },
+
         onDone: (sessionId) => {
           // Actualizar session_id si la sesión fue creada por el backend
           if (sessionId && sessionId !== this.activeSessionId) {
