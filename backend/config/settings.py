@@ -186,9 +186,12 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = 'noreply@socraticode.com'
 
-# Feature flag para activar o desactivar la moderación de contenido (LLM 2)
-# y ganar velocidad de respuesta.
-LLM_MOD = env('LLM_MOD', cast=bool, default=True)
+# Feature flags de moderación de contenido
+LLM_MOD_INPUT = env('LLM_MOD_INPUT', cast=bool, default=True)
+LLM_MOD_OUTPUT = env('LLM_MOD_OUTPUT', cast=bool, default=True)
+
+# Nº de palabras entre cada verificación de moderación de output
+MOD_WORD_WINDOW = env('MOD_WORD_WINDOW', cast=int, default=20)
 
 # URL del servicio Piston para ejecución de código
 PISTON_URL = env('PISTON_URL', default="http://localhost:2000")
