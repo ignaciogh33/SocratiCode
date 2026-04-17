@@ -1,0 +1,54 @@
+- Moderación del chat 
+solo programacion
+y lugo el LLM principal q tenga cuidado
+
+hacer panel de admin:
+para configurar moderaciones
+
+
+
+estado del arte:
+compara con cosas que existan
+ventajas de lo mio
+
+intrro:
+motivación (pq esto es importante)
+
+diseño:
+requisitos
+diagrams
+
+implementación:
+decir q la seguridad esta floja por piston
+tecnologias
+pq mi modelo uso ese (comparación con otros (tablas))
+
+pruebas:
+test unitarios (coveraje) decir q tengo (numero de test y coveraje)
+pruebas de personas (hacer encuesta)
+
+conclusiones:
+apartado trabajo futuro:
+    Login con UAM
+
+
+max 40 paginas
+
+- Login con UAM o Google NADAAA
+- Funciones extra como ejercicios
+- No me da para cambiar a gemma4 por capacidad de VRAM y no sé si merece la pena el cambio 
+de modelo (tener en cuenta que se hacen peticiones en paralelo)
+- System prompt:
+    - Cómo de socrático quieres que sea? 
+    - Puede devolver código? 
+
+- Memoria
+
+poner control de entrada en piston para que no pueda acceder a archivos del sistema
+investigar como va piston
+
+
+- Hacer que el admin pueda cambiar el modo de moderacion
+- Investigar la seguridad de piston y explicarlo en el apartado implementación
+- Meter el Login UAM en trabajo futuro dentro de conclusiones
+- Añadir Java y C
