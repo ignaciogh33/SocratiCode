@@ -18,13 +18,13 @@ dist/
 *.out
 *.toc
 *.synctex.gz
-*.pdf
 *.blg
 *.bbl
 *.fdb_latexmk
 *.fls
 *.nav
 *.snm
+*.ist
 
 # --- OS & IDE ---
 .vscode/
