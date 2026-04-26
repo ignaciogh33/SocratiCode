@@ -60,10 +60,7 @@
   \section{Modelos de Lenguaje Extenso (LLMs) y Despliegue Local\label{SEC:EA_LLMS}}{estado_arte/llms}
     \subsection{APIs en la nube vs. Inferencia Local\label{SS:EA_LLM_APIS}}{estado_arte/apis_vs_local}
     \subsection{Optimización de modelos ligeros (Llama 3.2)\label{SS:EA_LLM_OPTIMIZACION}}{estado_arte/optimizacion_modelos}
-  \section{Seguridad y Aislamiento de Procesos (Sandboxing)\label{SEC:EA_SANDBOX}}{estado_arte/sandboxing}
-    \subsection{Vectores de amenaza en plataformas interactivas\label{SS:EA_SB_AMENAZAS}}{estado_arte/amenazas}
-    \subsection{Primitivas de aislamiento a nivel de Kernel\label{SS:EA_SB_KERNEL}}{estado_arte/kernel}
-    \subsection{Motores de ejecución efímeros\label{SS:EA_SB_MOTORES}}{estado_arte/motores_efimeros}
+  \section{Seguridad y aislamiento en la ejecución de código\label{SEC:EA_SANDBOX}}{estado_arte/sandboxing}
   \section{Arquitecturas Web Educativas y Transmisión de Datos\label{SEC:EA_ARQUITECTURA}}{estado_arte/arquitectura_web}
     \subsection{Paradigma de Aplicación Web Desacoplada\label{SS:EA_ARQ_DESACOPLADA}}{estado_arte/web_desacoplada}
     \subsection{Protocolos de comunicación en tiempo real\label{SS:EA_ARQ_PROTOCOLOS}}{estado_arte/protocolos}
@@ -79,6 +76,8 @@
   \section{Casos de uso\label{SEC:AD_CASOSUSO}}{analisis_diseno/casos_uso}
   \section{Diagrama de modelo de datos (Clases/Entidad-Relación)\label{SEC:AD_MODELO}}{analisis_diseno/modelo_datos}
   \section{Diagrama de componentes y arquitectura\label{SEC:AD_ARQ}}{analisis_diseno/arquitectura}
+    \subsection{Diagrama de arquitectura\label{SS:AD_ARQ_DIAGRAMA}}{analisis_diseno/diagrama_arquitectura}
+    \subsection{Diagramas de secuencia de las funcionalidades principales\label{SS:AD_ARQ_SECUENCIA}}{analisis_diseno/diagramas_secuencia}
   \section{Conclusiones\label{SEC:AD_CONCLUSIONES}}{analisis_diseno/conclusiones}
 
 \chapter{Desarrollo e implementación\label{CAP:DESARROLLO}}{desarrollo_implementacion/desarrollo_implementacion}
@@ -90,11 +89,13 @@
     \subsection{Motor de compilación y ejecución (Piston / Docker)\label{SS:DI_TEC_MOTOR}}{desarrollo_implementacion/motor}
     \subsection{Control de versiones y despliegue (Git / GitHub)\label{SS:DI_TEC_GIT}}{desarrollo_implementacion/control_versiones}
   \section{Implementación\label{SEC:DI_IMPLEMENTACION}}{desarrollo_implementacion/implementacion}
-    \subsection{Arquitectura del Chat y Moderación de respuestas\label{SS:DI_IMP_CHAT}}{desarrollo_implementacion/arquitectura_chat}
-    \subsection{Integración de ejecución de código en tiempo real\label{SS:DI_IMP_CODIGO}}{desarrollo_implementacion/ejecucion_codigo}
+    \subsection{Gestión de la lógica socrática (Prompt Engineering)\label{SS:DI_IMP_PROMPTS}}{desarrollo_implementacion/logica_socratica}
+    \subsection{Implementación del flujo de datos en tiempo real (SSE)\label{SS:DI_IMP_SSE}}{desarrollo_implementacion/flujo_datos_sse}
+    \subsection{Integración y aislamiento del motor de ejecución (Docker/Piston)\label{SS:DI_IMP_MOTOR}}{desarrollo_implementacion/aislamiento_motor}
   \section{Interfaz\label{SEC:DI_INTERFAZ}}{desarrollo_implementacion/interfaz}
     \subsection{Navegación y vista principal del tutor\label{SS:DI_INT_NAVEGACION}}{desarrollo_implementacion/navegacion}
     \subsection{Personalización y editor de código\label{SS:DI_INT_EDITOR}}{desarrollo_implementacion/personalizacion}
+  \section{Verificación y Pruebas del sistema\label{SEC:DI_PRUEBAS}}{desarrollo_implementacion/verificacion_pruebas}
   \section{Conclusiones\label{SEC:DI_CONCLUSIONES}}{desarrollo_implementacion/conclusiones}
 
 \chapter{Pruebas\label{CAP:PRUEBAS}}{pruebas/pruebas}

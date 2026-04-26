@@ -18,14 +18,7 @@
 
 2.3.2. Optimización de modelos ligeros (Llama 3.2): Estado del arte sobre la viabilidad de la inferencia local mediante modelos de parámetros reducidos orientados a dispositivos de borde, apoyados en técnicas de cuantización para minimizar el uso de memoria (VRAM) manteniendo una alta capacidad de razonamiento.
 
-2.4. Seguridad y Aislamiento de Procesos (Sandboxing)
-
-2.4.1. Vectores de amenaza en plataformas interactivas: Análisis de los riesgos inherentes a permitir la Ejecución de Código Arbitrario (ACE) no confiable por parte de múltiples usuarios, incluyendo escalada de privilegios y ataques de denegación de servicio como las fork bombs.
-
-2.4.2. Primitivas de aislamiento a nivel de Kernel: Exploración técnica sobre cómo los namespaces de Linux aíslan la visibilidad del sistema (red, montaje) y cómo los grupos de control (cgroups) imponen límites físicos sobre el consumo de CPU y memoria.
-
-2.4.3. Motores de ejecución efímeros: Revisión de arquitecturas diseñadas para la compilación segura y políglota con sobrecarga mínima, destacando integraciones robustas como Piston.
-
+2.4. Seguridad y aislamiento en la ejecución de código: Análisis de los riesgos inherentes a permitir la Ejecución de Código Arbitrario (ACE) no confiable por parte de múltiples usuarios, y la solución aplicada mediante motores de ejecución efímeros para la compilación segura y políglota con sobrecarga mínima, destacando integraciones robustas como Piston.
 2.5. Arquitecturas Web Educativas y Transmisión de Datos
 
 2.5.1. Paradigma de Aplicación Web Desacoplada: Justificación de la división estructural entre clientes interactivos asíncronos (SPA) y servidores orientados a microservicios e interfaces de programación (APIs) para soportar entornos complejos de codificación en el navegador.
@@ -37,3 +30,33 @@
 2.6.1. Síntesis y propuesta de valor: Breve resumen de las brechas identificadas en la literatura analizada y posicionamiento de la plataforma SocratiCode como la solución arquitectónica que amalgama la seguridad de ejecución, la privacidad local y la rigurosidad pedagógica socrática.
 
 Esta estructura organizará de manera robusta su memoria, justificando paso a paso cada una de las decisiones de ingeniería expuestas en los capítulos posteriores de su Trabajo de Fin de Grado.
+
+
+## Cambios
+
+### 1. Simplificación de la Seguridad y Sandboxing (Punto 2.4)
+[cite_start]Tal y como sospechabas, este bloque tiene demasiado peso técnico en comparación con el núcleo pedagógico del proyecto[cite: 219]. [cite_start]Actualmente tienes tres subapartados muy específicos[cite: 220, 221, 222]:
+* [cite_start]**Recomendación:** Fusionar los puntos **2.4.1**, **2.4.2** y **2.4.3** en un único apartado titulado **"2.4. Seguridad y aislamiento en la ejecución de código"**[cite: 219].
+* [cite_start]**Justificación:** Hablar de "Primitivas a nivel de Kernel" [cite: 221] es un nivel de detalle excesivo para un TFG centrado en IA. [cite_start]Al unificarlos, puedes explicar la necesidad del aislamiento (amenazas) y la solución aplicada (motores efímeros como Docker) en un solo bloque coherente[cite: 220, 222].
+
+### 2. Actualización de Sistemas de Tutoría (Punto 2.2.2)
+[cite_start]En tu texto actual sobre casos de éxito [cite: 190][cite_start], te centras en el **CS50 Duck** de Harvard [cite: 192] [cite_start]y en **CodeAid**[cite: 197]. 
+* [cite_start]**Recomendación:** Incluir una mención o subpunto dedicado a **TreeInstruct (2024)** dentro de esta sección[cite: 190].
+* **Justificación:** Es la investigación más puntera y reciente (publicada en el EMNLP 2024) sobre planificación multi-turno y cuestionamiento jerárquico. Incluirla demuestra que tu estado del arte está actualizado al máximo nivel posible.
+
+### 3. Fortalecimiento de la Ingeniería de Prompts (Punto 2.2.3)
+[cite_start]Este apartado es fundamental porque justifica tu implementación técnica[cite: 208].
+* [cite_start]**Sugerencia:** Asegúrate de que este punto conecte directamente con la "jerarquía" que mencionas[cite: 213]. [cite_start]Debe quedar claro que los modelos actuales son "asistentes" por diseño y que es mediante esta ingeniería como los transformamos en "tutores"[cite: 211, 212].
+
+### 4. Reorganización del Flujo Lógico
+El orden actual es bueno, pero si aplicas los cambios anteriores, el flujo de lectura para el tribunal sería mucho más natural:
+1.  [cite_start]**Fundamentos Pedagógicos (2.1):** ¿Por qué hace falta SocratiCode?[cite: 151, 153].
+2.  [cite_start]**Sistemas Existentes (2.2):** ¿Qué han hecho otros (Harvard, CodeAid, TreeInstruct)?[cite: 190].
+3.  [cite_start]**Tecnología y Prompts (2.3):** ¿Con qué herramientas lo hacemos (Llama 3.2 y Prompt Engineering)?[cite: 215, 218].
+4.  [cite_start]**Seguridad (2.4):** ¿Cómo lo hacemos seguro (Sandboxing unificado)?[cite: 219].
+5.  [cite_start]**Arquitectura Web (2.5):** ¿Cómo se comunica todo en tiempo real?[cite: 223, 228].
+
+**Resumen de cambios sugeridos en el índice:**
+* [cite_start]**Eliminar:** 2.4.2 (Primitivas a nivel de Kernel) y 2.4.3 (Motores efímeros) como puntos independientes[cite: 221, 222].
+* [cite_start]**Añadir:** Referencia explícita a TreeInstruct en el punto 2.2.2[cite: 190].
+* [cite_start]**Mantener:** El enfoque de "Inferencia Local" (2.3.1) y "Llama 3.2" (2.3.2), ya que son tu propuesta de valor frente a Harvard[cite: 196, 217, 218].
