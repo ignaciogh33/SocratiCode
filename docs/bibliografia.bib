@@ -167,3 +167,235 @@ El autor, Edward Y. Chang, sostiene que los LLM suelen "regalar" la solución, l
 }
 
 
+--- 2.3. Modelos de Lenguaje Extenso (LLMs) y Despliegue Local ---
+
+• Punto de equilibrio económico: Identifica un umbral de 1,5 a 2 millones de tokens diarios donde la infraestructura local supera en rentabilidad a las APIs comerciales.
+• Análisis del TCO: Marco comparativo entre la inversión inicial en hardware (CapEx) y los costes operativos variables y lineales de los servicios SaaS (OpEx).
+• Optimización por cuantización: Demuestra cómo reducir la precisión del modelo disminuye drásticamente los requisitos de VRAM sin sacrificar capacidad de razonamiento.
+• Soberanía y cumplimiento: Destaca la soberanía de datos y el cumplimiento del GDPR como beneficios estratégicos que justifican la inversión frente a soluciones en la nube.
+@inproceedings{pan2025cost,
+  title       = {A Cost-Benefit Analysis of On-Premise Large Language Model Deployment: Breaking Even with Commercial LLM Services},
+  author      = {Pan, Guanzhong and Wang, Haibo},
+  booktitle   = {2025 IEEE International Conference on Big Data (BigData)},
+  year        = {2025},
+  url         = {https://arxiv.org/pdf/2509.18101.pdf}
+}
+
+• Inferencia privada de extremo a extremo: Los datos nunca abandonan el perímetro local, eliminando riesgos de filtración hacia servidores de terceros.
+• Soberanía y cumplimiento del GDPR: Solución técnica definitiva para evitar transferencias internacionales de datos sensibles en el ámbito educativo.
+• Optimización con cuantización: Ejecución de modelos potentes en hardware de bajo coste, equilibrando la privacidad física con el rendimiento.
+• Prevención de Shadow AI: Creación de un entorno institucional controlado que sustituye el uso de herramientas externas no supervisadas.
+@article{wada2025retrieval,
+  title={Local LLM Deployment for Enhanced Privacy},
+  author={Wada, Aki and others},
+  journal={arXiv preprint},
+  year={2025}
+}
+
+Introducción del concepto de razonamiento Chain of Thought (CoT).
+@inproceedings{wei2022chain,
+  author = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and ichter, brian and Xia, Fei and Chi, Ed and Le, Quoc V and Zhou, Denny},
+  booktitle = {Advances in Neural Information Processing Systems},
+  editor = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
+  pages = {24824--24837},
+  publisher = {Curran Associates, Inc.},
+  title = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
+  url = {https://proceedings.neurips.cc/paper_files/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf},
+  volume = {35},
+  year = {2022}
+}
+
+Modelos ligeros (1B y 3B): Diseñados para dispositivos con recursos limitados, permiten la inferencia local rápida. Son ideales para tu proyecto ya que pueden gestionar tareas de tutoría básica sin necesidad de hardware empresarial masivo.
+
+Ventana de contexto de 128K: A pesar de su tamaño reducido, estos modelos soportan hasta 128,000 tokens de contexto, lo cual es vital para que el tutor socrático analice fragmentos largos de código y el historial completo del alumno.
+
+Privacidad y Baja Latencia: Al procesar los datos localmente en el dispositivo o servidor del centro, se garantiza que la información nunca salga de la red institucional, eliminando los riesgos de privacidad asociados a la nube.
+
+Optimización Técnica: El uso de destilación (aprender de modelos más grandes como el 70B o 405B) asegura que el modelo 3B supere a competidores de su tamaño en tareas de resumen, reescritura de código y uso de herramientas.
+@article{meta2024llama32,
+  title={Llama 3.2: Vision, Edge, and Mobile Devices},
+  author={{Meta AI}},
+  journal={Meta AI Blog},
+  year={2024},
+  url={https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/}
+}
+
+@article{gemma_2025,
+    title={Gemma 3},
+    url={https://goo.gle/Gemma3Report},
+    publisher={Kaggle},
+    author={Gemma Team},
+    year={2025}
+}
+
+@misc{deepseekai2025deepseekr1,
+    title={DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning}, 
+    author={DeepSeek-AI},
+    year={2025},
+    eprint={2501.12948},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2501.12948}, 
+}
+
+@misc{qwen3.5,
+    title  = {{Qwen3.5}: Towards Native Multimodal Agents},
+    author = {{Qwen Team}},
+    month  = {February},
+    year   = {2026},
+    url    = {https://qwen.ai/blog?id=qwen3.5}
+}
+
+@misc{qwen3.6-27b,
+    title  = {{Qwen3.6-27B}: Flagship-Level Coding in a {27B} Dense Model},
+    author = {{Qwen Team}},
+    month  = {April},
+    year   = {2026},
+    url    = {https://qwen.ai/blog?id=qwen3.6-27b}
+}
+
+@misc{qwen36_35b_a3b,
+    title = {{Qwen3.6-35B-A3B}: Agentic Coding Power, Now Open to All},
+    url = {https://qwen.ai/blog?id=qwen3.6-35b-a3b},
+    author = {{Qwen Team}},
+    month = {April},
+    year = {2026}
+}
+
+@techreport{microsoft2025phi4,
+  title={Phi-4 Technical Report: Reasoning and Instruction Following at Scale},
+  author={{Microsoft Research}},
+  year={2025},
+  institution={Microsoft},
+  eprint={2504.21318},
+  archivePrefix={arXiv},
+  url={https://arxiv.org/abs/2504.21318}
+}
+
+@techreport{microsoft2025phi4mini,
+  title={Phi-4-mini Technical Report},
+  author={{Microsoft Research}},
+  year={2025},
+  institution={Microsoft},
+  eprint={2504.21233},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2504.21233}
+}
+
+% --- Benchmarks y Evaluadores ---
+
+@misc{llmstats2026ifeval,
+  author = {{LLM-Stats}},
+  title = {LLM-Stats: Instruction Following Evaluation (IFEval) Benchmark Leaderboard},
+  year = {2026},
+  url = {https://llm-stats.com/benchmarks/ifeval},
+  note = {Consultado el 28 de abril de 2026}
+}
+
+@misc{jain2024livecodebench,
+  title={LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code}, 
+  author={Naman Jain and King Han and Alex Gu and Wen-Ding Li and Fanjia Yan and Tianjun Zhang and Sida Wang and Armando Solar-Lezama and Koushik Sen and Ion Stoica},
+  year={2024},
+  eprint={2403.07974},
+  archivePrefix={arXiv},
+  primaryClass={cs.SE},
+  url={https://arxiv.org/abs/2403.07974}
+}
+
+@article{zhou2023ifeval,
+  title={Instruction-Following Evaluation through Constraint Checklists},
+  author={Zhou, Jeffrey and others},
+  journal={arXiv preprint arXiv:2311.07911},
+  year={2023}
+}
+
+@article{rein2023gpqa,
+  title={GPQA: A Graduate-Level Google-Proof Q\&A Benchmark},
+  author={Rein, David and others},
+  journal={arXiv preprint arXiv:2311.12022},
+  year={2023}
+}
+
+@misc{maa2026aime,
+  author = {{Mathematical Association of America}},
+  title = {American Invitational Mathematics Examination (AIME) Standards},
+  year = {2026},
+  url = {https://www.maa.org/math-competitions/aime}
+}
+
+@misc{huggingface_hub,
+  author = {{Hugging Face}},
+  title = {Hugging Face Model Hub: Central Repository for Pre-trained Models and Benchmarks},
+  year = {2026},
+  url = {https://huggingface.co/models},
+  note = {Used for technical specifications, model cards, and benchmark verification. Accessed: 2026-04-28}
+}
+
+@misc{artificialanalysis2026,
+  author = {{Artificial Analysis}},
+  title = {AI Model Intelligence and Performance Index},
+  year = {2026},
+  url = {https://artificialanalysis.ai/},
+  note = {Accessed: 2026-04-28}
+}
+
+% --- Software y Despliegue ---
+
+@software{ollama2026,
+  author = {{Ollama Team}},
+  title = {Ollama: Get up and running with large language models locally},
+  url = {https://ollama.com/},
+  year = {2026}
+}
+
+
+Eficiencia en el borde (Edge Computing): El paper defiende que la optimización mediante cuantización permite trasladar la inteligencia desde los grandes centros de datos hacia los servidores locales o dispositivos finales eliminando la latencia de red.
+
+Gestión de la precisión: Yadav explica que aunque se reduzca la precisión matemática de los parámetros el modelo mantiene su capacidad de entender el contexto y seguir instrucciones pedagógicas complejas lo que lo hace perfecto para un tutor socrático.
+
+Reducción de la huella de memoria: La investigación aporta datos sobre cómo la compresión permite que modelos que antes requerían 16 GB de VRAM ahora puedan funcionar con menos de 4 GB facilitando el uso de hardware de consumo.
+
+Benchmarking de rendimiento: Los autores presentan comparativas que demuestran que un modelo ligero cuantizado ofrece una experiencia de usuario mucho más satisfactoria gracias a la velocidad de generación de texto instantánea.
+Cuantización de parámetros
+@inproceedings{yadav2025optimizing,
+  title={Optimizing LLMs Using Quantization For Mobile Execution},
+  author={Yadav, Agatsya and Bhargavi, Renta Chintala},
+  booktitle={Proceedings of ICT4SD 2025},
+  publisher={Springer},
+  year={2025},
+  doi={10.1007/978-3-032-06697-8_33},
+  url={https://arxiv.org/pdf/2512.06490}
+}
+
+@article{nguyen2026parameter,
+  author = {Nguyen, Viet and The-Vinh, Nguyen and Nguyen, Huu-Khanh and Vu,
+  Duc-Quang},
+  year = {2026},
+  month = {02},
+  pages = {278},
+  title = {Parameter-efficient fine-tuning of small language models for
+  code generation: a comparative study of Gemma, Qwen 2.5 and Llama 3.2},
+  volume = {16},
+  journal = {International Journal of Electrical and Computer Engineering (IJECE)},
+  doi = {10.11591/ijece.v16i1.pp278-287},
+  url={https://www.researchgate.net/publication/400327943_Parameter-efficient_fine-tuning_of_small_language_models_for_code_generation_a_comparative_study_of_Gemma_Qwen_25_and_Llama_32}
+}
+
+MoE
+@article{shazeer2017outrageously,
+  title={Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer},
+  author={Shazeer, Noam and Mirhoseini, Azade and Maziarz, Krzysztof and Davis, Andy and Le, Quoc and Hinton, Geoffrey and Dean, Jeff},
+  journal={arXiv preprint arXiv:1701.06538},
+  year={2017},
+  note={Referencia fundamental sobre modelos MoE y parámetros activos.}
+}
+
+Formatos de precisión BF16 y FP8
+@article{micikevicius2017mixed,
+  title={Mixed Precision Training},
+  author={Micikevicius, Paulius and Narang, Sharan and Alben, Jonah and Diamos, Gregory and Elsen, Erich and Garcia, David and others},
+  journal={arXiv preprint arXiv:1710.03740},
+  year={2018},
+  note={Explica la base técnica de los formatos FP16, BF16 y la reducción de precisión.}
+}

@@ -16,7 +16,9 @@
 
 2.3.1. APIs en la nube vs. Inferencia Local: Análisis comparativo de los despliegues comerciales frente a infraestructuras autohospedadas, evaluando aspectos críticos como la soberanía de los datos, el cumplimiento normativo (GDPR) en entornos educativos y la previsibilidad de los costes operativos.
 
-2.3.2. Optimización de modelos ligeros (Llama 3.2): Estado del arte sobre la viabilidad de la inferencia local mediante modelos de parámetros reducidos orientados a dispositivos de borde, apoyados en técnicas de cuantización para minimizar el uso de memoria (VRAM) manteniendo una alta capacidad de razonamiento.
+2.3.2. Ecosistema y clasificación de modelos de lenguaje de código abierto: Revisión de la oferta de modelos open source según su cantidad de parámetros (1B, 3B, 8B) y análisis de familias destacadas como Llama, Mistral y Qwen para entornos educativos.
+
+2.3.3. Optimización de modelos ligeros (Llama 3.2): Estado del arte sobre la viabilidad de la inferencia local mediante modelos de parámetros reducidos orientados a dispositivos de borde, apoyados en técnicas de cuantización para minimizar el uso de memoria (VRAM) manteniendo una alta capacidad de razonamiento.
 
 2.4. Seguridad y aislamiento en la ejecución de código: Análisis de los riesgos inherentes a permitir la Ejecución de Código Arbitrario (ACE) no confiable por parte de múltiples usuarios, y la solución aplicada mediante motores de ejecución efímeros para la compilación segura y políglota con sobrecarga mínima, destacando integraciones robustas como Piston.
 2.5. Arquitecturas Web Educativas y Transmisión de Datos

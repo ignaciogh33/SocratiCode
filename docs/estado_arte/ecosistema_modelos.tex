@@ -1,0 +1,44 @@
+La oferta de modelos de lenguaje de código abierto ha crecido de manera exponencial permitiendo elegir entre diferentes arquitecturas según las necesidades de cada proyecto. Estas inteligencias se distribuyen habitualmente en versiones que varían según su número de parámetros, que son las conexiones internas que determinan la capacidad de razonamiento del sistema. Los modelos suelen etiquetarse con cifras como 1B, 7B o 70B para indicar los miles de millones de parámetros que contienen y esta escala influye directamente tanto en la precisión de las respuestas como en la exigencia de VRAM necesaria para su ejecución local.
+
+En el panorama actual de los Grandes Modelos de Lenguaje (LLM), se distinguen principalmente dos categorías según su metodología de respuesta, los modelos de instrucción (Instruct) y los modelos de razonamiento (Reasoning). Los primeros están optimizados para generar respuestas directas a partir de las instrucciones del usuario, priorizando la concisión y el seguimiento de reglas de formato. Por el contrario, los modelos de razonamiento ejecutan una fase previa de computación interna conocida como Chain of Thought (CoT) \cite{wei2022chain}. Durante esta etapa, el modelo genera un razonamiento intermedio, frecuentemente encapsulado entre etiquetas como \texttt{<think></think>}, que sirve como base lógica para construir la respuesta final. Esta técnica permite al modelo descomponer problemas complejos en pasos manejables, mejorando significativamente su rendimiento en tareas lógicas, matemáticas y de programación.
+
+En el escenario tecnológico actual, existen diversas familias de modelos de código abierto desarrollados por empresas como Meta, Google o Alibaba, cada una con distintos enfoques y cantidad de parámetros. Para cuantificar el rendimiento de estos modelos en el ámbito académico y técnico, se utilizan diversos indicadores estandarizados o benchmarks. En esta comparativa \ref{TB:LLM_COMPARATIVA} se han considerado cuatro métricas clave: 
+
+\begin{description}
+    \item[IFEval \cite{zhou2023ifeval}:] Evalúa la adherencia a restricciones instruccionales y de formato, garantizando el cumplimiento de protocolos pedagógicos específicos.
+    
+    \item[LiveCodeBench (LCB v6) \cite{jain2024livecodebench}:] Mide la capacidad de resolución de problemas técnicos y generación de código, validando su solvencia en entornos de ingeniería.
+    
+    \item[GPQA \cite{rein2023gpqa}:] Analiza el conocimiento experto en dominios científicos complejos mediante preguntas de nivel de doctorado resistentes a búsquedas convencionales en la web.
+    
+    \item[AIME \cite{maa2026aime}:] Evalúa el razonamiento lógico-matemático avanzado, mediante problemas que requieren cadenas de pensamiento complejas. Esta métrica indica la fluidez del modelo y su capacidad de deducción.
+
+\end{description}
+
+\begin{table}[Comparativa técnica de LLMs en Ollama (Auditoría Final)]{TB:LLM_COMPARATIVA}{Comparativa de arquitecturas de modelos de lenguaje verificada mediante la biblioteca de Ollama (abril 2026). Los datos relativos al tamaño en disco y la ventana de contexto han sido extraídos directamente de las especificaciones de despliegue local de Ollama. Por su parte, las métricas de rendimiento (IFEval, LiveCodeBench v6, GPQA Diamond y AIME) provienen de los informes técnicos oficiales de sus respectivos desarrolladores y de la documentación técnica disponible en Hugging Face \cite{meta2024llama32, gemma_2025, deepseekai2025deepseekr1, qwen3.5, qwen3.6-27b, qwen36_35b_a3b, microsoft2025phi4, microsoft2025phi4mini, huggingface_hub}. Los valores marcados como N/A indican la ausencia de datos oficiales o pruebas independientes bajo condiciones de cuantización idénticas en las fuentes consultadas.}
+  \begin{tabular}{llcccccc}
+    \hline
+    \textbf{Modelo} & \textbf{Tipo} & \textbf{Tamaño} & \textbf{Contexto} & \textbf{IFEval} & \textbf{LCB v6} & \textbf{GPQA} & \textbf{AIME} \\
+    \hline \hline
+    Qwen 3.6 35B          & Reasoning & 24.0 GB & 256k & N/A     & 80.4 & 86.0 & 92.7 \\
+    Ministral 3 14B       & Reasoning & 24.0 GB & 256k & N/A     & 64.6 & N/A  & 85.0 \\
+    Gemma 4 31B           & Reasoning & 20.0 GB & 256k & N/A     & 80.0 & 84.3 & 89.2 \\
+    Qwen 3.6 27B          & Reasoning & 17.0 GB & 256k & 95.0    & 83.9 & 87.8 & 94.1 \\
+    Phi-4 Rsn 14B         & Reasoning & 11.0 GB & 32k  & 83.4    & 53.8 & 67.1 & 62.9 \\
+    Gemma 4 e4B           & Reasoning & 9.6 GB  & 128k & N/A     & 52.0 & 58.6 & 42.5 \\
+    Phi-4 14B             & Instruct  & 9.1 GB  & 16k  & 62.3    & 26.9 & 54.7 & 12.9 \\
+    Gemma 4 e2B           & Reasoning & 7.2 GB  & 128k & N/A     & 44.0 & 43.4 & 37.5 \\
+    Qwen 3.5 9B           & Reasoning & 6.6 GB  & 256k & 91.5    & 65.6 & 81.7 & N/A  \\
+    Ministral 3 8B        & Reasoning & 6.0 GB  & 256k & N/A     & 61.6 & N/A  & 78.7 \\
+    DeepSeek-R1 8B        & Reasoning & 5.2 GB  & 128k & 37.8    & 39.6 & 49.0 & 43.3 \\
+    Qwen 3.5 4B           & Reasoning & 3.4 GB  & 256k & 89.8    & 55.8 & 76.2 & N/A  \\
+    Gemma 3 4B            & Instruct  & 3.3 GB  & 128k & 90.2    & 23.0 & 30.8 & N/A  \\
+    Phi-4 Mini Rsn 3.8B   & Reasoning & 3.2 GB  & 128k & N/A     & N/A  & 52.0 & 57.5 \\
+    Ministral 3 3B        & Reasoning & 3.0 GB  & 256k & N/A     & 54.8 & N/A  & 72.1 \\
+    Phi-4 Mini 3.8B       & Instruct  & 2.5 GB  & 128k & N/A     & N/A  & 25.2 & 10.0 \\
+    Llama 3.2 3B          & Instruct  & 2.0 GB  & 128k & 73.9    & N/A  & 32.8 & N/A  \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Como es de esperar, los modelos de mayor tamaño tienden a ofrecer un rendimiento superior en los benchmarks, sin embargo su despliegue local resulta más costoso y complejo. Por otro lado, los modelos más ligeros presentan un rendimiento menor, pero permiten una implementación local más sencilla. Destaca la notable diferencia entre los modelos de instrucción y los de razonamiento, obteniendo estos últimos mejores resultados a costa de un mayor tiempo de respuesta durante el proceso de inferencia. 
