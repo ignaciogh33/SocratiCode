@@ -5,7 +5,7 @@
         ref="textareaRef"
         v-model="text"
         class="chat-input__textarea"
-        :placeholder="chatStore.isStreaming ? 'Sócrates está pensando...' : 'Escribe tu duda o pega tu código...'"
+        :placeholder="chatStore.isStreaming ? 'Sócrates está pensando...' : 'Escribe tu duda...'"
         :disabled="chatStore.isStreaming"
         rows="1"
         @input="autoResize"
@@ -112,6 +112,14 @@ async function handleSend() {
   background: transparent;
   max-height: 200px;
   min-height: 24px;
+  border: none;
+  outline: none;
+  align-self: center;
+}
+
+.chat-input__textarea:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .chat-input__textarea::placeholder {

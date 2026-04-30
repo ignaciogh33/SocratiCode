@@ -52,23 +52,22 @@
 
     <!-- Sessions list -->
     <div class="sidebar__sessions">
-      <!-- Skeleton loading -->
-      <template v-if="chatStore.isLoadingSessions && chatStore.sessions.length === 0">
-        <div v-for="i in 5" :key="i" class="sidebar__session-skeleton">
-          <SkeletonLoader :width="uiStore.sidebarCollapsed ? '32px' : '100%'" height="38px" />
-        </div>
-      </template>
+      <template v-if="!uiStore.sidebarCollapsed">
+        <!-- Skeleton loading -->
+        <template v-if="chatStore.isLoadingSessions && chatStore.sessions.length === 0">
+          <div v-for="i in 5" :key="i" class="sidebar__session-skeleton">
+            <SkeletonLoader width="100%" height="38px" />
+          </div>
+        </template>
 
-      <!-- Session items -->
-      <template v-else>
-        <div
-          v-for="session in chatStore.sortedSessions"
-          :key="session.id"
-          :class="['sidebar__session', { 'sidebar__session--active': session.id === chatStore.activeSessionId }]"
-          @click="chatStore.setActiveSession(session.id)"
-          :title="uiStore.sidebarCollapsed ? session.title : ''"
-        >
-          <template v-if="!uiStore.sidebarCollapsed">
+        <!-- Session items -->
+        <template v-else>
+          <div
+            v-for="session in chatStore.sortedSessions"
+            :key="session.id"
+            :class="['sidebar__session', { 'sidebar__session--active': session.id === chatStore.activeSessionId }]"
+            @click="chatStore.setActiveSession(session.id)"
+          >
             <!-- Edit mode -->
             <input
               v-if="editingSessionId === session.id"
@@ -97,8 +96,8 @@
                 </svg>
               </button>
             </div>
-          </template>
-        </div>
+          </div>
+        </template>
       </template>
     </div>
 

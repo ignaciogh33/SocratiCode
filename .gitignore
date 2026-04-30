@@ -25,6 +25,35 @@ dist/
 *.fls
 *.nav
 *.snm
+# LaTeX build artifacts
+*.acn
+*.acr
+*.alg
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.gnuploterrors
+*.idx
+*.ilg
+*.ind
+*.loa
+*.loe
+*.lof
+*.log
+*.lol
+*.lot
+*.ltb
+*.mw
+*.out
+*.synctex.gz
+*.toc
+*.xdy
 
 # --- OS & IDE ---
 .vscode/
