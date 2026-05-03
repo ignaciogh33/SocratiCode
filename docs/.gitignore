@@ -1,3 +1,30 @@
+# --- Python & Django ---
+__pycache__/
+*.py[cod]
+.env
+.venv/
+db.sqlite3
+media/
+staticfiles/
+
+# --- Frontend (Vue + Vite) ---
+node_modules/
+dist/
+
+
+# --- LaTeX (Memoria) ---
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.pdf
+*.blg
+*.bbl
+*.fdb_latexmk
+*.fls
+*.nav
+*.snm
 # LaTeX build artifacts
 *.acn
 *.acr
@@ -27,3 +54,11 @@
 *.synctex.gz
 *.toc
 *.xdy
+
+# --- OS & IDE ---
+.vscode/
+.idea/
+.DS_Store
+.pyre_configuration
+token.txt
+.env
