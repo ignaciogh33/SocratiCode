@@ -42,7 +42,7 @@ class ChatSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatSession
-        fields = ['id', 'title', 'created_at', 'last_message']
+        fields = ['id', 'title', 'created_at', 'updated_at', 'last_message']
 
     def get_last_message(self, obj):
         msg = obj.messages.order_by('-created_at').first()

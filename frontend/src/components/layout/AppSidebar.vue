@@ -51,7 +51,7 @@
     </button>
 
     <!-- Sessions list -->
-    <div class="sidebar__sessions">
+    <div ref="sessionsContainer" class="sidebar__sessions" @scroll="onSessionsScroll">
       <template v-if="!uiStore.sidebarCollapsed">
         <!-- Skeleton loading -->
         <template v-if="chatStore.isLoadingSessions && chatStore.sessions.length === 0">
@@ -97,6 +97,11 @@
               </button>
             </div>
           </div>
+
+          <!-- Infinite scroll loading -->
+          <div v-if="chatStore.isLoadingSessions && chatStore.sessions.length > 0" class="sidebar__session-skeleton">
+            <SkeletonLoader width="100%" height="38px" />
+          </div>
         </template>
       </template>
     </div>
@@ -124,7 +129,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore } from '../../stores/chat'
 import { useAuthStore } from '../../stores/auth'
@@ -140,6 +145,22 @@ const uiStore = useUIStore()
 
 const editingSessionId = ref(null)
 const editTitle = ref('')
+const sessionsContainer = ref(null)
+
+// Auto-cargar más sesiones si el contenedor no tiene scroll
+watch(
+  () => chatStore.sessions.length,
+  () => {
+    nextTick(() => {
+      const el = sessionsContainer.value
+      if (!el) return
+      // Si el contenido no desborda y hay más páginas, cargar la siguiente
+      if (el.scrollHeight <= el.clientHeight && chatStore.sessionsNextPage && !chatStore.isLoadingSessions) {
+        chatStore.fetchSessions(chatStore.sessionsNextPage)
+      }
+    })
+  }
+)
 
 async function handleNewChat() {
   await chatStore.createSession()
@@ -174,6 +195,14 @@ async function handleDelete(sessionId) {
 function handleLogout() {
   authStore.logout()
   router.push({ name: 'Login' })
+}
+
+function onSessionsScroll(e) {
+  const el = e.target
+  const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100
+  if (nearBottom && chatStore.sessionsNextPage && !chatStore.isLoadingSessions) {
+    chatStore.fetchSessions(chatStore.sessionsNextPage)
+  }
 }
 </script>
 
