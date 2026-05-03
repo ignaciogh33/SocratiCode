@@ -9,13 +9,13 @@ import { compilerService } from '../services/compilerService'
 export const SUPPORTED_LANGUAGES = [
   { id: 'python', label: 'Python', version: '3.10.0', monacoId: 'python' },
   { id: 'c', label: 'C', version: '10.2.0', monacoId: 'c' },
-  { id: 'javascript', label: 'JavaScript', version: '18.15.0', monacoId: 'javascript' },
+  { id: 'java', label: 'Java', version: '15.0.2', monacoId: 'java' },
 ]
 
 const DEFAULT_CODE = {
   python: '# Escribe tu código Python aquí\nprint("¡Hola, SocratiCode!")\n',
   c: '// Escribe tu código C aquí\n#include <stdio.h>\n\nint main() {\n    printf("¡Hola, SocratiCode!\\n");\n    return 0;\n}\n',
-  javascript: '// Escribe tu código JavaScript aquí\nconsole.log("¡Hola, SocratiCode!");\n',
+  java: '// Escribe tu código Java aquí\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("¡Hola, SocratiCode!");\n    }\n}\n',
 }
 
 export const useEditorStore = defineStore('editor', {
