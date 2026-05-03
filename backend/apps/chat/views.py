@@ -100,7 +100,7 @@ def _get_or_create_session(session_id, user):
 
 def _build_messages_payload(session, code_context, last_output, language):
     """Construye el array de mensajes para Ollama (historial + contexto de código)."""
-    history_objs = list(session.messages.order_by('-created_at')[:10])
+    history_objs = list(session.messages.order_by('-id')[:10])
     history_objs.reverse()
 
     messages_payload = [{'role': 'system', 'content': SYSTEM_PROMPT}]
@@ -125,7 +125,7 @@ def _mark_user_message_moderated(session_id):
     """Marca el último mensaje del usuario en la sesión como moderado."""
     user_msg = (
         Message.objects.filter(session_id=session_id, role="user")
-        .order_by('-created_at').first()
+        .order_by('-id').first()
     )
     if user_msg:
         user_msg.moderated = True
@@ -316,7 +316,7 @@ async def chat_view(request):
 @permission_classes([IsAuthenticated])
 def list_sessions(request):
     """Lista las sesiones de chat del usuario autenticado."""
-    sessions = ChatSession.objects.filter(user=request.user).order_by('-created_at')
+    sessions = ChatSession.objects.filter(user=request.user).order_by('-id')
     paginator = SessionPagination()
     result_page = paginator.paginate_queryset(sessions, request)
     serializer = ChatSessionSerializer(result_page, many=True)
@@ -345,7 +345,7 @@ def session_detail(request, session_id):
 def list_session_messages(request, session_id):
     """Devuelve los mensajes paginados de una sesión específica."""
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
-    messages = session.messages.order_by('-created_at')
+    messages = session.messages.order_by('-id')
     paginator = MessagePagination()
     result_page = paginator.paginate_queryset(messages, request)
     serializer = MessageSerializer(result_page, many=True)

@@ -35,9 +35,16 @@ export const useChatStore = defineStore('chat', {
      * Mensajes ordenados cronológicamente (la API devuelve más recientes primero).
      */
     sortedMessages: (state) =>
-      [...state.messages].sort(
-        (a, b) => new Date(a.created_at) - new Date(b.created_at)
-      ),
+      [...state.messages].sort((a, b) => {
+        const aIsTemp = String(a.id).startsWith('temp-');
+        const bIsTemp = String(b.id).startsWith('temp-');
+        if (aIsTemp && !bIsTemp) return 1;
+        if (!aIsTemp && bIsTemp) return -1;
+        if (aIsTemp && bIsTemp) {
+          return new Date(a.created_at) - new Date(b.created_at);
+        }
+        return a.id - b.id;
+      }),
 
     sortedSessions: (state) =>
       [...state.sessions].sort(

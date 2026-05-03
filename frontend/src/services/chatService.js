@@ -100,9 +100,13 @@ export const chatService = {
       const decoder = new TextDecoder()
       let buffer = ''
 
+      let isDone = false;
       while (true) {
         const { done, value } = await reader.read()
-        if (done) break
+        if (done) {
+          if (!isDone) onDone?.()
+          break
+        }
 
         buffer += decoder.decode(value, { stream: true })
         const lines = buffer.split('\n')
@@ -117,6 +121,7 @@ export const chatService = {
 
           // Señal de fin
           if (data === '[DONE]') {
+            isDone = true
             onDone?.()
             return
           }
