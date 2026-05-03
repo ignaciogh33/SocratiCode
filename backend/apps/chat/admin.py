@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ChatSession, Message
+from .models import ChatSession, Message, SystemConfig
 
 
 class MessageInline(admin.TabularInline):
@@ -33,3 +33,32 @@ class MessageAdmin(admin.ModelAdmin):
     def short_content(self, obj):
         return obj.content[:80] + '...' if len(obj.content) > 80 else obj.content
     short_content.short_description = 'Contenido'
+
+
+@admin.register(SystemConfig)
+class SystemConfigAdmin(admin.ModelAdmin):
+    """Panel de configuración del sistema (singleton — una sola fila)."""
+
+    fieldsets = (
+        ('Moderación de contenido', {
+            'fields': ('moderation_mode',),
+            'description': 'Controla qué moderación se aplica a los mensajes del chat.',
+        }),
+        ('Modelos LLM (Ollama)', {
+            'fields': ('llm_model', 'moderation_model'),
+            'description': 'Nombres de los modelos instalados en Ollama.',
+        }),
+    )
+
+    def has_add_permission(self, request):
+        # No permitir crear más de una fila
+        return not SystemConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        # Redirigir siempre al formulario de edición de la única fila
+        obj = SystemConfig.get()
+        from django.shortcuts import redirect
+        return redirect(f'{obj.pk}/change/')
