@@ -1,6 +1,7 @@
 import json
 import asyncio
 import ollama
+from django.utils import timezone
 from django.conf import settings
 from django.http import StreamingHttpResponse
 from asgiref.sync import sync_to_async
@@ -9,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes  # type: igno
 from rest_framework.permissions import IsAuthenticated  # type: ignore
 from rest_framework.response import Response  # type: ignore
 from django.shortcuts import get_object_or_404
-from .models import ChatSession, Message
+from .models import ChatSession, Message, SystemConfig
 from config.pagination import SessionPagination, MessagePagination
 from .serializers import (
     ChatInputSerializer,
@@ -23,7 +24,7 @@ from .prompts import (
     OUTPUT_MODERATION_PROMPT,
     MODERATED_RESPONSE,
 )
-def moderate_input(user_text: str, code_context: str = "") -> bool:
+def moderate_input(user_text: str, code_context: str = "", mod_model: str = 'llama3.2') -> bool:
     """Modera el INPUT del alumno (prompt + código). Síncrono y rápido."""
     try:
         content_to_evaluate = user_text
@@ -35,40 +36,35 @@ def moderate_input(user_text: str, code_context: str = "") -> bool:
             {'role': 'user', 'content': content_to_evaluate},
         ]
 
-        if settings.DEBUG:
-            print("\n" + "═"*70)
-            print("🛡️  1. PETICIÓN AL LLM MODERADOR (Input del alumno)")
-            print("─"*70)
-            print("📩 [CONTENIDO A EVALUAR]:")
-            print(f"   {content_to_evaluate[:200]}")
-            print("═"*70 + "\n")
-
         result = ollama.chat(
-            model='llama3.2',
+            model=mod_model,
             messages=messages_payload,
             stream=False,
         )
         verdict = result['message']['content'].strip().upper()
+        is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
-            print("\n" + "═"*70)
-            print("⚖️  2. VEREDICTO DEL MODERADOR")
-            print("─"*70)
-            print(f"📝 [RESPUESTA CRUDA]: {result['message']['content']}")
-            print(f"✅ [VEREDICTO]: {verdict}")
-            print("═"*70 + "\n")
+            status = '✅ SAFE' if is_ok else '🚫 BLOCKED'
+            print(f"   └─ Veredicto: {status}  (raw: {result['message']['content'].strip()})")
 
-        return verdict == 'OK'
+        return is_ok
     except Exception:
+        if settings.DEBUG:
+            print("   └─ Veredicto: ⚠️  ERROR (fail-closed: bloqueado)")
         return False
 
 
-async def moderate_output_async(text: str) -> bool:
+# Contador global para numerar los checks de output moderation por petición
+_output_mod_counter = 0
+
+async def moderate_output_async(text: str, mod_model: str = 'llama3.2') -> bool:
     """Modera un fragmento de la salida del LLM. Totalmente async."""
+    global _output_mod_counter
     try:
         client = ollama.AsyncClient()
         result = await client.chat(
-            model='llama3.2',
+            model=mod_model,
             messages=[
                 {'role': 'system', 'content': OUTPUT_MODERATION_PROMPT},
                 {'role': 'user',   'content': text},
@@ -76,12 +72,15 @@ async def moderate_output_async(text: str) -> bool:
             stream=False,
         )
         verdict = result['message']['content'].strip().upper()
+        is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
+            _output_mod_counter += 1
             wc = len(text.split())
-            print(f"\n🛡️  [MOD OUTPUT] ({wc} palabras) {text} → {verdict}")
+            status = '✅' if is_ok else '🚫'
+            print(f"   │  check #{_output_mod_counter}: {status} ({wc} palabras acumuladas)")
 
-        return verdict == 'OK'
+        return is_ok
     except Exception:
         return True  # fail-open para no romper el stream
 
@@ -153,30 +152,58 @@ async def chat_view(request):
     # Extraer ID primitivo ANTES del generador (evita SynchronousOnlyOperation)
     safe_session_id = session.id
 
-    # 3. GUARDAR MENSAJE DEL USUARIO
+    # 3. GUARDAR MENSAJE DEL USUARIO + AUTO-NAMING + TOUCH updated_at
     await sync_to_async(Message.objects.create)(
         session_id=safe_session_id, role="user", content=user_text
     )
 
-    # 4. MODERACIÓN DEL INPUT (~0.5s, síncrona envuelta)
-    do_moderation = getattr(settings, 'LLM_MOD_INPUT', True)
+    # Auto-naming: si es el primer mensaje, usar el texto como título
+    def _auto_name_and_touch(sid, text):
+        s = ChatSession.objects.get(id=sid)
+        msg_count = s.messages.filter(role='user').count()
+        if msg_count == 1 and s.title == 'Nueva conversación':
+            s.title = text[:50]
+        s.updated_at = timezone.now()
+        s.save(update_fields=['title', 'updated_at'])
+        return s.title
 
-    if do_moderation:
-        is_safe = await sync_to_async(moderate_input)(user_text, code_context)
+    session_title = await sync_to_async(_auto_name_and_touch)(safe_session_id, user_text)
+
+    # 4. LEER CONFIGURACIÓN DEL SISTEMA
+    config = await sync_to_async(SystemConfig.get)()
+    do_input_mod = config.moderation_mode in ('both', 'input')
+    do_output_mod = config.moderation_mode in ('both', 'output')
+    llm_model = config.llm_model
+    mod_model = config.moderation_model
+
+    # ── DEBUG: Encabezado del flujo ──
+    if settings.DEBUG:
+        mod_mode_label = {'both': 'Input + Output', 'input': 'Solo Input', 'output': 'Solo Output', 'none': 'Desactivada'}
+        print("\n" + "═"*60)
+        print(f"📨 NUEVA PETICIÓN — Sesión #{safe_session_id}")
+        print("─"*60)
+        print(f"   LLM: {llm_model}  |  Moderación: {mod_mode_label.get(config.moderation_mode, '?')} ({mod_model})")
+        print(f"   Prompt: \"{user_text[:80]}{'...' if len(user_text) > 80 else ''}\"")
+        if code_context:
+            lines = code_context.strip().split('\n')
+            print(f"   Código: {len(lines)} líneas ({language})")
+        print("─"*60)
+
+    # 5. MODERACIÓN DEL INPUT
+    if do_input_mod:
+        if settings.DEBUG:
+            print(f"\n① INPUT MOD ({mod_model})")
+
+        is_safe = await sync_to_async(moderate_input)(user_text, code_context, mod_model)
 
         if not is_safe:
             if settings.DEBUG:
-                print("\n" + "═"*70)
-                print("🚫 INPUT BLOQUEADO POR EL MODERADOR")
-                print("─"*70)
-                print(f"📝 Prompt: {user_text[:100]}")
-                print("═"*70 + "\n")
+                print(f"   └─ 🚫 Flujo cortado. Respuesta: moderada.")
+                print("═"*60 + "\n")
 
-            # Marcar el mensaje del usuario como moderado para auditoría
             await sync_to_async(_mark_user_message_moderated)(safe_session_id)
 
-            # Devolver MODERATED_RESPONSE en formato SSE (sin error HTTP)
-            def moderated_stream():
+            async def moderated_stream():
                 payload = json.dumps({
                     'response': MODERATED_RESPONSE,
                     'session_id': safe_session_id,
@@ -188,44 +215,36 @@ async def chat_view(request):
                 moderated_stream(),
                 content_type='text/event-stream',
             )
+    elif settings.DEBUG:
+        print(f"\n① INPUT MOD — desactivado")
 
-    # 5. CONSTRUIR PAYLOAD DE MENSAJES (sync → async)
+    # 6. CONSTRUIR PAYLOAD DE MENSAJES (sync → async)
     messages_payload = await sync_to_async(_build_messages_payload)(
         session, code_context, last_output, language
     )
 
     if settings.DEBUG:
-        print("\n" + "═"*80)
-        print("🤖 3. PETICIÓN AL LLM PRINCIPAL (OLLAMA - CHAT STREAMING)")
-        print("─"*80)
-        print("🛠️  [SYSTEM PROMPT]:")
-        print(f"   {messages_payload[0]['content']}")
-        print("─"*80)
-        if len(messages_payload) > 2:
-            print("📚 [HISTORIAL PREVIO]:")
-            for m in messages_payload[1:-1]:
-                role_str = "Tú" if m['role'] == 'user' else "IA"
-                print(f"   [{role_str}]: {m['content'][:100]}")
-            print("─"*80)
-        if len(messages_payload) > 1:
-            print("📩 [NUEVO MENSAJE]:")
-            print(f"   {messages_payload[-1]['content']}")
-            print("═"*80 + "\n")
+        print(f"\n② LLM PRINCIPAL ({llm_model}) — streaming...")
 
-    # 6. STREAMING DEL LLM PRINCIPAL (async, token a token, con moderación paralela)
+    # 7. STREAMING DEL LLM PRINCIPAL (async, token a token, con moderación paralela)
     async def event_stream():
+        global _output_mod_counter
+        _output_mod_counter = 0  # Reset counter per request
+
         full_response = ""
         mod_buffer = ""
         moderation_tasks: list[asyncio.Task] = []
         flagged = False
-        do_output_mod = getattr(settings, 'LLM_MOD_OUTPUT', True)
         word_window = getattr(settings, 'MOD_WORD_WINDOW', 20)
+
+        if settings.DEBUG and do_output_mod:
+            print(f"\n③ OUTPUT MOD ({mod_model}) — cada {word_window} palabras")
 
         client = ollama.AsyncClient()
 
         try:
             async for chunk in await client.chat(
-                model='llama3.2',
+                model=llm_model,
                 messages=messages_payload,
                 stream=True,
             ):
@@ -254,7 +273,7 @@ async def chat_view(request):
                     if len(mod_buffer.split()) >= word_window:
                         # Enviar TODO lo generado hasta ahora (contexto acumulativo)
                         task = asyncio.create_task(
-                            moderate_output_async(full_response)
+                            moderate_output_async(full_response, mod_model)
                         )
                         moderation_tasks.append(task)
                         mod_buffer = ""
@@ -265,7 +284,7 @@ async def chat_view(request):
         # ── Moderar buffer restante + esperar tareas pendientes ──
         if do_output_mod and not flagged:
             if mod_buffer.strip():
-                task = asyncio.create_task(moderate_output_async(full_response))
+                task = asyncio.create_task(moderate_output_async(full_response, mod_model))
                 moderation_tasks.append(task)
 
             if moderation_tasks:
@@ -279,7 +298,20 @@ async def chat_view(request):
             yield "data: [DONE]\n\n"
 
             if settings.DEBUG:
-                print(f"\n🚫 [MOD OUTPUT] Respuesta moderada: {full_response[:200]}")
+                print(f"\n──────────────────────────────")
+                print(f"🚫 OUTPUT MODERADO")
+                print(f"   Texto generado antes del bloqueo:")
+                import textwrap
+                print(f"   ┌{'─'*56}┐")
+                for line in full_response.splitlines():
+                    wrapped_lines = textwrap.wrap(line, width=54)
+                    if not wrapped_lines:
+                        print(f"   │ {' '*54} │")
+                    else:
+                        for wrapped in wrapped_lines:
+                            print(f"   │ {wrapped:<54} │")
+                print(f"   └{'─'*56}┘")
+                print("═"*60 + "\n")
 
             if full_response:
                 await sync_to_async(Message.objects.create)(
@@ -291,15 +323,14 @@ async def chat_view(request):
             return
 
         # ── Happy path: stream completado sin moderación ──
-        yield f"data: {json.dumps({'session_id': safe_session_id})}\n\n"
+        yield f"data: {json.dumps({'session_id': safe_session_id, 'session_title': session_title})}\n\n"
         yield "data: [DONE]\n\n"
 
         if settings.DEBUG:
-            print("\n" + "═"*80)
-            print("🧠 4. RESPUESTA COMPLETA DEL LLM (STREAMING FINALIZADO)")
-            print("─"*80)
-            print(f"📝 {full_response[:300]}")
-            print("═"*80 + "\n")
+            print(f"\n──────────────────────────────")
+            print(f"✅ RESPUESTA COMPLETA ({len(full_response.split())} palabras)")
+            print(f"   \"{full_response[:200]}{'...' if len(full_response) > 200 else ''}\"")
+            print("═"*60 + "\n")
 
         if full_response:
             await sync_to_async(Message.objects.create)(
@@ -316,7 +347,7 @@ async def chat_view(request):
 @permission_classes([IsAuthenticated])
 def list_sessions(request):
     """Lista las sesiones de chat del usuario autenticado."""
-    sessions = ChatSession.objects.filter(user=request.user).order_by('-created_at')
+    sessions = ChatSession.objects.filter(user=request.user).order_by('-updated_at')
     paginator = SessionPagination()
     result_page = paginator.paginate_queryset(sessions, request)
     serializer = ChatSessionSerializer(result_page, many=True)

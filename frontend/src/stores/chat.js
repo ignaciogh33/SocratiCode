@@ -41,7 +41,7 @@ export const useChatStore = defineStore('chat', {
 
     sortedSessions: (state) =>
       [...state.sessions].sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        (a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at)
       ),
   },
 
@@ -189,7 +189,7 @@ export const useChatStore = defineStore('chat', {
           }
         },
 
-        onDone: (sessionId) => {
+        onDone: (sessionId, sessionTitle) => {
           // Actualizar session_id si la sesión fue creada por el backend
           if (sessionId && sessionId !== this.activeSessionId) {
             this.activeSessionId = sessionId
@@ -198,6 +198,13 @@ export const useChatStore = defineStore('chat', {
             if (!session) {
               this.fetchSessions()
             }
+          }
+
+          // Actualizar título y timestamp de la sesión activa
+          const activeSession = this.sessions.find((s) => s.id === this.activeSessionId)
+          if (activeSession) {
+            if (sessionTitle) activeSession.title = sessionTitle
+            activeSession.updated_at = new Date().toISOString()
           }
 
           // Marcar como finalizado
@@ -229,6 +236,12 @@ export const useChatStore = defineStore('chat', {
         this.abortController.abort()
         this.isStreaming = false
         this.abortController = null
+        
+        // Finalizar el cursor de streaming en el mensaje actual
+        const lastMsg = this.messages[this.messages.length - 1]
+        if (lastMsg && lastMsg.role === 'assistant' && lastMsg._isStreaming) {
+          lastMsg._isStreaming = false
+        }
       }
     },
   },

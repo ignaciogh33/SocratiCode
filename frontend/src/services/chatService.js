@@ -145,7 +145,7 @@ export const chatService = {
 
             // session_id al final del stream
             if (parsed.session_id !== undefined) {
-              onDone?.(parsed.session_id)
+              onDone?.(parsed.session_id, parsed.session_title)
             }
           } catch {
             // Línea no parseable, ignorar
