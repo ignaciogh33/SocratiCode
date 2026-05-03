@@ -78,6 +78,9 @@ async function handleSend() {
     lastOutput: editorStore.editorVisible ? (editorStore.stdout || editorStore.stderr) : '',
     language: editorStore.language,
   })
+
+  // Mantener el foco en el textarea para seguir escribiendo
+  nextTick(() => textareaRef.value?.focus())
 }
 </script>
 

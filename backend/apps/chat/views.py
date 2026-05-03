@@ -1,6 +1,7 @@
 import json
 import asyncio
 import ollama
+from django.utils import timezone
 from django.conf import settings
 from django.http import StreamingHttpResponse
 from asgiref.sync import sync_to_async
@@ -155,10 +156,22 @@ async def chat_view(request):
     # Extraer ID primitivo ANTES del generador (evita SynchronousOnlyOperation)
     safe_session_id = session.id
 
-    # 3. GUARDAR MENSAJE DEL USUARIO
+    # 3. GUARDAR MENSAJE DEL USUARIO + AUTO-NAMING + TOUCH updated_at
     await sync_to_async(Message.objects.create)(
         session_id=safe_session_id, role="user", content=user_text
     )
+
+    # Auto-naming: si es el primer mensaje, usar el texto como título
+    def _auto_name_and_touch(sid, text):
+        s = ChatSession.objects.get(id=sid)
+        msg_count = s.messages.filter(role='user').count()
+        if msg_count == 1 and s.title == 'Nueva conversación':
+            s.title = text[:50]
+        s.updated_at = timezone.now()
+        s.save(update_fields=['title', 'updated_at'])
+        return s.title
+
+    session_title = await sync_to_async(_auto_name_and_touch)(safe_session_id, user_text)
 
     # 4. MODERACIÓN DEL INPUT (~0.5s, síncrona envuelta)
     do_moderation = getattr(settings, 'LLM_MOD_INPUT', True)
@@ -293,7 +306,7 @@ async def chat_view(request):
             return
 
         # ── Happy path: stream completado sin moderación ──
-        yield f"data: {json.dumps({'session_id': safe_session_id})}\n\n"
+        yield f"data: {json.dumps({'session_id': safe_session_id, 'session_title': session_title})}\n\n"
         yield "data: [DONE]\n\n"
 
         if settings.DEBUG:
@@ -318,7 +331,7 @@ async def chat_view(request):
 @permission_classes([IsAuthenticated])
 def list_sessions(request):
     """Lista las sesiones de chat del usuario autenticado."""
-    sessions = ChatSession.objects.filter(user=request.user).order_by('-created_at')
+    sessions = ChatSession.objects.filter(user=request.user).order_by('-updated_at')
     paginator = SessionPagination()
     result_page = paginator.paginate_queryset(sessions, request)
     serializer = ChatSessionSerializer(result_page, many=True)
