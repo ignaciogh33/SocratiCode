@@ -229,6 +229,12 @@ export const useChatStore = defineStore('chat', {
         this.abortController.abort()
         this.isStreaming = false
         this.abortController = null
+        
+        // Finalizar el cursor de streaming en el mensaje actual
+        const lastMsg = this.messages[this.messages.length - 1]
+        if (lastMsg && lastMsg.role === 'assistant' && lastMsg._isStreaming) {
+          lastMsg._isStreaming = false
+        }
       }
     },
   },

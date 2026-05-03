@@ -1,7 +1,7 @@
 <template>
   <div class="typing-indicator">
     <div class="typing-indicator__avatar">
-      <img src="../../assets/images/logo-circular.png" alt="Sócrates" />
+      <img src="../../assets/images/logo-circular.svg" alt="Sócrates" />
     </div>
     <div class="typing-indicator__dots">
       <span></span>

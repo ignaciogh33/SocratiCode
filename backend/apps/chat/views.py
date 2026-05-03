@@ -49,16 +49,17 @@ def moderate_input(user_text: str, code_context: str = "") -> bool:
             stream=False,
         )
         verdict = result['message']['content'].strip().upper()
+        is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
             print("\n" + "═"*70)
             print("⚖️  2. VEREDICTO DEL MODERADOR")
             print("─"*70)
             print(f"📝 [RESPUESTA CRUDA]: {result['message']['content']}")
-            print(f"✅ [VEREDICTO]: {verdict}")
+            print(f"✅ [VEREDICTO]: {verdict} → {'SAFE' if is_ok else 'BLOCKED'}")
             print("═"*70 + "\n")
 
-        return verdict == 'OK'
+        return is_ok
     except Exception:
         return False
 
@@ -76,12 +77,13 @@ async def moderate_output_async(text: str) -> bool:
             stream=False,
         )
         verdict = result['message']['content'].strip().upper()
+        is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
             wc = len(text.split())
-            print(f"\n🛡️  [MOD OUTPUT] ({wc} palabras) {text} → {verdict}")
+            print(f"\n🛡️  [MOD OUTPUT] ({wc} palabras) → {verdict} ({'SAFE' if is_ok else 'BLOCKED'})")
 
-        return verdict == 'OK'
+        return is_ok
     except Exception:
         return True  # fail-open para no romper el stream
 
