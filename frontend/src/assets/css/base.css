@@ -50,7 +50,6 @@ body {
   background-color: var(--color-surface-chat);
   line-height: 1.6;
   min-height: 100vh;
-  overflow: hidden;
 }
 
 /* ─── SCROLLBAR (Dark theme) ─── */

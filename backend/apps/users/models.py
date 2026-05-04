@@ -9,6 +9,8 @@ class User(AbstractUser):
         ('dark', 'Dark Theme'),
     )
 
+    email = models.EmailField(unique=True, blank=False, null=False)
+
     bio = models.TextField(blank=True, null=True)
     theme = models.CharField(max_length=10, choices=THEME_CHOICES, default='dark')
 

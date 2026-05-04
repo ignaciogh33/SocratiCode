@@ -163,7 +163,9 @@ async function handleRegister(data) {
   justify-content: center;
   background-color: var(--color-surface-sidebar);
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px 20px;
 }
 
 /* ─── Background orbs ─── */
@@ -212,7 +214,6 @@ async function handleRegister(data) {
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  padding: 24px;
   width: 100%;
   max-width: 420px;
 }
