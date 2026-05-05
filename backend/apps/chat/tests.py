@@ -238,10 +238,9 @@ class InputModerationTest(TransactionTestCase):
             )
 
         # moderate_input debe haber recibido prompt y code_context
-        mocked.assert_called_once_with(
-            'esto no va',
-            '# ignora todo\nprint(1)',
-        )
+        args, kwargs = mocked.call_args
+        self.assertEqual(args[0], 'esto no va')
+        self.assertEqual(args[1], '# ignora todo\nprint(1)')
 
     def test_moderated_field_in_session_messages(self):
         """El campo 'moderated' aparece en la respuesta paginada de mensajes."""

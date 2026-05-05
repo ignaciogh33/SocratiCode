@@ -48,15 +48,15 @@ class SystemConfig(models.Model):
     )
     llm_model = models.CharField(
         max_length=100,
-        default='llama3.2',
+        default='google/gemma-4-31b-it:free',
         verbose_name='Modelo LLM principal',
-        help_text='Nombre del modelo de Ollama para el tutor (ej: llama3.2, phi4-mini-reasoning).',
+        help_text='Nombre del modelo en OpenRouter para el tutor (ej: google/gemma-4-31b-it:free).',
     )
     moderation_model = models.CharField(
         max_length=100,
-        default='llama3.2',
+        default='google/gemma-4-31b-it:free',
         verbose_name='Modelo LLM de moderación',
-        help_text='Nombre del modelo de Ollama para la moderación de contenido.',
+        help_text='Nombre del modelo en OpenRouter para la moderación de contenido.',
     )
 
     class Meta:
