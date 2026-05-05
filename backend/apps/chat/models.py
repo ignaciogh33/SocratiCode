@@ -48,15 +48,15 @@ class SystemConfig(models.Model):
     )
     llm_model = models.CharField(
         max_length=100,
-        default='llama3.2',
+        default='gemini-2.0-flash',
         verbose_name='Modelo LLM principal',
-        help_text='Nombre del modelo de Ollama para el tutor (ej: llama3.2, phi4-mini-reasoning).',
+        help_text='Nombre del modelo de Gemini para el tutor (ej: gemini-2.0-flash, gemini-2.5-flash-preview-04-17).',
     )
     moderation_model = models.CharField(
         max_length=100,
-        default='llama3.2',
+        default='gemini-2.0-flash',
         verbose_name='Modelo LLM de moderación',
-        help_text='Nombre del modelo de Ollama para la moderación de contenido.',
+        help_text='Nombre del modelo de Gemini para la moderación de contenido.',
     )
 
     class Meta:

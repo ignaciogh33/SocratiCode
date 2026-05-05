@@ -1,6 +1,8 @@
 import json
 import asyncio
-import ollama
+import os
+from google import genai
+from google.genai import types
 from django.utils import timezone
 from django.conf import settings
 from django.http import StreamingHttpResponse
@@ -24,54 +26,54 @@ from .prompts import (
     OUTPUT_MODERATION_PROMPT,
     MODERATED_RESPONSE,
 )
-def moderate_input(user_text: str, code_context: str = "", mod_model: str = 'llama3.2') -> bool:
+
+# ── Cliente Gemini (singleton, reutilizado en todas las peticiones) ──
+_gemini_client = genai.Client(api_key=os.environ.get('GEMINI_API_KEY'))
+
+
+def moderate_input(user_text: str, code_context: str = "", mod_model: str = 'gemini-2.0-flash') -> bool:
     """Modera el INPUT del alumno (prompt + código). Síncrono y rápido."""
     try:
         content_to_evaluate = user_text
         if code_context:
             content_to_evaluate += f"\n\nCódigo del alumno:\n{code_context}"
 
-        messages_payload = [
-            {'role': 'system', 'content': INPUT_MODERATION_PROMPT},
-            {'role': 'user', 'content': content_to_evaluate},
-        ]
-
-        result = ollama.chat(
+        result = _gemini_client.models.generate_content(
             model=mod_model,
-            messages=messages_payload,
-            stream=False,
+            contents=content_to_evaluate,
+            config=types.GenerateContentConfig(
+                system_instruction=INPUT_MODERATION_PROMPT,
+            ),
         )
-        verdict = result['message']['content'].strip().upper()
+        verdict = result.text.strip().upper()
         is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
             status = '✅ SAFE' if is_ok else '🚫 BLOCKED'
-            print(f"   └─ Veredicto: {status}  (raw: {result['message']['content'].strip()})")
+            print(f"   └─ Veredicto: {status}  (raw: {result.text.strip()})")
 
         return is_ok
-    except Exception:
+    except Exception as e:
         if settings.DEBUG:
-            print("   └─ Veredicto: ⚠️  ERROR (fail-closed: bloqueado)")
+            print(f"   └─ Veredicto: ⚠️  ERROR (fail-closed: bloqueado) — {type(e).__name__}: {e}")
         return False
 
 
 # Contador global para numerar los checks de output moderation por petición
 _output_mod_counter = 0
 
-async def moderate_output_async(text: str, mod_model: str = 'llama3.2') -> bool:
+async def moderate_output_async(text: str, mod_model: str = 'gemini-2.0-flash') -> bool:
     """Modera un fragmento de la salida del LLM. Totalmente async."""
     global _output_mod_counter
     try:
-        client = ollama.AsyncClient()
-        result = await client.chat(
+        result = await _gemini_client.aio.models.generate_content(
             model=mod_model,
-            messages=[
-                {'role': 'system', 'content': OUTPUT_MODERATION_PROMPT},
-                {'role': 'user',   'content': text},
-            ],
-            stream=False,
+            contents=text,
+            config=types.GenerateContentConfig(
+                system_instruction=OUTPUT_MODERATION_PROMPT,
+            ),
         )
-        verdict = result['message']['content'].strip().upper()
+        verdict = result.text.strip().upper()
         is_ok = verdict.startswith('OK')
 
         if settings.DEBUG:
@@ -98,14 +100,25 @@ def _get_or_create_session(session_id, user):
 
 
 def _build_messages_payload(session, code_context, last_output, language):
-    """Construye el array de mensajes para Ollama (historial + contexto de código)."""
+    """Construye el array de mensajes para Gemini (historial + contexto de código).
+
+    Devuelve (contents, system_instruction):
+    - contents: lista de types.Content para el historial del chat.
+    - system_instruction: string con el system prompt completo (incluye contexto de código).
+    """
     history_objs = list(session.messages.order_by('-created_at')[:10])
     history_objs.reverse()
 
-    messages_payload = [{'role': 'system', 'content': SYSTEM_PROMPT}]
+    # Construir historial en formato Gemini
+    contents = []
     for msg in history_objs:
-        messages_payload.append({'role': msg.role, 'content': msg.content})
+        role = 'model' if msg.role == 'assistant' else msg.role
+        contents.append(
+            types.Content(role=role, parts=[types.Part(text=msg.content)])
+        )
 
+    # System instruction = prompt base + contexto de código opcional
+    system_parts = [SYSTEM_PROMPT]
     if code_context:
         context_parts = [
             f"El alumno tiene este código en el editor:\n```{language}\n{code_context}\n```"
@@ -114,10 +127,11 @@ def _build_messages_payload(session, code_context, last_output, language):
             context_parts.append(
                 f"La última salida de ejecución fue:\n```\n{last_output}\n```"
             )
-        context_msg = "\n\n".join(context_parts)
-        messages_payload.insert(1, {'role': 'system', 'content': context_msg})
+        system_parts.append("\n\n".join(context_parts))
 
-    return messages_payload
+    system_instruction = "\n\n".join(system_parts)
+
+    return contents, system_instruction
 
 
 def _mark_user_message_moderated(session_id):
@@ -219,7 +233,7 @@ async def chat_view(request):
         print(f"\n① INPUT MOD — desactivado")
 
     # 6. CONSTRUIR PAYLOAD DE MENSAJES (sync → async)
-    messages_payload = await sync_to_async(_build_messages_payload)(
+    contents, system_instruction = await sync_to_async(_build_messages_payload)(
         session, code_context, last_output, language
     )
 
@@ -240,13 +254,13 @@ async def chat_view(request):
         if settings.DEBUG and do_output_mod:
             print(f"\n③ OUTPUT MOD ({mod_model}) — cada {word_window} palabras")
 
-        client = ollama.AsyncClient()
-
         try:
-            async for chunk in await client.chat(
+            async for chunk in _gemini_client.aio.models.generate_content_stream(
                 model=llm_model,
-                messages=messages_payload,
-                stream=True,
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                ),
             ):
                 # ── Comprobar tareas de moderación completadas ──
                 if do_output_mod:
@@ -258,7 +272,10 @@ async def chat_view(request):
                 if flagged:
                     break  # Cortar generación del LLM
 
-                token = chunk['message']['content']
+                token = chunk.text or ""
+                if not token:
+                    continue
+
                 full_response += token
 
                 # Enviar token al usuario inmediatamente

@@ -44,9 +44,9 @@ class SystemConfigAdmin(admin.ModelAdmin):
             'fields': ('moderation_mode',),
             'description': 'Controla qué moderación se aplica a los mensajes del chat.',
         }),
-        ('Modelos LLM (Ollama)', {
+        ('Modelos LLM (Gemini)', {
             'fields': ('llm_model', 'moderation_model'),
-            'description': 'Nombres de los modelos instalados en Ollama.',
+            'description': 'Nombres de los modelos de Gemini (Google AI Studio).',
         }),
     )
 

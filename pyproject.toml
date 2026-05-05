@@ -10,6 +10,7 @@ dependencies = [
     "djangorestframework>=3.16.1",
     "djangorestframework-simplejwt>=5.5.1",
     "djoser>=2.3.3",
+    "google-genai>=1.0.0",
     "ollama>=0.6.1",
     "psycopg2-binary>=2.9.11",
     "uvicorn>=0.34.0",
