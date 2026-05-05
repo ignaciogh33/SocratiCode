@@ -161,8 +161,12 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+# Dominio del FRONTEND (no del backend) para los enlaces en emails de Djoser
+DOMAIN = env('FRONTEND_DOMAIN', default='localhost:5173')
+SITE_NAME = 'SocratiCode'
+
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset-password/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
@@ -175,6 +179,9 @@ DJOSER = {
         'user_create': 'apps.users.serializers.UserCreateSerializer',
         'user': 'apps.users.serializers.UserSerializer',
         'current_user': 'apps.users.serializers.UserSerializer',
+    },
+    'EMAIL': {
+        'password_reset': 'apps.users.email.PasswordResetEmail',
     }
 }
 

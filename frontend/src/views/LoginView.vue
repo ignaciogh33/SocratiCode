@@ -63,7 +63,7 @@
         <!-- Links -->
         <div class="login-view__links">
           <template v-if="activeTab === 'login'">
-            <a href="#" class="login-view__link">¿Olvidaste tu contraseña?</a>
+            <router-link :to="{ name: 'ForgotPassword' }" class="login-view__link">¿Olvidaste tu contraseña?</router-link>
             <a href="#" class="login-view__link" @click.prevent="switchTab('register')">
               Crear una cuenta
             </a>
