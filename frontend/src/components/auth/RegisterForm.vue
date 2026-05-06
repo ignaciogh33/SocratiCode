@@ -15,6 +15,7 @@
       type="email"
       placeholder="tu@email.com"
       autocomplete="email"
+      required
       :error="fieldErrors.email"
     />
     <AppInput

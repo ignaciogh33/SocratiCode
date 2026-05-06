@@ -8,6 +8,9 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = ('id', 'username', 'email', 'password', 'bio', 'theme')
+        extra_kwargs = {
+            'email': {'required': True, 'allow_blank': False}
+        }
 
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):

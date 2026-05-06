@@ -10,6 +10,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :autocomplete="autocomplete"
+        :required="required"
         class="app-input__field"
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="isFocused = true"
@@ -32,6 +33,7 @@ defineProps({
   error: { type: String, default: '' },
   disabled: { type: Boolean, default: false },
   autocomplete: { type: String, default: 'off' },
+  required: { type: Boolean, default: false },
 })
 
 defineEmits(['update:modelValue'])

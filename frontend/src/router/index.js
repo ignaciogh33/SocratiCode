@@ -21,6 +21,18 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: () => import('../views/ForgotPasswordView.vue'),
+    meta: { requiresGuest: true },
+  },
+  {
+    path: '/reset-password/:uid/:token',
+    name: 'ResetPassword',
+    component: () => import('../views/ResetPasswordView.vue'),
+    meta: { requiresGuest: true },
+  },
+  {
     // Redirect cualquier ruta desconocida
     path: '/:pathMatch(.*)*',
     redirect: '/',

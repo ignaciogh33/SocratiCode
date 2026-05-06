@@ -5,8 +5,7 @@
         ref="textareaRef"
         v-model="text"
         class="chat-input__textarea"
-        :placeholder="chatStore.isStreaming ? 'Sócrates está pensando...' : 'Escribe tu duda...'"
-        :disabled="chatStore.isStreaming"
+        placeholder="Escribe tu duda..."
         rows="1"
         @input="autoResize"
         @keydown="handleKeydown"
@@ -24,7 +23,7 @@
       <button
         v-else
         class="chat-input__send"
-        :disabled="!text.trim()"
+        :disabled="!text.trim() || chatStore.isStreaming"
         @click="handleSend"
         title="Enviar (Ctrl+Enter)"
       >
@@ -129,9 +128,7 @@ async function handleSend() {
   color: var(--color-text-dim);
 }
 
-.chat-input__textarea:disabled {
-  opacity: 0.5;
-}
+
 
 .chat-input__send,
 .chat-input__stop {

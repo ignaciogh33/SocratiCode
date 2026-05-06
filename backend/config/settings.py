@@ -135,14 +135,12 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # CORS Configuration
-# MODO DESARROLLO (Actual): Permite Postman, Chrome local, Vue, etc.
-CORS_ALLOW_ALL_ORIGINS = True
-
-# MODO PRODUCCIÓN (o cuando decidas cerrarlo solo a Vue):
-# Comenta la línea anterior 'CORS_ALLOW_ALL_ORIGINS' y descomenta lo siguiente:
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-# ]
+# Solo permite peticiones desde el frontend autorizado.
+# En desarrollo: http://localhost:5173 (Vite dev server)
+# En producción: configurar CORS_ORIGIN en .env (ej: https://socraticode.com)
+CORS_ALLOWED_ORIGINS = [
+    env('CORS_ORIGIN', default='http://localhost:5173'),
+]
 
 # DRF Configuration
 REST_FRAMEWORK = {
@@ -158,13 +156,17 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+# Dominio del FRONTEND (no del backend) para los enlaces en emails de Djoser
+DOMAIN = env('FRONTEND_DOMAIN', default='localhost:5173')
+SITE_NAME = 'SocratiCode'
+
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset-password/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
@@ -177,6 +179,9 @@ DJOSER = {
         'user_create': 'apps.users.serializers.UserCreateSerializer',
         'user': 'apps.users.serializers.UserSerializer',
         'current_user': 'apps.users.serializers.UserSerializer',
+    },
+    'EMAIL': {
+        'password_reset': 'apps.users.email.PasswordResetEmail',
     }
 }
 
