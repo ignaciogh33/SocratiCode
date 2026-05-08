@@ -91,58 +91,88 @@
     \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-1_secuencia_chat_stream.pdf}
 \end{figure}
 
-\begin{table}[CU2 Ejecución Piston 1]{TB:CU2 1}{Caso de uso: Ejecución de código con Piston. 1}
-  \begin{tabular}{l p{11cm}}
-    \hline
-    \textbf{Campo} & \textbf{Descripción} \\
-    \hline \hline
-    \textbf{Identificador} & CU2 \\
-    \textbf{Nombre} & Compilación y ejecución de código en sandbox \\
-    \textbf{Actor principal} & Alumno (usuario autenticado) \\
-    \textbf{Actores secundarios} & Piston (contenedor Docker de ejecución de código) \\
-    \textbf{Descripción} & El alumno ejecuta el código de su editor en un entorno sandbox aislado (Piston). El sistema envía el código fuente, el lenguaje y la versión al contenedor, y devuelve la salida estándar (\texttt{stdout}), los errores (\texttt{stderr}) y el código de salida. \\
-    \textbf{Precondiciones} & 1. El alumno está autenticado (JWT válido). \newline  2. El contenedor Piston (\texttt{tutor\_compiler}) está activo y accesible en \texttt{PISTON\_URL} (por defecto \texttt{http://localhost:2000}). \newline  3. El runtime del lenguaje solicitado está instalado en Piston. \\
-    \textbf{Postcondiciones} & 1. El alumno recibe la salida de ejecución (\texttt{stdout}, \texttt{stderr}, \texttt{exit\_code}). \newline  2. No se persiste ningún dato de ejecución en la base de datos (operación efímera). \newline  3. Los archivos temporales en el contenedor se eliminan automáticamente (tmpfs). \\
-    \hline
-  \end{tabular}
-\end{table}
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  
+  % --- PIE DE PÁGINA INTERMEDIO ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- PIE FINAL (Caption abajo) ---
+  \hline
+  \caption{Caso de Uso CU2 — Compilación y Ejecución de Código en Piston.}
+  \label{TB:CU2_PISTON}
+  \endlastfoot
 
-\begin{table}[CU2 Ejecución Piston 2]{TB:CU2 2}{Caso de uso: Ejecución de código con Piston. 2}
-  \begin{tabular}{c c p{8cm}}
-    \hline
-    \textbf{Paso} & \textbf{Actor} & \textbf{Acción} \\
-    \hline \hline
-    1 & Alumno & Pulsa el botón ''Ejecutar'' en el editor. El frontend envía \texttt{POST /api/compiler/execute/} con \texttt{\{ source\_code, language, version \}}. \\
-    2 & Sistema & Valida los datos de entrada mediante \texttt{ExecuteInputSerializer}. Valores por defecto: \texttt{language='python3'}, \texttt{version='3.10.0'}. \\
-    3 & Sistema & Construye el payload para la API de Piston: \texttt{\{ language, version, files: [\{ content: source\_code \}] \}}. \\
-    4 & Sistema & Envía \texttt{POST} a \texttt{\{PISTON\_URL\}/api/v2/execute} con el payload JSON. Timeout: 30 segundos. \\
-    5 & Piston & Ejecuta el código en un sub-contenedor aislado. Para lenguajes compilados (C, Java), primero compila y luego ejecuta. \\
-    6 & Piston & Devuelve la respuesta JSON con los campos \texttt{compile} (opcional), \texttt{run.stdout}, \texttt{run.stderr}, \texttt{run.code} y \texttt{run.signal}. \\
-    7 & Sistema & Procesa la respuesta: extrae \texttt{stdout}, concatena \texttt{stderr} de compilación y ejecución, extrae \texttt{exit\_code} (o asigna \texttt{-1} si es \texttt{null}). \\
-    8 & Sistema & Devuelve al frontend: \texttt{\{ stdout, stderr, exit\_code, language \}} con HTTP 200. \\
-    9 & Frontend & Muestra \texttt{stdout} en el panel de salida del editor. Si \texttt{stderr} no está vacío, lo muestra como error. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+    \textbf{Identificador:} CU2 & \textbf{Actor principal:} Alumno 
+  \end{tabularx} \\ \hline
 
-\begin{table}[CU2 Ejecución Piston 3]{TB:CU2 3}{Caso de uso: Ejecución de código con Piston. 3}
-  \begin{tabular}{c p{8cm} p{8cm}}
-    \hline
-    \textbf{ID} & \textbf{Condición} & \textbf{Acción del sistema} \\
-    \hline \hline
-    FA-01 & Piston no accesible (\texttt{ConnectionError}) & Se devuelve HTTP 503 con \texttt{\{''error'': ''No se pudo conectar con el servicio de ejecución de código.'', ''details'': null\}}. \\
-    FA-02 & Timeout de ejecución (\texttt{requests.Timeout}) & Se devuelve HTTP 504 con \texttt{\{''error'': ''El servicio de ejecución de código tardó demasiado.'', ''details'': null\}}. \\
-    FA-03 & Señal SIGKILL recibida & El programa del alumno ha excedido el límite de tiempo de Piston. Se añade al \texttt{stderr}: \texttt{''[Error del Sistema]: El programa ha superado el límite de tiempo y ha sido detenido. Revisa si tienes un bucle infinito (while True).''} \\
-    FA-04 & Error de Piston (campo \texttt{message} en respuesta) & Se devuelve HTTP 400 con el mensaje de error de Piston (ej: lenguaje no instalado). \\
-    FA-05 & Error inesperado del servidor & Se devuelve HTTP 500 con \texttt{\{''error'': ''Error inesperado: <detalle>'', ''details'': null\}}. \\
-    FA-06 & Error de compilación (lenguajes compilados) & \texttt{compile.stderr} contiene los errores del compilador. Se concatena con \texttt{run.stderr} y se devuelve al alumno como \texttt{stderr}. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 2: Nombre
+  \textbf{Nombre:} Compilación y ejecución de código en sandbox \\ \hline
+
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El alumno ejecuta el código de su editor en un entorno sandbox aislado (Piston). El sistema envía el código fuente, el lenguaje y la versión al contenedor, y devuelve la salida estándar (\texttt{stdout}), los errores (\texttt{stderr}) y el código de salida. \\ \hline
+
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
+  -- El contenedor Piston está activo. \newline
+  -- El lenguaje solicitado está instalado en el contenedor Piston. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El alumno pulsa el botón ``Ejecutar'' en el editor con código en el editor y el lenguaje seleccionado.\newline
+  2. El sistema valida los datos de entrada .\newline
+  3. El sistema construye el payload y lo envía a la API de Piston.\newline
+  4. Piston ejecuta el código en un sub-contenedor aislado (compila primero si es necesario).\newline
+  5. Piston devuelve la respuesta JSON con \texttt{stdout}, \texttt{stderr} y \texttt{exit\_code}.\newline
+  6. El sistema procesa la respuesta: concatena errores de compilación y ejecución si existen.\newline
+  7. El sistema devuelve al frontend el objeto JSON con la salida procesada.\newline
+  8. El frontend muestra la salida en el panel correspondiente. Si hay errores, los resalta. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Señal \texttt{SIGKILL} recibida: \newline
+    1. El sistema interpreta  el campo \texttt{status}. \newline
+    2. El sistema devuelve al frontend un JSON con un mensaje de error explicativo añadido al \texttt{stderr}. \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El alumno recibe la salida de ejecución detallada. \newline
+  2. Operación efímera: no se persiste el código ni el resultado en la base de datos. \newline
+  3. Los archivos temporales del contenedor se eliminan automáticamente. \\ \hline
+
+\end{longtable}
+\endgroup
 
 \begin{figure}[Diagrama de secuencia CU2]{FIG:CU2_SEQ}{Diagrama de secuencia de ejecución de código en Piston.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-2_secuencia_ejecucion_piston.png}
+    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-2_secuencia_ejecucion_piston_SIMPLE.pdf}
 \end{figure}
 
 \begin{table}[CU3 Configuración Singleton 1]{TB:CU3 1}{Caso de uso: Configuración global del sistema. 1}
