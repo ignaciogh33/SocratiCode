@@ -1,62 +1,94 @@
-\begin{table}[CU1 Tutor Socrático 1]{TB:CU1 1}{Caso de uso: Interacción con el tutor socrático. 1}
-  \begin{tabular}{l p{11cm}}
-    \hline
-    \textbf{Campo} & \textbf{Descripción} \\
-    \hline \hline
-    \textbf{Identificador} & CU1 \\
-    \textbf{Nombre} & Interacción con el tutor socrático \\
-    \textbf{Actor principal} & Alumno (usuario autenticado) \\
-    \textbf{Actores secundarios} & Ollama (LLM tutor), Ollama (LLM moderación) \\
-    \textbf{Descripción} & El alumno envía una pregunta al tutor socrático, opcionalmente acompañada del código de su editor y la última salida de ejecución. El sistema modera la entrada, genera una respuesta pedagógica en streaming (SSE) y opcionalmente modera la salida en paralelo. \\
-    \textbf{Precondiciones} & 1. El alumno está autenticado (posee un \texttt{access\_token} JWT válido). \newline  2. El servicio Ollama está activo y el modelo LLM configurado en \texttt{SystemConfig} está disponible. \newline  3. Existe una sesión de chat activa o se creará una nueva automáticamente. \\
-    \textbf{Postcondiciones} & 1. El mensaje del alumno queda persistido en la tabla \texttt{Message} con \texttt{role='user'}. \newline  2. La respuesta del tutor queda persistida con \texttt{role='assistant'}. \newline  3. Si fue el primer mensaje, la sesión se renombra automáticamente (auto-naming). \newline  4. El campo \texttt{updated\_at} de la sesión se actualiza. \\
-    \hline
-  \end{tabular}
-\end{table}
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  
+  % --- PIE DE PÁGINA (mientras no sea la última) ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- PIE FINAL (Donde aparece el nombre ahora) ---
+  \hline
+  \caption{Caso de Uso CU1 — Interacción con el Tutor Socrático.}
+  \label{TB:CU1_TUTOR_SOCRATICO_V3}
+  \endlastfoot
 
-\begin{table}[CU1 Tutor Socrático 2]{TB:CU1 2}{Caso de uso: Interacción con el tutor socrático. 2}
-  \begin{tabular}{c c p{8cm}}
-    \hline
-    \textbf{Paso} & \textbf{Actor} & \textbf{Acción} \\
-    \hline \hline
-    1 & Alumno & Escribe un mensaje en el chat y pulsa enviar. El frontend envía \texttt{POST /api/chat/} con \texttt{\{ session\_id, prompt, code\_context, last\_output, language \}}. \\
-    2 & Sistema & Valida los datos de entrada mediante \texttt{ChatInputSerializer} (prompt $\le$ 2000 caracteres). \\
-    3 & Sistema & Obtiene o crea la sesión de chat (\texttt{\_get\_or\_create\_session}). Si \texttt{session\_id} es \texttt{null}, crea una nueva sesión. \\
-    4 & Sistema & Persiste el mensaje del alumno en la base de datos (\texttt{Message.objects.create}, \texttt{role='user'}). \\
-    5 & Sistema & Ejecuta \texttt{\_auto\_name\_and\_touch}: si es el primer mensaje de usuario y el título es \texttt{''Nueva conversación''}, asigna los primeros 50 caracteres como título. Actualiza \texttt{updated\_at}. \\
-    6 & Sistema & Lee la configuración global (\texttt{SystemConfig.get()}) para determinar: \texttt{llm\_model}, \texttt{moderation\_model} y \texttt{moderation\_mode}. \\
-    7 & Sistema & \textbf{Moderación de input} (si \texttt{moderation\_mode $\in$ \{both, input\}}): invoca a \texttt{moderate\_input()} que envía el texto del alumno al LLM de moderación. El veredicto es \texttt{OK} $\rightarrow$ continúa. \\
-    8 & Sistema & Construye el array de mensajes para Ollama: \texttt{SYSTEM\_PROMPT} + contexto de código (si existe) + últimos 10 mensajes del historial. \\
-    9 & Sistema & Inicia el streaming asíncrono: \texttt{ollama.AsyncClient().chat(model=llm\_model, stream=True)}. Abre una respuesta \texttt{StreamingHttpResponse} con \texttt{content\_type='text/event-stream'}. \\
-    10 & Sistema & Por cada token recibido, emite \texttt{data: \{''token'': ''...''\}} al frontend vía SSE. \\
-    11 & Sistema & \textbf{Moderación de output} (si \texttt{moderation\_mode $\in$ \{both, output\}}): cada \texttt{MOD\_WORD\_WINDOW} palabras (20 por defecto), lanza un \texttt{asyncio.Task} que evalúa el texto acumulado hasta el momento. \\
-    12 & Frontend & El \texttt{ReadableStream} del navegador procesa cada línea SSE. El callback \texttt{onToken(token)} concatena el token al mensaje del asistente en la interfaz de usuario, creando el efecto de escritura progresiva. \\
-    13 & Sistema & Al finalizar el stream, emite \texttt{data: \{''session\_id'': N, ''session\_title'': ''...''\}} y \texttt{data: [DONE]}. Persiste la respuesta completa como \texttt{Message(role='assistant')}. \\
-    14 & Frontend & El callback \texttt{onDone(sessionId, sessionTitle)} actualiza el estado de la sesión activa y el sidebar. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+    \textbf{Identificador:} CU1 & \textbf{Actor principal:} Alumno 
+  \end{tabularx} \\ \hline
 
-\begin{table}[CU1 Tutor Socrático 3]{TB:CU1 3}{Caso de uso: Interacción con el tutor socrático. 3}
-  \begin{tabular}{c p{8cm} p{8cm}}
-    \hline
-    \textbf{ID} & \textbf{Condición} & \textbf{Acción del sistema} \\
-    \hline \hline
-    FA-01 & Moderación de input rechaza el mensaje (\texttt{NO}) & Se marca el mensaje del usuario como \texttt{moderated=True}. Se envía un stream con la respuesta predeterminada: \texttt{''Lo siento, no puedo procesar ese mensaje. ¿Puedes reformular tu pregunta?''} seguido de \texttt{[DONE]}. No se invoca al LLM tutor. \\
-    FA-02 & Moderación de input falla por error técnico & Se aplica \textit{fail-closed}: el mensaje se trata como rechazado (se bloquea). Se devuelve la respuesta moderada predeterminada. \\
-    FA-03 & Moderación de output rechaza un fragmento (\texttt{NO}) & Se interrumpe la generación del LLM (\texttt{break} en el bucle de streaming). Se emite \texttt{data: \{''moderated'': true, ''response'': ''...''\}} seguido de \texttt{[DONE]}. Se persiste el mensaje con \texttt{moderated=True} y el contenido de la respuesta predeterminada. \\
-    FA-04 & Moderación de output falla por error técnico & Se aplica \textit{fail-open}: se permite continuar el stream sin interrupciones (\texttt{return True}). \\
-    FA-05 & Error en el LLM durante el streaming & Se emite \texttt{data: \{''error'': ''Error en motor IA: <detalle>''\}} al frontend. El callback \texttt{onError(error)} muestra el error al usuario. \\
-    FA-06 & Sesión no encontrada (\texttt{session\_id} inválido) & Se devuelve HTTP 404 con \texttt{\{''error'': ''Sesión no encontrada.'', ''details'': null\}}. \\
-    FA-07 & Token JWT expirado o ausente & El frontend intercepta HTTP 401, intenta renovar el token automáticamente (\texttt{POST /api/auth/jwt/refresh/}). Si falla, redirige al login. \\
-    FA-08 & Validación de entrada falla & Se devuelve HTTP 400 con los errores de validación en formato estandarizado \texttt{\{''error'': ''...'', ''details'': \{...\}\}}. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 2: Nombre
+  \textbf{Nombre:} Interacción con el tutor socrático \\ \hline
+
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El alumno envía una pregunta al tutor socrático, opcionalmente acompañada del código de su editor y la última salida de ejecución. El sistema modera la entrada, genera una respuesta pedagógica en streaming (SSE) y opcionalmente modera la salida en paralelo. \\ \hline
+
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
+  -- El servicio Ollama está activo y los modelos (principal y moderador) configurados están disponibles. \newline
+  -- Existe una sesión de chat activa o se creará una nueva automáticamente. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El alumno escribe un mensaje en el chat y pulsa enviar.\newline
+  2. El sistema valida que el mensaje no exceda la longitud permitida (2000 caracteres).\newline
+  3. El sistema obtiene o crea la sesión de chat si esta no existe.\newline
+  4. El sistema guarda el mensaje del alumno en la base de datos.\newline
+  5. El sistema comprueba si es el primer mensaje de usuario y si es el caso asigna los primeros 50 caracteres como título. Actualiza la fecha de la última modificación.\newline
+  6. El sistema lee la configuración global para determinar los modelos a utilizar, los modos de moderación y el umbral de palabras para la moderación de output.\newline
+  7. Si la moderación de input está activada envía el texto del alumno al LLM de moderación, si el veredicto es OK, continúa.\newline
+  8. El sistema construye el array de mensajes para Ollama: \texttt{SYSTEM\_PROMPT} + contexto de código (si existe) + últimos 10 mensajes del historial.\newline
+  9. El sistema inicia el streaming asíncrono.\newline
+  10. Por cada token recibido, el sistema lo transmite en tiempo real hacia la interfaz del usuario vía SSE.\newline
+  11. Si la moderación de salida está activada, el sistema evalúa periódicamente el texto acumulado de forma asíncrona.\newline
+  12. La interfaz de usuario recibe los fragmentos de manera progresiva y los visualiza de forma continua en el chat.\newline
+  13. Al finalizar la generación de la respuesta, el sistema notifica el cierre de la transmisión y guarda la respuesta completa del asistente en la base de datos.\newline
+  14. La interfaz de usuario actualiza el estado de la sesión activa y refresca el historial de conversaciones en la barra lateral. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Moderación de input rechaza el mensaje (Paso 7):  \newline
+  1. El sistema marca el mensaje como moderado en la base de datos. \newline
+  2. Se envía respuesta predeterminada y no se invoca al LLM tutor. \newline
+  \textbf{FA-02:} Moderación de output rechaza un fragmento (Paso 11):  \newline
+  1. El sistema marca la respuesta como moderada en la base de datos. \newline
+  2. Se interrumpe la generación y se envía respuesta predeterminada. \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El mensaje del alumno se almacena en la base de datos. \newline
+  2. La respuesta del tutor se almacena en la base de datos. \newline
+  3. La sesión se actualiza o renombra si es necesario. \\ \hline
+
+\end{longtable}
+\endgroup
 
 \begin{figure}[Diagrama de secuencia CU1]{FIG:CU1_SEQ}{Diagrama de secuencia de la interacción del chat con streaming.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-1_secuencia_chat_stream.png}
+    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-1_secuencia_chat_stream.pdf}
 \end{figure}
 
 \begin{table}[CU2 Ejecución Piston 1]{TB:CU2 1}{Caso de uso: Ejecución de código con Piston. 1}

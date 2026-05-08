@@ -1,46 +1,13 @@
-\begin{table}[Requisitos No Funcionales 1]{TB:REQ_NO_FUNC 1}{Requisitos no funcionales del sistema. 1}
-  \begin{tabular}{c p{3cm} p{8cm} c}
-    \hline
-    \textbf{ID} & \textbf{Nombre} & \textbf{Descripción} & \textbf{Métrica / Restricción} \\
-    \hline \hline
-    RNF-01 & Latencia de streaming & La respuesta del tutor debe comenzar a llegar al navegador (primer token SSE) antes de que el usuario perciba una espera excesiva. El streaming token a token minimiza el \textit{time-to-first-byte} percibido. & Primer token < 3 s (red local) \\
-    RNF-02 & Ejecución de código con timeout & La ejecución en Piston dispone de un timeout HTTP de 30 segundos en el backend (\texttt{requests.post(..., timeout=30)}). Piston envía \texttt{SIGKILL} si el proceso del alumno excede su límite interno. & Timeout: 30 s (backend), configurable en Piston \\
-    RNF-03 & Paginación de datos & Las sesiones se paginan a 15 por página y los mensajes a 50 por página (máx. 100 configurable vía \texttt{?size=N}), evitando la transferencia masiva de datos y reduciendo la carga en PostgreSQL. & Sesiones: 15/pág, Mensajes: 50/pág \\
-    RNF-04 & Ventana de moderación de output & La moderación asíncrona de la respuesta del LLM se ejecuta cada \texttt{MOD\_WORD\_WINDOW} palabras (por defecto 20). Este parámetro es configurable vía variable de entorno para equilibrar latencia vs. cobertura. & Ventana: 20 palabras (configurable) \\
-    RNF-05 & Historial de contexto limitado & El payload enviado al LLM incluye como máximo los últimos 10 mensajes de la sesión (\texttt{order\_by('-created\_at')[:10]}), limitando el consumo de tokens y mejorando el tiempo de respuesta. & Máx. 10 mensajes de contexto \\
-    RNF-06 & Vigencia de tokens JWT & El \texttt{access\_token} tiene una validez de 1 día y el \texttt{refresh\_token} de 7 días, equilibrando seguridad con comodidad de uso. & Access: 1 día, Refresh: 7 días \\
-    \hline
-  \end{tabular}
-\end{table}
-
-\begin{table}[Requisitos No Funcionales 2]{TB:REQ_NO_FUNC 2}{Requisitos no funcionales del sistema. 2}
-  \begin{tabular}{c p{3cm} p{8cm} c}
-    \hline
-    \textbf{ID} & \textbf{Nombre} & \textbf{Descripción} & \textbf{Métrica / Restricción} \\
-    \hline \hline
-    RNF-07 & Ejecución aislada con Piston & Todo código del alumno se ejecuta dentro del contenedor Docker de Piston (\texttt{ghcr.io/engineer-man/piston}), completamente aislado del host y del backend Django. El contenedor se ejecuta en modo \texttt{privileged} para gestionar sus propios sub-contenedores de ejecución. & Aislamiento completo por contenedor \\
-    RNF-08 & Almacenamiento efímero en Piston & Los directorios \texttt{/piston/jobs} y \texttt{/tmp} del contenedor Piston se montan como \texttt{tmpfs} (sistema de archivos en RAM), garantizando que no persista ningún artefacto de ejecución del alumno tras cada petición. & tmpfs en \texttt{/piston/jobs} y \texttt{/tmp} \\
-    RNF-09 & Base de datos contenerizada & PostgreSQL 15 (Alpine) se ejecuta como servicio Docker independiente con volumen persistente \texttt{postgres\_data}. El puerto se mapea en \texttt{5433:5432} para evitar conflictos con instalaciones locales. & PostgreSQL 15-alpine, puerto 5433 \\
-    RNF-10 & IA local con Ollama & Los modelos LLM (tutor y moderación) se ejecutan localmente a través de Ollama, sin depender de APIs externas de pago. Esto garantiza privacidad total de los datos del alumno y elimina costes por token. & Sin dependencia de servicios en la nube \\
-    \hline
-  \end{tabular}
-\end{table}
-
-\begin{table}[Requisitos No Funcionales 3]{TB:REQ_NO_FUNC 3}{Requisitos no funcionales del sistema. 3}
-  \begin{tabular}{c p{3cm} p{8cm} c}
-    \hline
-    \textbf{ID} & \textbf{Nombre} & \textbf{Descripción} & \textbf{Métrica / Restricción} \\
-    \hline \hline
-    RNF-11 & Autenticación obligatoria & Todos los endpoints de la API (excepto registro, login y refresh) requieren un token JWT válido (\texttt{IsAuthenticated}). Las peticiones sin token o con token expirado reciben HTTP 401. & JWT Bearer en todas las peticiones \\
-    RNF-12 & Renovación transparente de sesión & El frontend implementa un interceptor Axios que detecta errores 401, intenta renovar el \texttt{access\_token} automáticamente y reintenta la petición original. Las peticiones concurrentes se encolan durante el refresh (patrón \textit{subscriber queue}). & Auto-refresh transparente \\
-    RNF-13 & Moderación dual configurable & El sistema soporta cuatro modos de moderación configurables desde el Admin: \texttt{both} (input + output), \texttt{input} (solo entrada), \texttt{output} (solo salida) y \texttt{none} (desactivada). Esto permite ajustar el nivel de seguridad según el contexto de uso. & 4 modos: both, input, output, none \\
-    RNF-14 & Fail-closed en moderación de input & Si la moderación de entrada falla por error técnico, el mensaje se bloquea por defecto (estrategia \textit{fail-closed}), priorizando la seguridad sobre la disponibilidad. & Bloqueo por defecto en error \\
-    RNF-15 & Fail-open en moderación de output & Si la moderación de salida falla por error técnico, el texto se permite (estrategia \textit{fail-open}), priorizando la continuidad del stream educativo sobre el riesgo residual. & Permiso por defecto en error \\
-    RNF-16 & Prompt anti-jailbreak & El \texttt{SYSTEM\_PROMPT} del tutor incluye reglas explícitas de \textit{prevención de engaños}: ignora instrucciones del alumno que intenten anular las directrices del sistema, solicitar código completo o cambiar el rol del asistente. & Regla explícita en el system prompt \\
-    RNF-17 & CORS configurado & En desarrollo se permite \texttt{CORS\_ALLOW\_ALL\_ORIGINS = True}. En producción se restringe a los orígenes autorizados mediante \texttt{CORS\_ALLOWED\_ORIGINS}. & Configurable por entorno \\
-    RNF-18 & Propiedad de datos por usuario & Todas las consultas de sesiones y mensajes filtran por \texttt{user=request.user}, impidiendo que un usuario acceda a datos de otro. El borrado en cascada (\texttt{on\_delete=CASCADE}) garantiza la eliminación completa. & Filtrado por usuario en cada query \\
-    RNF-19 & Validación de entrada estandarizada & Todos los datos de entrada se validan mediante serializers de DRF (\texttt{ChatInputSerializer}, \texttt{ExecuteInputSerializer}), limitando el tamaño del \texttt{prompt} a 2000 caracteres y garantizando la sanitización de tipos. & Máx. 2000 chars en prompt \\
-    \hline
-  \end{tabular}
-\end{table}
-
+\begin{nonfunctional}
+    \item Seguridad: El código de los usuarios debe ejecutarse en un entorno aislado (sandbox) sin acceso a red ni al sistema operativo. El sistema de IA debe integrar protecciones contra inyecciones de prompts.
+    
+    \item Rendimiento: La ejecución de código debe limitarse estrictamente en tiempo (ej. 3 segundos) y memoria. Las respuestas del LLM utilizarán streaming para lograr una latencia inicial inferior a 1 segundo.
+    
+    \item Usabilidad: La interfaz debe ser reactiva y ocultar las trazas de error de sistema crudas (ej. SIGKILL), traduciéndolas a mensajes de retroalimentación pedagógicos para el estudiante.
+    
+    \item Fiabilidad: El sistema debe interceptar caídas internas del motor de ejecución sin detener la aplicación. La arquitectura debe permitir cambiar de modelo de IA sin modificar el código fuente.
+    
+    \item Eficiencia y Costes: El consumo de la API debe optimizarse utilizando modelos de IA pequeños para la moderación y un sistema de truncado del historial para no exceder los límites de tokens.
+    
+    \item Portabilidad: La plataforma cliente debe ser accesible desde cualquier navegador web moderno, sin requerir ninguna instalación ni configuración local por parte del estudiante.
+\end{nonfunctional}

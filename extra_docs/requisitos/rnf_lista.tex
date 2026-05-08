@@ -1,0 +1,13 @@
+\begin{nonfunctional}
+    \item[RNF-01.-] Seguridad: El código de los usuarios debe ejecutarse en un entorno aislado (sandbox) sin acceso a red ni al sistema operativo. El sistema de IA debe integrar protecciones contra inyecciones de prompts.
+    
+    \item[RNF-02.-] Rendimiento: La ejecución de código debe limitarse estrictamente en tiempo (ej. 3 segundos) y memoria. Las respuestas del LLM utilizarán streaming para lograr una latencia inicial inferior a 1 segundo.
+    
+    \item[RNF-03.-] Usabilidad: La interfaz debe ser reactiva y ocultar las trazas de error de sistema crudas (ej. SIGKILL), traduciéndolas a mensajes de retroalimentación pedagógicos para el estudiante.
+    
+    \item[RNF-04.-] Fiabilidad: El sistema debe interceptar caídas internas del motor de ejecución sin detener la aplicación. La arquitectura debe permitir cambiar de modelo de IA sin modificar el código fuente.
+    
+    \item[RNF-05.-] Eficiencia y Costes: El consumo de la API debe optimizarse utilizando modelos de IA pequeños para la moderación y un sistema de truncado del historial para no exceder los límites de tokens.
+    
+    \item[RNF-06.-] Portabilidad: La plataforma cliente debe ser accesible desde cualquier navegador web moderno, sin requerir ninguna instalación ni configuración local por parte del estudiante.
+\end{nonfunctional}

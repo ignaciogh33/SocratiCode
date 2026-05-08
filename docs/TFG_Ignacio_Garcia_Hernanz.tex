@@ -12,7 +12,7 @@
 
 \advisor{Oscar Delgado Ben Mohatar}
 \levelin{Ingeniería Informática}
-\title{Desarrollo de un Tutor Socrático basado en LLMs para la enseñanza de Programación}
+\title{Desarrollo de un tutor socrático basado en LLMs para la enseñanza de programación}
 \subtitle{SocratiCode}
 \author{Ignacio García Hernanz}
 \privateaddress{C\textbackslash\ Francisco Tomás y Valiente Nº 11}
@@ -24,6 +24,9 @@
 \ackfile{inicio/agradecimientos}
 \resumenfile{inicio/resumen}
 \abstractfile{inicio/abstract}
+
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
 
 \keywords{Algunas} % TODO: Añadir palabras clave
 \palabrasclave{Otras} % TODO: Añadir keywords en inglés
@@ -47,25 +50,25 @@
 \chapter{Introducción\label{CAP:INTRO}}{introduccion/introduccion}
   \section{Motivación\label{SEC:INTRO_MOTIVACION}}{introduccion/motivacion}
   \section{Objetivos\label{SEC:INTRO_OBJETIVOS}}{introduccion/objetivos}
-  \section{Estructura del Proyecto\label{SEC:INTRO_ESTRUCTURA}}{introduccion/estructura_proyecto}
+  \section{Estructura del proyecto\label{SEC:INTRO_ESTRUCTURA}}{introduccion/estructura_proyecto}
 
 \chapter{Estado del arte\label{CAP:ESTADO_ARTE}}{estado_arte/estado_arte}
-  \section{Fundamentos Pedagógicos en la Enseñanza de la Programación\label{SEC:EA_FUNDAMENTOS}}{estado_arte/fundamentos}
+  \section{Fundamentos pedagógicos en la enseñanza de la programación\label{SEC:EA_FUNDAMENTOS}}{estado_arte/fundamentos}
     \subsection{Dificultades en el aprendizaje inicial (CS1)\label{SS:EA_FUND_DIFICULTADES}}{estado_arte/dificultades}
-    \subsection{El Método Socrático como mitigación\label{SS:EA_FUND_SOCRATICO}}{estado_arte/metodo_socratico}
-  \section{Inteligencia Artificial Generativa en la Educación\label{SEC:EA_IA_EDU}}{estado_arte/ia_educacion}
+    \subsection{El método socrático como mitigación\label{SS:EA_FUND_SOCRATICO}}{estado_arte/metodo_socratico}
+  \section{Inteligencia artificial generativa en la educación\label{SEC:EA_IA_EDU}}{estado_arte/ia_educacion}
     \subsection{Riesgos del facilismo algorítmico\label{SS:EA_IA_RIESGOS}}{estado_arte/riesgos}
-    \subsection{Sistemas de tutoría guiada (Casos de Éxito)\label{SS:EA_IA_TUTORIA}}{estado_arte/sistemas_tutoria}
-    \subsection{Ingeniería de Prompts en educación\label{SS:EA_IA_PROMPTS}}{estado_arte/prompts}
-  \section{Modelos de Lenguaje Extenso (LLMs) y Despliegue Local\label{SEC:EA_LLMS}}{estado_arte/llms}
-    \subsection{APIs en la nube vs. Inferencia Local\label{SS:EA_LLM_APIS}}{estado_arte/apis_vs_local}
+    \subsection{Sistemas de tutoría guiada (casos de éxito)\label{SS:EA_IA_TUTORIA}}{estado_arte/sistemas_tutoria}
+    \subsection{Ingeniería de \textit{prompts} en educación\label{SS:EA_IA_PROMPTS}}{estado_arte/prompts}
+  \section{Modelos de lenguaje extenso (LLMs) y despliegue local\label{SEC:EA_LLMS}}{estado_arte/llms}
+    \subsection{APIs en la nube vs. inferencia local\label{SS:EA_LLM_APIS}}{estado_arte/apis_vs_local}
     \subsection{Ecosistema y clasificación de modelos de lenguaje \\ de código abierto\label{SS:EA_LLM_ECOSISTEMA}}{estado_arte/ecosistema_modelos}
     \subsection{Optimización de modelos ligeros\label{SS:EA_LLM_OPTIMIZACION}}{estado_arte/optimizacion_modelos}
   \section{Seguridad y aislamiento en la ejecución de código\label{SEC:EA_SANDBOX}}{estado_arte/sandboxing}
   \section{Arquitecturas web para entornos interactivos\label{SEC:EA_ARQUITECTURA}}{estado_arte/arquitectura_web}
-    \subsection{Paradigma de Aplicación de Página Única (SPA)\label{SS:EA_ARQ_DESACOPLADA}}{estado_arte/web_desacoplada}
+    \subsection{Paradigma de aplicación de página única (SPA)\label{SS:EA_ARQ_DESACOPLADA}}{estado_arte/web_desacoplada}
     \subsection{Protocolos de comunicación en tiempo real\label{SS:EA_ARQ_PROTOCOLOS}}{estado_arte/protocolos}
-  \section{Conclusiones del Estado del Arte\label{SEC:EA_CONCLUSIONES}}{estado_arte/conclusiones}
+  \section{Conclusiones del estado del arte\label{SEC:EA_CONCLUSIONES}}{estado_arte/conclusiones}
 
 \chapter{Análisis y diseño\label{CAP:ANALISIS_DISENO}}{analisis_diseno/analisis_diseno}
   \section{Metodología\label{SEC:AD_METODOLOGIA}}{analisis_diseno/metodologia}
@@ -74,7 +77,7 @@
     \subsection{Requisitos funcionales\label{SS:AD_REQ_FUNCIONALES}}{analisis_diseno/requisitos_funcionales}
     \subsection{Requisitos no funcionales\label{SS:AD_REQ_NOFUNCIONALES}}{analisis_diseno/requisitos_no_funcionales}
   \section{Casos de uso\label{SEC:AD_CASOSUSO}}{analisis_diseno/casos_uso}
-  \section{Diagrama de modelo de datos (Clases/Entidad-Relación)\label{SEC:AD_MODELO}}{analisis_diseno/modelo_datos}
+  \section{Diagrama de modelo de datos (clases/entidad-relación)\label{SEC:AD_MODELO}}{analisis_diseno/modelo_datos}
   \section{Diagrama de componentes y arquitectura\label{SEC:AD_ARQ}}{analisis_diseno/arquitectura}
     \subsection{Diagrama de arquitectura\label{SS:AD_ARQ_DIAGRAMA}}{analisis_diseno/diagrama_arquitectura}
     \subsection{Diagramas de secuencia de las funcionalidades principales\label{SS:AD_ARQ_SECUENCIA}}{analisis_diseno/diagramas_secuencia}
@@ -83,23 +86,23 @@
 \chapter{Desarrollo e implementación\label{CAP:DESARROLLO}}{desarrollo_implementacion/desarrollo_implementacion}
   \section{Entorno de programación\label{SEC:DI_ENTORNO}}{desarrollo_implementacion/entorno}
   \section{Tecnologias y librerías\label{SEC:DI_TECNOLOGIAS}}{desarrollo_implementacion/tecnologias}
-    \subsection{Framework Backend (Django / Python)\label{SS:DI_TEC_BACKEND}}{desarrollo_implementacion/backend}
-    \subsection{Framework Frontend (Vue 3 / Vite)\label{SS:DI_TEC_FRONTEND}}{desarrollo_implementacion/frontend}
-    \subsection{Motor de Inteligencia Artificial (Ollama / Llama 3.2)\label{SS:DI_TEC_IA}}{desarrollo_implementacion/ia}
+    \subsection{Framework backend (Django / Python)\label{SS:DI_TEC_BACKEND}}{desarrollo_implementacion/backend}
+    \subsection{Framework frontend (Vue 3 / Vite)\label{SS:DI_TEC_FRONTEND}}{desarrollo_implementacion/frontend}
+    \subsection{Motor de inteligencia artificial (Ollama / Llama 3.2)\label{SS:DI_TEC_IA}}{desarrollo_implementacion/ia}
     \subsection{Motor de compilación y ejecución (Piston / Docker)\label{SS:DI_TEC_MOTOR}}{desarrollo_implementacion/motor}
     \subsection{Control de versiones y despliegue (Git / GitHub)\label{SS:DI_TEC_GIT}}{desarrollo_implementacion/control_versiones}
   \section{Implementación\label{SEC:DI_IMPLEMENTACION}}{desarrollo_implementacion/implementacion}
-    \subsection{Gestión de la lógica socrática (Prompt Engineering)\label{SS:DI_IMP_PROMPTS}}{desarrollo_implementacion/logica_socratica}
+    \subsection{Gestión de la lógica socrática (\textit{prompt engineering})\label{SS:DI_IMP_PROMPTS}}{desarrollo_implementacion/logica_socratica}
     \subsection{Implementación del flujo de datos en tiempo real (SSE)\label{SS:DI_IMP_SSE}}{desarrollo_implementacion/flujo_datos_sse}
     \subsection{Integración y aislamiento del motor de ejecución (Docker/Piston)\label{SS:DI_IMP_MOTOR}}{desarrollo_implementacion/aislamiento_motor}
   \section{Interfaz\label{SEC:DI_INTERFAZ}}{desarrollo_implementacion/interfaz}
     \subsection{Navegación y vista principal del tutor\label{SS:DI_INT_NAVEGACION}}{desarrollo_implementacion/navegacion}
     \subsection{Personalización y editor de código\label{SS:DI_INT_EDITOR}}{desarrollo_implementacion/personalizacion}
-  \section{Verificación y Pruebas del sistema\label{SEC:DI_PRUEBAS}}{desarrollo_implementacion/verificacion_pruebas}
+  \section{Verificación y pruebas del sistema\label{SEC:DI_PRUEBAS}}{desarrollo_implementacion/verificacion_pruebas}
   \section{Conclusiones\label{SEC:DI_CONCLUSIONES}}{desarrollo_implementacion/conclusiones}
 
 \chapter{Pruebas\label{CAP:PRUEBAS}}{pruebas/pruebas}
-  \section{Pruebas de seguridad e integridad (Pentesting del Sandbox)\label{SEC:PR_SEGURIDAD}}{pruebas/seguridad}
+  \section{Pruebas de seguridad e integridad (pentesting del sandbox)\label{SEC:PR_SEGURIDAD}}{pruebas/seguridad}
   \section{Encuesta de experiencia de usuario y validación pedagógica\label{SEC:PR_ENCUESTA}}{pruebas/encuesta}
 
 \chapter{Conclusiones y trabajo futuro\label{CAP:CONCLUSIONES_FUTURO}}{conclusiones_futuro/conclusiones_futuro}

@@ -1,0 +1,39 @@
+\begingroup
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased} % Líneas un tono más oscuro que el fondo de las filas
+\begin{longtable}{|c|p{3.5cm}|p{9cm}|}
+  \caption{Requisitos No Funcionales del sistema.}
+  \label{TB:REQ_NO_FUNC} \\
+  
+  % --- Primera cabecera (aparece solo en la primera página de la tabla) ---
+  \hline
+  \rowcolor{maincolor} 
+  \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Nombre}} & \textcolor{white}{\textbf{Descripción}} \\
+  \hline
+  \endfirsthead
+  
+  % --- Cabecera secundaria (se repite en las siguientes páginas) ---
+  \multicolumn{3}{c}{{\tablename\ \thetable{} -- Continuación de la página anterior}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Nombre}} & \textcolor{white}{\textbf{Descripción}} \\
+  \hline
+  \endhead
+  
+  % --- Pie de tabla (aparece al final de cada página si la tabla continúa) ---
+  \hline \multicolumn{3}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- Pie final (aparece solo al final de la última página de la tabla) ---
+  \hline
+  \endlastfoot
+
+  % --- CONTENIDO DE LA TABLA ---
+  \rowcolor{ulepsbased} RNF-01 & Seguridad & El código de los usuarios debe ejecutarse en un entorno aislado (sandbox) sin acceso a red ni al sistema operativo. El sistema de IA debe integrar protecciones contra inyecciones de prompts. \\ \hline
+  RNF-02 & Rendimiento & La ejecución de código debe limitarse estrictamente en tiempo (ej. 3 segundos) y memoria. Las respuestas del LLM utilizarán streaming para lograr una latencia inicial inferior a 1 segundo. \\ \hline
+  \rowcolor{ulepsbased} RNF-03 & Usabilidad & La interfaz debe ser reactiva y ocultar las trazas de error de sistema crudas (ej. SIGKILL), traduciéndolas a mensajes de retroalimentación pedagógicos para el estudiante. \\ \hline
+  RNF-04 & Fiabilidad & El sistema debe interceptar caídas internas del motor de ejecución sin detener la aplicación. La arquitectura debe permitir cambiar de modelo de IA sin modificar el código fuente. \\ \hline
+  \rowcolor{ulepsbased} RNF-05 & Eficiencia y Costes & El consumo de la API debe optimizarse utilizando modelos de IA pequeños para la moderación y un sistema de truncado del historial para no exceder los límites de tokens. \\ \hline
+  RNF-06 & Portabilidad & La plataforma cliente debe ser accesible desde cualquier navegador web moderno, sin requerir ninguna instalación ni configuración local por parte del estudiante. \\ \hline
+\end{longtable}
+\endgroup

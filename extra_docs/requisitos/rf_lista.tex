@@ -1,0 +1,37 @@
+\begin{functional}
+    \item[RF-01.-] Registro de usuarios: El sistema permitirá a un usuario crear una cuenta proporcionando un nombre de usuario, una dirección de email y una contraseña. La contraseña se deberá introducir dos veces para verificar su coincidencia. Además, el sistema validará que la contraseña cumpla con criterios de seguridad robustos, exigiendo una longitud mínima, la inclusión de caracteres alfanuméricos y especiales, y la restricción de claves vulnerables o de uso común.
+
+    \item[RF-02.-] Inicio de sesión: El sistema autenticará al usuario mediante credenciales (usuario y contraseña).
+
+    \item[RF-03.-] Almacenamiento seguro de credenciales: El sistema almacenará el \textit{hash} de la contraseña utilizando el algoritmo PBKDF2 con SHA-256, aplicando 1.200.000 iteraciones y un \textit{salt} aleatorio.
+
+    \item[RF-04.-] Cierre de sesión: El sistema permitirá al usuario autenticado cerrar su sesión de forma segura, eliminando los \textit{tokens} de acceso del cliente y redirigiéndolo a la pantalla de inicio o \textit{login}.
+
+    \item[RF-05.-] Gestión de perfil de usuario: El usuario podrá consultar y editar su nombre de usuario, descripción y tema de la interfaz (claro/oscuro). También podrá cambiar su contraseña proporcionando la actual y la nueva (con confirmación).
+
+    \item[RF-06.-] Recuperación de contraseña: El usuario podrá recuperar su contraseña proporcionando una dirección de correo electrónico asociada a una cuenta existente. El sistema enviará un email con un enlace de recuperación de un solo uso y tiempo de expiración limitado.
+
+    \item[RF-07.-] Creación de sesiones de chat: El sistema permitirá crear una nueva sesión de chat vacía asociada al usuario autenticado. El título por defecto será ``Nueva conversación'', el cual se renombrará automáticamente cuando el usuario envíe su primer mensaje.
+
+    \item[RF-08.-] Listado de sesiones paginado: El sistema listará las sesiones del usuario ordenadas por fecha de actualización descendente.
+
+    \item[RF-09.-] Interacción con el tutor socrático: El usuario enviará un mensaje de texto (máx. 2000 caracteres), opcionalmente acompañado del código del editor (si está desplegado) y del resultado de la última ejecución (si existe). El sistema generará una respuesta pedagógica usando un LLM en modo streaming.
+
+    \item[RF-10.-] Moderación de input configurable: Si está habilitada, el sistema evaluará el mensaje del alumno mediante un LLM de moderación antes de invocar al tutor. Si este marca el mensaje como inapropiado o da error, se mostrará un mensaje predeterminado al usuario.
+
+    \item[RF-11.-] Moderación de output configurable: Si está habilitada, el sistema evaluará la salida del LLM tutor en paralelo cada cierta cantidad de palabras (configurable). Si el LLM moderador marca como inapropiado un fragmento acumulativo se corta la generación, se descarta el texto y se sustituye por el mensaje moderado; en cambio, si este falla no se corta la generación.
+
+    \item[RF-12.-] Renombrado de sesión: El usuario podrá renombrar una sesión proporcionando un nuevo título (máx. 200 caracteres).
+
+    \item[RF-13.-] Eliminación de sesión: El sistema permitirá al usuario eliminar una sesión de chat y todos sus mensajes asociados.
+
+    \item[RF-14.-] Historial de mensajes: El sistema devolverá los mensajes de una sesión ordenados por fecha descendente.
+
+    \item[RF-15.-] Compilación y ejecución de código: El sistema ejecutará código fuente del alumno, soportando Python, Java y C. Devolverá el resultado de la ejecución o un mensaje de error si este falla.
+
+    \item[RF-16.-] Gestión e Intercepción de Errores de Ejecución: El sistema gestionará los errores de ejecución (como tiempos de espera agotados o fallos de memoria) traduciéndolos a mensajes de error claros.
+
+    \item[RF-17.-] Configuración global de parámetros: El administrador podrá gestionar a través de la interfaz de administración los parámetros globales del sistema, incluyendo la selección de los modelos de lenguaje principal y de moderación, así como el alcance de la supervisión de mensajes (entrada, salida, ambos o ninguno). El sistema garantizará la existencia de un único conjunto de ajustes activos para toda la plataforma.
+
+    \item[RF-18.-] Control de navegación por estado de autenticación: El sistema restringirá el acceso a las diferentes vistas de la aplicación en función de si el usuario ha iniciado sesión o no. Las áreas privadas redirigirán automáticamente a la pantalla de acceso si no existe una sesión válida, mientras que las interfaces de ingreso o registro bloquearán el acceso a los usuarios ya autenticados, redirigiéndolos al panel principal.
+\end{functional}
