@@ -1,5 +1,42 @@
 from django.contrib import admin
+from django import forms
 from .models import ChatSession, Message, SystemConfig
+
+import ollama
+
+
+def _get_ollama_choices():
+    """Consulta a Ollama los modelos instalados y devuelve choices para un select."""
+    try:
+        response = ollama.list()
+        names = sorted(m.model for m in response.models)
+        return [(n, n) for n in names]
+    except Exception:
+        return None
+
+
+class SystemConfigForm(forms.ModelForm):
+    """Formulario con selectores dinámicos de modelos de Ollama."""
+
+    class Meta:
+        model = SystemConfig
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = _get_ollama_choices()
+
+        if choices:
+            for field_name in ('llm_model', 'moderation_model'):
+                current = self.initial.get(field_name) or self.fields[field_name].initial
+                if current and current not in [c[0] for c in choices]:
+                    choices = [(current, f'{current}  ⚠ no disponible')] + choices
+                self.fields[field_name] = forms.ChoiceField(
+                    choices=choices,
+                    initial=current,
+                    label=self.fields[field_name].label,
+                    help_text=self.fields[field_name].help_text,
+                )
 
 
 class MessageInline(admin.TabularInline):
@@ -39,9 +76,11 @@ class MessageAdmin(admin.ModelAdmin):
 class SystemConfigAdmin(admin.ModelAdmin):
     """Panel de configuración del sistema (singleton — una sola fila)."""
 
+    form = SystemConfigForm
+
     fieldsets = (
         ('Moderación de contenido', {
-            'fields': ('moderation_mode',),
+            'fields': ('moderation_mode', 'mod_word_window'),
             'description': 'Controla qué moderación se aplica a los mensajes del chat.',
         }),
         ('Modelos LLM (Ollama)', {

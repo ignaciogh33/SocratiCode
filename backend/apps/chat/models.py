@@ -58,6 +58,11 @@ class SystemConfig(models.Model):
         verbose_name='Modelo LLM de moderación',
         help_text='Nombre del modelo de Ollama para la moderación de contenido.',
     )
+    mod_word_window = models.PositiveIntegerField(
+        default=40,
+        verbose_name='Ventana de moderación (palabras)',
+        help_text='Cada cuántas palabras del output se lanza un check de moderación.',
+    )
 
     class Meta:
         verbose_name = 'Configuración del sistema'

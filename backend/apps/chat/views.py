@@ -235,7 +235,7 @@ async def chat_view(request):
         mod_buffer = ""
         moderation_tasks: list[asyncio.Task] = []
         flagged = False
-        word_window = getattr(settings, 'MOD_WORD_WINDOW', 20)
+        word_window = config.mod_word_window
 
         if settings.DEBUG and do_output_mod:
             print(f"\n③ OUTPUT MOD ({mod_model}) — cada {word_window} palabras")
