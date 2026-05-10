@@ -1,10 +1,16 @@
-\begin{figure}[Diagrama Entidad-Relación]{FIG:ER_MODEL}{Diagrama Entidad-Relación del sistema.}
+En esta sección se describe la estructura interna de los datos manejados por la aplicación desde un punto de vista orientado a objetos y relacional. Para ello, se presenta un diagrama de clases detallado que refleja las principales entidades del sistema, sus atributos y la forma en que se relacionan entre sí. Este modelo permite obtener una visión general de cómo se organiza la información, facilitando así la comprensión de la arquitectura de datos subyacente.
+
+\begin{figure}[Diagrama de clases del modelo de datos]{FIG:ER_CLASS_DIAGRAM}{Diagrama de clases detallado del modelo de datos de SocratiCode.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-4_er_modelo_datos.png}
+    \includegraphics[width=0.95\textwidth]{./diagramas/er_diagram.pdf}
 \end{figure}
 
-\begin{figure}[Modelo de datos en DBeaver]{FIG:ER_DBEAVER}{Modelo de datos generado en DBeaver.}
-    \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-4_er_modelo_datos_dbeaver.png}
-\end{figure}
+A continuación se detalla el propósito y las responsabilidades de cada una de las clases que conforman este modelo:
 
+\begin{itemize}
+    \item \textbf{AbstractUser:} Clase base que encapsula la lógica estándar de gestión de identidades, contraseñas y estados de acceso.
+    \item \textbf{User:} Entidad principal que representa a los usuarios registrados en la plataforma. Extiende el modelo base para almacenar parámetros específicos de la aplicación, como la biografía del perfil y el tema visual seleccionado por defecto. Añade la obligatoriedad de un correo electrónico para el registro.
+    \item \textbf{ChatSession:} Representa una sesión o conversación de chat individual. Cada sesión está asociada a un único usuario y sirve como contenedor lógico para agrupar y organizar cronológicamente los mensajes.
+    \item \textbf{Message:} Entidad que almacena de forma individual cada interacción dentro de una sesión de chat. Registra el rol de quien emite el mensaje (usuario, asistente o sistema), el contenido de la interacción y un indicador de si el contenido ha sido filtrado por la moderación.
+    \item \textbf{SystemConfig:} Modelo diseñado para centralizar la configuración administrativa global. Se apoya en un patrón Singleton para asegurar una única instancia, permitiendo gestionar dinámicamente los modelos de inteligencia artificial en uso y los niveles de moderación de la plataforma.
+\end{itemize}
