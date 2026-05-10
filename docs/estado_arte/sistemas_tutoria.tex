@@ -1,4 +1,4 @@
-Para evitar estos problemas sin renunciar a la IA, diversas instituciones han desarrollado sisistemas que siguen reglas pedagógicas muy estrictas. A continuación, se analizan tres de las implementaciones más relevantes y actuales en el ámbito académico.
+Para evitar estos problemas sin renunciar a la IA, diversas instituciones han desarrollado sistemas que buscan modificar de una forma u otra el comportamiento nativo de los LLM para que actúen como tutores pedagógicos. A continuación, se analizan tres de las propuestas más relevantes y actuales en el ámbito académico.
 
 \subsubsection{CS50 Duck (Universidad de Harvard)}
 \label{sec:cs50}
@@ -13,7 +13,7 @@ Para gestionar los costes de la API comercial, Harvard implementó un sistema de
 
 \subsubsection{CodeAid}
 \label{sec:codeaid}
-El asistente CodeAid propone un modelo de ayuda estructurada basado en herramientas específicas como la explicación de conceptos técnicos o la resolución de dudas teóricas sin ejecución directa de código. Su arquitectura se apoya en una técnica de \textit{few-shot prompting}, donde el modelo es entrenado con ejemplos de interacciones pedagógicas para mantener un tono de apoyo constante \cite{kazemitabaar2024codeaid}. Uno de sus puntos fuertes es que, al seleccionar la opción de revisión de código, la IA sigue el flujo descrito por la figura \ref{fig:arquitectura_codeaid} para garantizar la precisión de sus respuestas. En este proceso se genera internamente la solución correcta, pero el sistema solo muestra al estudiante un pseudocódigo que orienta su lógica sin regalarle la implementación final, obligándole a escribir cada línea en su propio editor \cite{kazemitabaar2024codeaid}.
+El asistente CodeAid propone un modelo de ayuda estructurada basado en herramientas específicas como la explicación de conceptos técnicos o la resolución de dudas teóricas sin ejecución directa de código. Su arquitectura se apoya en el uso de \textit{few-shot prompting}, una técnica que condiciona al modelo incorporando ejemplos de interacciones pedagógicas directamente en sus instrucciones base (\textit{system prompt}), logrando así mantener un tono de apoyo constante \cite{kazemitabaar2024codeaid}. Uno de sus puntos fuertes es que, al seleccionar la opción de revisión de código, la IA sigue el flujo descrito por la figura \ref{fig:arquitectura_codeaid} para garantizar la precisión de sus respuestas. En este proceso se genera internamente la solución correcta, pero el sistema solo muestra al estudiante un pseudocódigo que orienta su lógica sin regalarle la implementación final, obligándole a escribir cada línea en su propio editor \cite{kazemitabaar2024codeaid}.
 
 \begin{figure}[Arquitectura del sistema CodeAid]{fig:arquitectura_codeaid}{Flujo de procesamiento de CodeAid desde la consulta del alumno hasta la generación de pseudocódigo. Tomado de \cite{kazemitabaar2024codeaid}.}
     \centering
