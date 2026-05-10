@@ -1,5 +1,18 @@
-\begin{figure}[Arquitectura en capas]{FIG:ARQ_CAPAS}{Diagrama de la arquitectura en capas del sistema.}
+En este apartado se presenta la arquitectura a alto nivel de la aplicación SocratiCode. El diseño del sistema se fundamenta en una estructura modular, compuesta por cinco grandes componentes que se encargan de separar las distintas responsabilidades funcionales: el cliente web (frontend) que actúa como interfaz de usuario, el servidor orquestador central (backend API), el sistema de persistencia de datos (base de datos), el motor local de inteligencia artificial y el entorno aislado para la ejecución segura de código (sandbox). 
+
+A continuación, se expone un diagrama de componentes que ilustra de forma simplificada las interfaces y los canales de comunicación entre estos módulos para dar soporte al flujo conversacional interactivo.
+
+\begin{figure}[Diagrama de componentes del sistema]{FIG:ARQ_COMPONENTES}{Diagrama de componentes a alto nivel de SocratiCode.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-5_arquitectura_capas.png}
+    \includegraphics[width=0.95\textwidth]{./diagramas/diagrama_componentes.pdf}
 \end{figure}
 
+A continuación, se detalla la función principal de cada uno de los componentes ilustrados en el diagrama:
+
+\begin{itemize}
+    \item \textbf{Cliente Web (Frontend):} Interfaz visual con la que interactúa el alumno. Está construida como una aplicación de página única (SPA) utilizando Vue 3. Se encarga de capturar la entrada del usuario, mostrar el entorno de chat y el editor de código, así como de renderizar en tiempo real el flujo de respuestas del tutor mediante \textit{streaming}.
+    \item \textbf{Servidor Backend (API):} Núcleo orquestador del sistema desarrollado en Django. Gestiona la lógica de negocio, la autenticación de los usuarios, coordina el \textit{streaming} de eventos asíncronos (SSE) hacia el cliente web y actúa como puente de comunicación con los servicios de IA y ejecución.
+    \item \textbf{Base de Datos:} Sistema de persistencia (PostgreSQL) en el que se almacena la información de los usuarios, sus historiales de sesiones, los mensajes de chat y la configuración global del sistema.
+    \item \textbf{Motor de Inteligencia Artificial:} Servicio autónomo (Ollama) encargado de realizar la inferencia local de los modelos de lenguaje (LLMs). Soporta tanto la generación conversacional del tutor socrático como las tareas automáticas de moderación de contenido.
+    \item \textbf{Sandbox de Ejecución de Código:} Entorno aislado (basado en Piston y Docker) que recibe el código fuente, lo compila o interpreta dentro de un contenedor efímero, y devuelve los resultados o errores de forma totalmente segura sin comprometer el servidor anfitrión.
+\end{itemize}
