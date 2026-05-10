@@ -31,8 +31,8 @@
 
   % Fila 1: ID y Actor
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
-    \textbf{Identificador:} CU2 & \textbf{Actor principal:} Usuario 
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU2 & \textbf{Actor principal:} Alumno 
   \end{tabularx} \\ \hline
 
   % Fila 2: Nombre
@@ -41,18 +41,18 @@
   % Fila 3: Descripción
   \rowcolor{ulepsbased}
   \textbf{Descripción:} \newline 
-  El usuario ejecuta el código de su editor en un entorno sandbox aislado (Piston). El sistema envía el código fuente, el lenguaje y la versión al contenedor, y devuelve la salida estándar (\texttt{stdout}), los errores (\texttt{stderr}) y el código de salida. \\ \hline
+  El alumno ejecuta el código de su editor en un entorno sandbox aislado (Piston). El sistema envía el código fuente, el lenguaje y la versión al contenedor, y devuelve la salida estándar (\texttt{stdout}), los errores (\texttt{stderr}) y el código de salida. \\ \hline
 
   % Fila 4: Precondiciones
   \textbf{Precondiciones:} \newline
-  -- El usuario ha iniciado sesión en la plataforma. \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
   -- El contenedor Piston está activo. \newline
   -- El lenguaje solicitado está instalado en el contenedor Piston. \\ \hline
 
   % Fila 5: Flujo principal
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
-  1. El usuario pulsa el botón ``Ejecutar'' en el editor con código en el editor y el lenguaje seleccionado.\newline
+  1. El alumno pulsa el botón ``Ejecutar'' en el editor con código en el editor y el lenguaje seleccionado.\newline
   2. El sistema valida los datos de entrada .\newline
   3. El sistema construye el payload y lo envía a la API de Piston.\newline
   4. Piston ejecuta el código en un sub-contenedor aislado (compila primero si es necesario).\newline
@@ -63,14 +63,15 @@
 
   % Fila 6: Flujos alternativos
   \textbf{Flujos alternativos:} \newline
-  \textbf{FA-01:} Señal \texttt{SIGKILL} recibida: \newline
-    1. El sistema interpreta  el campo \texttt{status}. \newline
-    2. El sistema devuelve al frontend un mensaje de error explicativo. \\ \hline
+  \textbf{FA-01:} Error en tiempo de ejecución o interrupción del sistema: \newline
+    1. El sistema evalúa el campo \texttt{status} devuelto por Piston. \newline
+    2. El sistema añade al \texttt{stderr} un mensaje de error según el código de estado detectado. \newline
+    3. Se devuelve al frontend un JSON con la respuesta procesada. \\ \hline
 
   % Fila 7: Postcondiciones
   \rowcolor{ulepsbased}
   \textbf{Postcondiciones:} \newline
-  1. El usuario recibe la salida de ejecución detallada. \newline
+  1. El alumno recibe la salida de ejecución detallada. \newline
   2. Operación efímera: no se persiste el código ni el resultado en la base de datos. \newline
   3. Los archivos temporales del contenedor se eliminan automáticamente. \\ \hline
 

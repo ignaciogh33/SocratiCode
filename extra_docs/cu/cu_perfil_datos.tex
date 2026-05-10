@@ -22,7 +22,7 @@
   \endlastfoot
 
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU7 & \textbf{Actor principal:} Usuario
   \end{tabularx} \\ \hline
 
@@ -33,11 +33,11 @@
   El usuario accede a la vista de ajustes para modificar su información personal (nombre de usuario y descripción/biografía). \\ \hline
 
   \textbf{Precondiciones:} \newline
-  1. El usuario ha iniciado sesión y tiene un token válido. \\ \hline
+  1. El usuario ha iniciado sesión. \\ \hline
 
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
-  1. El usuario navega a la sección de "Perfil / Ajustes" desde la interfaz principal. \newline
+  1. El usuario navega a la sección de "Perfil" desde la interfaz principal. \newline
   2. El sistema muestra los datos actuales del usuario (nombre de usuario, correo, descripción). \newline
   3. El usuario edita su nombre de usuario y/o descripción. \newline
   4. El usuario pulsa el botón "Guardar cambios". \newline
@@ -55,7 +55,7 @@
 
   \rowcolor{ulepsbased}
   \textbf{Postcondiciones:} \newline
-  1. El nombre y la biografía del usuario se persisten actualizados en el sistema. \\ \hline
+  1. El nombre y la biografía del usuario se guardan actualizados en el sistema. \\ \hline
 
 \end{longtable}
 \endgroup

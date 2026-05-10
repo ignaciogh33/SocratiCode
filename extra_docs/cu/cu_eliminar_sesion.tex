@@ -22,7 +22,7 @@
   \endlastfoot
 
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU11 & \textbf{Actor principal:} Usuario
   \end{tabularx} \\ \hline
 
@@ -30,7 +30,7 @@
 
   \rowcolor{ulepsbased}
   \textbf{Descripción:} \newline 
-  El usuario decide eliminar permanentemente una sesión de chat completa de su historial, desencadenando el borrado en cascada de todos los mensajes asociados a la misma. \\ \hline
+  El usuario decide eliminar permanentemente una sesión de chat completa de su historial, provocando el borrado de todos los mensajes asociados a la misma. \\ \hline
 
   \textbf{Precondiciones:} \newline
   1. El usuario ha iniciado sesión. \newline
@@ -39,12 +39,12 @@
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
   1. El usuario hace clic en el botón de eliminar (ícono de papelera) junto a una sesión en el panel lateral. \newline
-  2. El frontend muestra un cuadro de diálogo de confirmación ("¿Estás seguro de que quieres eliminar esta sesión?"). \newline
+  2. El frontend muestra un cuadro de diálogo de confirmación (¿Eliminar esta conversación? Esta acción no se puede deshacer.). \newline
   3. El usuario confirma la eliminación. \newline
   4. La interfaz envía una solicitud HTTP DELETE al backend. \newline
   5. El sistema verifica la propiedad y borra el registro de la sesión y, en cascada, todos sus mensajes asociados en la base de datos. \newline
   6. El sistema devuelve HTTP 204 (No Content). \newline
-  7. El frontend remueve la sesión de la lista visual y, si el usuario estaba visualizando la sesión eliminada, limpia la pantalla y lo devuelve a la vista inicial (pantalla de creación de "Nueva conversación"), independientemente de si hay más sesiones en el historial. \\ \hline
+  7. El frontend elimina la sesión de la lista visual y, si el usuario estaba visualizando la sesión eliminada, limpia la pantalla y lo devuelve a la vista inicial (pantalla de creación de "Nueva conversación"), independientemente de si hay más sesiones en el historial. \\ \hline
 
   \textbf{Flujos alternativos:} \newline
   \textbf{FA-01:} Cancelación del borrado: \newline

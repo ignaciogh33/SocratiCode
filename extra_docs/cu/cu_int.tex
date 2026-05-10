@@ -26,13 +26,13 @@
   % --- PIE FINAL (Donde aparece el nombre ahora) ---
   \hline
   \caption{Caso de Uso CU1 — Interacción con el Tutor Socrático.}
-  \label{TB:CU1_TUTOR_SOCRATICO_V3}
+  \label{TB:CU1_TUTOR}
   \endlastfoot
 
   % Fila 1: ID y Actor
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
-    \textbf{Identificador:} CU1 & \textbf{Actor principal:} Usuario 
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU1 & \textbf{Actor principal:} Alumno 
   \end{tabularx} \\ \hline
 
   % Fila 2: Nombre
@@ -41,24 +41,24 @@
   % Fila 3: Descripción
   \rowcolor{ulepsbased}
   \textbf{Descripción:} \newline 
-  El usuario envía una pregunta al tutor socrático, opcionalmente acompañada del código de su editor y la última salida de ejecución. El sistema modera la entrada, genera una respuesta pedagógica en streaming (SSE) y opcionalmente modera la salida en paralelo. \\ \hline
+  El alumno envía una pregunta al tutor socrático, opcionalmente acompañada del código de su editor y la última salida de ejecución. El sistema modera la entrada, genera una respuesta pedagógica en streaming (SSE) y opcionalmente modera la salida en paralelo. \\ \hline
 
   % Fila 4: Precondiciones
   \textbf{Precondiciones:} \newline
-  -- El usuario ha iniciado sesión en la plataforma. \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
   -- El servicio Ollama está activo y los modelos (principal y moderador) configurados están disponibles. \newline
   -- Existe una sesión de chat activa o se creará una nueva automáticamente. \\ \hline
 
   % Fila 5: Flujo principal
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
-  1. El usuario escribe un mensaje en el chat y pulsa enviar.\newline
+  1. El alumno escribe un mensaje en el chat y pulsa enviar.\newline
   2. El sistema valida que el mensaje no exceda la longitud permitida (2000 caracteres).\newline
   3. El sistema obtiene o crea la sesión de chat si esta no existe.\newline
-  4. El sistema guarda el mensaje del usuario en la base de datos.\newline
+  4. El sistema guarda el mensaje del alumno en la base de datos.\newline
   5. El sistema comprueba si es el primer mensaje de usuario y si es el caso asigna los primeros 50 caracteres como título. Actualiza la fecha de la última modificación.\newline
   6. El sistema lee la configuración global para determinar los modelos a utilizar, los modos de moderación y el umbral de palabras para la moderación de output.\newline
-  7. Si la moderación de input está activada envía el texto del usuario al LLM de moderación, si el veredicto es OK, continúa.\newline
+  7. Si la moderación de input está activada envía el texto del alumno al LLM de moderación, si el veredicto es OK, continúa.\newline
   8. El sistema construye el array de mensajes para Ollama: \texttt{SYSTEM\_PROMPT} + contexto de código (si existe) + últimos 10 mensajes del historial.\newline
   9. El sistema inicia el streaming asíncrono.\newline
   10. Por cada token recibido, el sistema lo transmite en tiempo real hacia la interfaz del usuario vía SSE.\newline
@@ -79,7 +79,7 @@
   % Fila 7: Postcondiciones
   \rowcolor{ulepsbased}
   \textbf{Postcondiciones:} \newline
-  1. El mensaje del usuario se almacena en la base de datos. \newline
+  1. El mensaje del alumno se almacena en la base de datos. \newline
   2. La respuesta del tutor se almacena en la base de datos. \newline
   3. La sesión se actualiza o renombra si es necesario. \\ \hline
 

@@ -22,7 +22,7 @@
   \endlastfoot
 
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU12 & \textbf{Actor principal:} Usuario
   \end{tabularx} \\ \hline
 
@@ -37,10 +37,10 @@
 
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
-  1. El usuario carga la interfaz principal. \newline
-  2. El frontend realiza una petición asíncrona (GET) para obtener el listado paginado de sesiones del usuario. \newline
-  3. El backend valida la identidad y devuelve las sesiones ordenadas por última actualización descendente. \newline
-  4. La interfaz pinta las sesiones en el panel lateral. \newline
+  1. El usuario accede a la interfaz principal de la aplicación. \newline
+  2. El frontend solicita el listado paginado de sesiones asociadas a la cuenta. \newline
+  3. El backend valida la autenticación y retorna los registros ordenados por fecha de última actualización. \newline
+  4. La interfaz pinta este historial de conversaciones en el panel lateral. \newline
   5. El usuario hace clic sobre una de las sesiones anteriores. \newline
   6. El frontend envía una petición al backend para obtener los mensajes de esa sesión concreta. \newline
   7. El backend devuelve la lista de mensajes ordenados cronológicamente (con su contenido, remitente y fecha). \newline
@@ -49,6 +49,9 @@
   \rowcolor{ulepsbased}
   \textbf{Postcondiciones:} \newline
   1. El estado activo de la interfaz se sincroniza con la sesión seleccionada, preparándose para recibir nuevos mensajes (enlaza con el CU1). \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  Ninguno. \\ \hline
 
 \end{longtable}
 \endgroup

@@ -22,7 +22,7 @@
   \endlastfoot
 
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU5 & \textbf{Actor principal:} Usuario
   \end{tabularx} \\ \hline
 
@@ -30,7 +30,7 @@
 
   \rowcolor{ulepsbased}
   \textbf{Descripción:} \newline 
-  El usuario se autentica en la plataforma mediante sus credenciales para acceder al entorno de tutoría. \\ \hline
+  El usuario se autentica en la plataforma mediante sus credenciales. \\ \hline
 
   \textbf{Precondiciones:} \newline
   1. El usuario debe existir en el sistema. \\ \hline
@@ -38,7 +38,7 @@
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
   1. El usuario accede a la vista de "Inicio de sesión". \newline
-  2. Introduce su correo electrónico o usuario y su contraseña. \newline
+  2. Introduce su usuario y su contraseña. \newline
   3. Pulsa "Ingresar". \newline
   4. El sistema valida las credenciales verificando el hash almacenado. \newline
   5. El sistema genera los tokens JWT de acceso y refresco correspondientes. \newline
@@ -47,12 +47,11 @@
   \textbf{Flujos alternativos:} \newline
   \textbf{FA-01:} Credenciales incorrectas: \newline
   1. El sistema detecta que el usuario no existe o la contraseña no es válida. \newline
-  2. Se deniega el acceso, se no generan tokens y se muestra un error al usuario. \\ \hline
+  2. Se deniega el acceso, no se generan los tokens y se muestra un error al usuario. \\ \hline
 
   \rowcolor{ulepsbased}
   \textbf{Postcondiciones:} \newline
-  1. Se establece un contexto de sesión segura. \newline
-  2. El usuario tiene acceso completo a las áreas privadas. \\ \hline
+  1. El usuario tiene acceso a la plataforma. \\ \hline
 
 \end{longtable}
 \endgroup
