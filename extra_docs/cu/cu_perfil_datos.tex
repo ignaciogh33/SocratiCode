@@ -1,0 +1,61 @@
+\begingroup
+\shorthandoff{"<>"}
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  \hline
+  \caption{Caso de Uso CU7 — Modificación de datos del perfil.}
+  \label{TB:CU7_PERFIL_DATOS}
+  \endlastfoot
+
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+    \textbf{Identificador:} CU7 & \textbf{Actor principal:} Usuario
+  \end{tabularx} \\ \hline
+
+  \textbf{Nombre:} Modificación de datos del perfil \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El usuario accede a la vista de ajustes para modificar su información personal (nombre de usuario y descripción/biografía). \\ \hline
+
+  \textbf{Precondiciones:} \newline
+  1. El usuario ha iniciado sesión y tiene un token válido. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El usuario navega a la sección de "Perfil / Ajustes" desde la interfaz principal. \newline
+  2. El sistema muestra los datos actuales del usuario (nombre de usuario, correo, descripción). \newline
+  3. El usuario edita su nombre de usuario y/o descripción. \newline
+  4. El usuario pulsa el botón "Guardar cambios". \newline
+  5. El frontend envía una solicitud PATCH de actualización al backend con los datos modificados y su token de autenticación. \newline
+  6. El sistema valida los permisos y verifica que el nuevo nombre de usuario no esté siendo utilizado por otra cuenta. \newline
+  7. El sistema actualiza el registro en la base de datos de manera atómica. \newline
+  8. El backend devuelve un código 200 OK con los datos actualizados. \newline
+  9. La interfaz actualiza el estado local y muestra un aviso de éxito. \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Nombre de usuario ya en uso: \newline
+  1. Durante la actualización, el sistema detecta que el nombre de usuario solicitado ya pertenece a otro registro. \newline
+  2. Se rechaza la modificación y el backend devuelve un error 400 Bad Request. \newline
+  3. La interfaz muestra al usuario que el nombre no está disponible, abortando los cambios. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El nombre y la biografía del usuario se persisten actualizados en el sistema. \\ \hline
+
+\end{longtable}
+\endgroup

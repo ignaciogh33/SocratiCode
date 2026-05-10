@@ -19,7 +19,7 @@
 
     \item Moderación de input configurable: Si está habilitada, el sistema evaluará el mensaje del alumno mediante un LLM de moderación antes de invocar al tutor. Si este marca el mensaje como inapropiado o da error, se mostrará un mensaje predeterminado al usuario.
 
-    \item Moderación de output configurable: Si está habilitada, el sistema evaluará la salida del LLM tutor en paralelo cada cierta cantidad de palabras (configurable). Si el LLM moderador marca como inapropiado un fragmento acumulativo se corta la generación, se descarta el texto y se sustituye por el mensaje moderado; en cambio, si este falla no se corta la generación.
+    \item Moderación de output configurable: Si está habilitada, el sistema evaluará la salida del LLM tutor en paralelo cada cierta cantidad de palabras (configurable). Si el LLM moderador marca como inapropiado un fragmento acumulativo se corta la generación, se descarta el texto y se sustituye por el mensaje moderado, en cambio, si este falla no se corta la generación.
 
     \item Renombrado de sesión: El usuario podrá renombrar una sesión proporcionando un nuevo título (máx. 200 caracteres).
 
@@ -31,7 +31,7 @@
 
     \item Gestión e Intercepción de Errores de Ejecución: El sistema gestionará los errores de ejecución (como tiempos de espera agotados o fallos de memoria) traduciéndolos a mensajes de error claros.
 
-    \item Configuración global de parámetros: El administrador podrá gestionar a través de la interfaz de administración los parámetros globales del sistema, incluyendo la selección de los modelos de lenguaje principal y de moderación, así como el alcance de la supervisión de mensajes (entrada, salida, ambos o ninguno). El sistema garantizará la existencia de un único conjunto de ajustes activos para toda la plataforma.
+    \item Configuración global de parámetros: El administrador podrá gestionar a través de la interfaz de administración los parámetros globales del sistema, incluyendo la selección de los modelos de lenguaje principal y de moderación (entre los disponibles), así como el alcance de la supervisión de mensajes (entrada, salida, ambos o ninguno) y el umbral de palabras para la moderación de salida. El sistema garantizará la existencia de un único conjunto de ajustes activos para toda la plataforma.
 
     \item Control de navegación por estado de autenticación: El sistema restringirá el acceso a las diferentes vistas de la aplicación en función de si el usuario ha iniciado sesión o no. Las áreas privadas redirigirán automáticamente a la pantalla de acceso si no existe una sesión válida, mientras que las interfaces de ingreso o registro bloquearán el acceso a los usuarios ya autenticados, redirigiéndolos al panel principal.
 \end{functional}

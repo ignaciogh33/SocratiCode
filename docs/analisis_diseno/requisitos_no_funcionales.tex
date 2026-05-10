@@ -1,13 +1,13 @@
 \begin{nonfunctional}
     \item Seguridad: El código de los usuarios debe ejecutarse en un entorno aislado (sandbox) sin acceso a red ni al sistema operativo. El sistema de IA debe integrar protecciones contra inyecciones de prompts.
     
-    \item Rendimiento: La ejecución de código debe limitarse estrictamente en tiempo (ej. 3 segundos) y memoria. Las respuestas del LLM utilizarán streaming para lograr una latencia inicial inferior a 1 segundo.
+    \item Rendimiento: La ejecución de código debe limitarse estrictamente en tiempo (3 segundos) y memoria. Las respuestas del LLM utilizarán streaming para lograr una latencia inicial inferior a 1 segundo (excluyendo la primera consulta).
     
-    \item Usabilidad: La interfaz debe ser reactiva y ocultar las trazas de error de sistema crudas (ej. SIGKILL), traduciéndolas a mensajes de retroalimentación pedagógicos para el estudiante.
+    \item Usabilidad: La interfaz debe ser reactiva y abstraer los detalles técnicos de los errores en la ejecución mediante la evaluación de códigos de estado genéricos, traduciéndolos a mensajes de retroalimentación pedagógicos para el estudiante.
     
     \item Fiabilidad: El sistema debe interceptar caídas internas del motor de ejecución sin detener la aplicación. La arquitectura debe permitir cambiar de modelo de IA sin modificar el código fuente.
     
-    \item Eficiencia y Costes: El consumo de la API debe optimizarse utilizando modelos de IA pequeños para la moderación y un sistema de truncado del historial para no exceder los límites de tokens.
+    \item Eficiencia de Recursos: El consumo computacional debe optimizarse utilizando modelos de IA locales más pequeños (ligeros) para la moderación y un sistema de truncado del historial para limitar el uso de memoria y no exceder los límites de tokens.
     
     \item Portabilidad: La plataforma cliente debe ser accesible desde cualquier navegador web moderno, sin requerir ninguna instalación ni configuración local por parte del estudiante.
 \end{nonfunctional}

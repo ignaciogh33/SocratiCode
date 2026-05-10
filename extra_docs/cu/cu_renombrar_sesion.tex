@@ -1,0 +1,62 @@
+\begingroup
+\shorthandoff{"<>"}
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  \hline
+  \caption{Caso de Uso CU10 — Renombrado manual de sesión de chat.}
+  \label{TB:CU10_RENOMBRAR_SESION}
+  \endlastfoot
+
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+    \textbf{Identificador:} CU10 & \textbf{Actor principal:} Usuario
+  \end{tabularx} \\ \hline
+
+  \textbf{Nombre:} Renombrado manual de sesión de chat \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El usuario decide modificar el título de una sesión de chat existente en su panel lateral para facilitar su organización, introduciendo un nuevo nombre. \\ \hline
+
+  \textbf{Precondiciones:} \newline
+  1. El usuario ha iniciado sesión. \newline
+  2. Existe al menos una sesión de chat en su historial. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El usuario hace clic en el botón de "Renombrar" junto a la sesión deseada en el panel lateral. \newline
+  2. La interfaz reemplaza el título estático por un campo de texto editable y solicita el nuevo título. \newline
+  3. El usuario escribe el nuevo nombre y confirma (pulsando Enter o el botón de guardado). \newline
+  4. La interfaz valida que el campo de texto no esté vacío ni compuesto solo por espacios en blanco. \newline
+  5. La interfaz envía la petición al backend con el nuevo título. \newline
+  6. El backend verifica la propiedad de la sesión y comprueba que el título no llegue vacío. \newline
+  7. Si el título supera los 200 caracteres, el backend realiza un truncado silencioso recortándolo al límite permitido. \newline
+  8. El sistema actualiza el título en la base de datos y devuelve el título modificado exitosamente. \newline
+  9. El frontend actualiza el nombre visualmente en el panel lateral. \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Título vacío o en blanco: \newline
+  1. El sistema detecta en el frontend que el título introducido está vacío o contiene únicamente espacios en blanco. \newline
+  2. La función de guardado se aborta sin llegar a enviar ninguna solicitud HTTP al backend. \newline
+  3. La interfaz cancela el modo de edición silenciosamente y restaura el título original. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El nuevo título queda asociado a la sesión en la base de datos de manera permanente. \\ \hline
+
+\end{longtable}
+\endgroup

@@ -1,3 +1,9 @@
+A partir de los requisitos establecidos en la \autoref{SEC:AD_REQUISITOS}, en este apartado se detallan los principales casos de uso de la aplicación. Mediante estos casos de uso se modelan las interacciones entre los diferentes actores y el sistema, lo que permite representar de forma estructurada las funcionalidades centrales de la plataforma. Además, estos procesos se complementan con diagramas de secuencia que ilustrarán el flujo de comunicación interno y las llamadas al motor de IA paso a paso.
+
+Los casos de uso expuestos en esta sección conforman los pilares de la aplicación: la interacción conversacional con el tutor socrático (\autoref{TB:CU1_TUTOR} y \autoref{FIG:CU1_SEQ}), la compilación y ejecución remota de código en entornos aislados (\autoref{TB:CU2_PISTON} y \autoref{FIG:CU2_SEQ}) y la configuración global de los modelos por parte de la administración (\autoref{TB:CU3_SINGLETON} y \autoref{FIG:CU3_SEQ}). Para consultar la especificación detallada del resto de casos de uso (tales como la autenticación, la gestión del perfil o el manejo de sesiones), véase el \autoref{CAP:AP_DIAGRAMAS}.
+
+\vspace{0.5cm}
+
 \begingroup
 \shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
 \setlength{\arrayrulewidth}{1pt}
@@ -26,12 +32,12 @@
   % --- PIE FINAL (Donde aparece el nombre ahora) ---
   \hline
   \caption{Caso de Uso CU1 — Interacción con el Tutor Socrático.}
-  \label{TB:CU1_TUTOR_SOCRATICO_V3}
+  \label{TB:CU1_TUTOR}
   \endlastfoot
 
   % Fila 1: ID y Actor
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU1 & \textbf{Actor principal:} Alumno 
   \end{tabularx} \\ \hline
 
@@ -88,7 +94,7 @@
 
 \begin{figure}[Diagrama de secuencia CU1]{FIG:CU1_SEQ}{Diagrama de secuencia de la interacción del chat con streaming.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-1_secuencia_chat_stream.pdf}
+    \includegraphics[width=0.85\textwidth]{./diagramas/secuencia_chat_stream_SIMPLE.pdf}
 \end{figure}
 
 \begingroup
@@ -124,7 +130,7 @@
 
   % Fila 1: ID y Actor
   \rowcolor{ulepsbased}
-  \begin{tabularx}{\linewidth}{@{}p{7.5cm}p{7.5cm}@{}}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
     \textbf{Identificador:} CU2 & \textbf{Actor principal:} Alumno 
   \end{tabularx} \\ \hline
 
@@ -156,9 +162,10 @@
 
   % Fila 6: Flujos alternativos
   \textbf{Flujos alternativos:} \newline
-  \textbf{FA-01:} Señal \texttt{SIGKILL} recibida: \newline
-    1. El sistema interpreta  el campo \texttt{status}. \newline
-    2. El sistema devuelve al frontend un JSON con un mensaje de error explicativo añadido al \texttt{stderr}. \\ \hline
+  \textbf{FA-01:} Error en tiempo de ejecución o interrupción del sistema: \newline
+    1. El sistema evalúa el campo \texttt{status} devuelto por Piston. \newline
+    2. El sistema añade al \texttt{stderr} un mensaje de error según el código de estado detectado. \newline
+    3. Se devuelve al frontend un JSON con la respuesta procesada. \\ \hline
 
   % Fila 7: Postcondiciones
   \rowcolor{ulepsbased}
@@ -172,71 +179,93 @@
 
 \begin{figure}[Diagrama de secuencia CU2]{FIG:CU2_SEQ}{Diagrama de secuencia de ejecución de código en Piston.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-2_secuencia_ejecucion_piston_SIMPLE.pdf}
+    \includegraphics[width=0.85\textwidth]{./diagramas/secuencia_ejecucion_piston_SIMPLE.pdf}
 \end{figure}
 
-\begin{table}[CU3 Configuración Singleton 1]{TB:CU3 1}{Caso de uso: Configuración global del sistema. 1}
-  \begin{tabular}{l p{11cm}}
-    \hline
-    \textbf{Campo} & \textbf{Descripción} \\
-    \hline \hline
-    \textbf{Identificador} & CU3 \\
-    \textbf{Nombre} & Configuración global del sistema (patrón Singleton) \\
-    \textbf{Actor principal} & Administrador (usuario con \texttt{is\_staff=True}) \\
-    \textbf{Actores secundarios} & — \\
-    \textbf{Descripción} & El administrador accede al panel de Django Admin para configurar los parámetros globales del sistema: modelo LLM del tutor, modelo LLM de moderación y modo de moderación. La configuración se almacena en una única fila de la tabla \texttt{SystemConfig} (patrón Singleton). \\
-    \textbf{Precondiciones} & 1. El administrador tiene acceso al panel de Django Admin (\texttt{/admin/}). \newline  2. El usuario tiene permisos de staff (\texttt{is\_staff=True}). \\
-    \textbf{Postcondiciones} & 1. La configuración queda persistida en la fila con \texttt{pk=1} de \texttt{SystemConfig}. \newline  2. Las peticiones de chat subsiguientes utilizarán los nuevos valores de forma inmediata (lectura en cada petición mediante \texttt{SystemConfig.get()}). \\
-    \hline
-  \end{tabular}
-\end{table}
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  
+  % --- PIE DE PÁGINA INTERMEDIO ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- PIE FINAL (Caption abajo) ---
+  \hline
+  \caption{Caso de Uso CU3 — Configuración Global (Singleton) por el Administrador.}
+  \label{TB:CU3_SINGLETON}
+  \endlastfoot
 
-\begin{table}[CU3 Configuración Singleton 2]{TB:CU3 2}{Caso de uso: Configuración global del sistema. 2}
-  \begin{tabular}{c c p{8cm}}
-    \hline
-    \textbf{Paso} & \textbf{Actor} & \textbf{Acción} \\
-    \hline \hline
-    1 & Administrador & Accede a \texttt{http://localhost:8000/admin/} e inicia sesión con credenciales de staff. \\
-    2 & Sistema & Muestra el panel de administración con la sección ''Configuración del sistema''. \\
-    3 & Administrador & Hace clic en ''Configuración del sistema''. El sistema redirige automáticamente al formulario de edición de la única fila existente (\texttt{changelist\_view} $\rightarrow$ \texttt{redirect(pk/change/)}). \\
-    4 & Sistema & Muestra el formulario organizado en dos fieldsets: \newline  — \textbf{Moderación de contenido}: campo \texttt{moderation\_mode} (desplegable: Input + Output, Solo Input, Solo Output, Desactivada). \newline  — \textbf{Modelos LLM (Ollama)}: campos \texttt{llm\_model} y \texttt{moderation\_model} (texto libre, ej: \texttt{llama3.2}, \texttt{phi4-mini-reasoning}). \\
-    5 & Administrador & Modifica los valores deseados y pulsa ''Guardar''. \\
-    6 & Sistema & El método \texttt{save()} sobrescrito fuerza \texttt{self.pk = 1} antes de guardar, garantizando que solo exista una fila (Singleton). Persiste los cambios en PostgreSQL. \\
-    7 & Sistema & Muestra confirmación de guardado exitoso. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU3 & \textbf{Actor principal:} Administrador
+  \end{tabularx} \\ \hline
 
-\begin{table}[CU3 Configuración Singleton 3]{TB:CU3 3}{Caso de uso: Configuración global del sistema. 3}
-  \begin{tabular}{c p{8cm} p{8cm}}
-    \hline
-    \textbf{ID} & \textbf{Condición} & \textbf{Acción del sistema} \\
-    \hline \hline
-    FA-01 & No existe configuración previa & El método de clase \texttt{SystemConfig.get()} (invocado por \texttt{changelist\_view}) ejecuta \texttt{get\_or\_create(pk=1)}, creando la fila con valores por defecto: \texttt{moderation\_mode='both'}, \texttt{llm\_model='llama3.2'}, \texttt{moderation\_model='llama3.2'}. \\
-    FA-02 & Intento de crear una segunda fila & \texttt{has\_add\_permission()} devuelve \texttt{False} si ya existe una fila, ocultando el botón ''Añadir'' en el Admin. \\
-    FA-03 & Intento de eliminar la configuración & \texttt{has\_delete\_permission()} devuelve siempre \texttt{False}, impidiendo el borrado de la configuración. \\
-    FA-04 & Modelo LLM no disponible en Ollama & El sistema no valida la existencia del modelo en tiempo de guardado (validación diferida). El error se producirá en la siguiente petición de chat, donde \texttt{ollama.chat()} lanzará una excepción capturada por el flujo de error del CU1 (FA-05). \\
-    FA-05 & Acceso por usuario sin permisos de staff & Django Admin deniega el acceso y redirige a la página de login del Admin. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 2: Nombre
+  \textbf{Nombre:} Configuración global del sistema (patrón Singleton) \\ \hline
 
-\begin{table}[CU3 Configuración Singleton 4]{TB:CU3 4}{Caso de uso: Configuración global del sistema. 4}
-  \begin{tabular}{l p{11cm}}
-    \hline
-    \textbf{Mecanismo} & \textbf{Implementación} \\
-    \hline \hline
-    Forzar PK única & \texttt{save()} sobrescrito: \texttt{self.pk = 1} antes de \texttt{super().save()}. \\
-    Creación automática & Método de clase \texttt{get()}: \texttt{cls.objects.get\_or\_create(pk=1)}. \\
-    Impedir creación manual & \texttt{has\_add\_permission()} $\rightarrow$ \texttt{not SystemConfig.objects.exists()}. \\
-    Impedir eliminación & \texttt{has\_delete\_permission()} $\rightarrow$ \texttt{False}. \\
-    Redirección automática & \texttt{changelist\_view()} $\rightarrow$ \texttt{redirect(f'\{obj.pk\}/change/')}. \\
-    \hline
-  \end{tabular}
-\end{table}
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El administrador accede al panel de Django Admin para configurar los parámetros globales del sistema: modelo LLM del tutor, modelo LLM de moderación, modo de moderación y umbral de palabras para la moderación de salida. \\ \hline
 
-\begin{figure}[Diagrama de secuencia CU3]{FIG:CU3_SEQ}{Diagrama de secuencia del proceso de Auto-Naming.}
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  1. El administrador tiene acceso al panel de Django Admin. \newline
+  2. El usuario tiene permisos de staff. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El administrador inicia sesión en el panel de Django Admin con credenciales de staff.\newline
+  2. El sistema muestra el panel de administración con la sección ``Configuración del sistema''.\newline
+  3. El administrador hace clic en ``Configuración del sistema''. El sistema redirige automáticamente al formulario de edición de la única fila existente. \newline
+  4. El sistema muestra el formulario organizado en dos fieldsets:\newline
+  --- \textbf{Moderación de contenido}: campo \texttt{moderation\_mode} (desplegable: Input + Output, Solo Input, Solo Output, Desactivada) y el campo \texttt{mod\_word\_window} (entero positivo) que determina cada cuántas palabras se realiza el análisis asíncrono.\newline
+  --- \textbf{Modelos LLM (Ollama)}: campos \texttt{llm\_model} y \texttt{moderation\_model}. El sistema consulta a Ollama en tiempo real para poblar estos campos como listas desplegables dinámicas con los modelos disponibles. \newline
+  5. El administrador modifica los valores deseados y pulsa ``Guardar''.\newline
+  6. El sistema sobreescribe el registro principal y actualiza los parámetros en la base de datos, garantizando que solo exista una fila (Singleton). \newline
+  7. El sistema muestra confirmación de guardado exitoso. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Servicio Ollama inaccesible al cargar: \newline
+  1. El sistema consulta a Ollama la lista de modelos disponibles. \newline
+  2. El servicio Ollama no responde o da error de conexión. \newline
+  3. El sistema muestra los campos de selección como campos de texto libre para no bloquear al administrador. \newline
+  4. El administrador modifica los datos si es necesario y el guardado se realiza sin errores. \newline
+  \textbf{FA-02:} Modelo previamente guardado borrado: \newline
+  1. El sistema consulta a Ollama la lista de modelos y obtiene los resultados correctamente. \newline
+  2. El sistema detecta que el modelo guardado en la base de datos ya no se encuentra en la lista de instalados. \newline
+  3. El sistema añade dicho modelo al desplegable, lo deja preseleccionado e incluye la advertencia «$\triangle$ no disponible». \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. Las peticiones de chat siguientes utilizarán los nuevos parámetros. \\ \hline
+
+\end{longtable}
+\endgroup
+\begin{figure}[Diagrama de secuencia CU3]{FIG:CU3_SEQ}{Diagrama de secuencia de la configuración global del sistema.}
     \centering
-    \includegraphics[width=0.85\textwidth]{./diagramas/figura_3-3_secuencia_auto_naming.png}
+    \includegraphics[width=0.85\textwidth]{./diagramas/secuencia_config_admin_SIMPLE.pdf}
 \end{figure}
 
