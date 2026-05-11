@@ -191,13 +191,13 @@ async def chat_view(request):
 
     # 5. MODERACIÓN DEL INPUT
     if do_input_mod:
-        if settings.DEBUG:
+        if settings.DEBUG:  # pragma: no cover
             print(f"\n① INPUT MOD ({mod_model})")
 
         is_safe = await sync_to_async(moderate_input)(user_text, code_context, mod_model)
 
         if not is_safe:
-            if settings.DEBUG:
+            if settings.DEBUG:  # pragma: no cover
                 print(f"   └─ 🚫 Flujo cortado. Respuesta: moderada.")
                 print("═"*60 + "\n")
 
@@ -237,7 +237,7 @@ async def chat_view(request):
         flagged = False
         word_window = config.mod_word_window
 
-        if settings.DEBUG and do_output_mod:
+        if settings.DEBUG and do_output_mod:  # pragma: no cover
             print(f"\n③ OUTPUT MOD ({mod_model}) — cada {word_window} palabras")
 
         client = ollama.AsyncClient()
@@ -297,7 +297,7 @@ async def chat_view(request):
             yield f"data: {json.dumps({'moderated': True, 'response': MODERATED_RESPONSE})}\n\n"
             yield "data: [DONE]\n\n"
 
-            if settings.DEBUG:
+            if settings.DEBUG:  # pragma: no cover
                 print(f"\n──────────────────────────────")
                 print(f"🚫 OUTPUT MODERADO")
                 print(f"   Texto generado antes del bloqueo:")
@@ -326,7 +326,7 @@ async def chat_view(request):
         yield f"data: {json.dumps({'session_id': safe_session_id, 'session_title': session_title})}\n\n"
         yield "data: [DONE]\n\n"
 
-        if settings.DEBUG:
+        if settings.DEBUG:  # pragma: no cover
             print(f"\n──────────────────────────────")
             print(f"✅ RESPUESTA COMPLETA ({len(full_response.split())} palabras)")
             print(f"   \"{full_response[:200]}{'...' if len(full_response) > 200 else ''}\"")
