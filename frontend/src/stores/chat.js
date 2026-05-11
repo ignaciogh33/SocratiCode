@@ -79,12 +79,9 @@ export const useChatStore = defineStore('chat', {
       await chatService.deleteSession(sessionId)
       this.sessions = this.sessions.filter((s) => s.id !== sessionId)
       if (this.activeSessionId === sessionId) {
-        this.activeSessionId = this.sessions[0]?.id || null
-        if (this.activeSessionId) {
-          await this.fetchMessages(this.activeSessionId)
-        } else {
-          this.messages = []
-        }
+        // Volver al empty state (pantalla de bienvenida con botón "Nueva conversación")
+        this.activeSessionId = null
+        this.messages = []
       }
     },
 
