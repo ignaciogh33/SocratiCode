@@ -10,7 +10,8 @@ staticfiles/
 # --- Frontend (Vue + Vite) ---
 node_modules/
 dist/
-
+coverage/
+./frontend/coverage/
 
 # --- LaTeX (Memoria) ---
 *.aux

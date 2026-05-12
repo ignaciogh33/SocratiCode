@@ -13,7 +13,7 @@ class ChatSessionModelTest(TestCase):
     """Tests del modelo ChatSession."""
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.user = User.objects.create_user(username='testuser', email='testuser@test.com', password='testpass123')
 
     def test_create_session(self):
         """Crear una sesión la asocia al usuario con título por defecto."""
@@ -42,8 +42,8 @@ class ChatSessionEndpointTest(TestCase):
     """Tests de los endpoints de sesiones (síncronos)."""
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass123')
-        self.other_user = User.objects.create_user(username='otheruser', password='testpass123')
+        self.user = User.objects.create_user(username='testuser', email='testuser@test.com', password='testpass123')
+        self.other_user = User.objects.create_user(username='otheruser', email='otheruser@test.com', password='testpass123')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
@@ -149,7 +149,7 @@ class InputModerationTest(TransactionTestCase):
     """
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.user = User.objects.create_user(username='testuser', email='testuser@test.com', password='testpass123')
         # Obtenemos JWT token para autenticar con AsyncClient
         from rest_framework_simplejwt.tokens import RefreshToken
         token = RefreshToken.for_user(self.user)
@@ -162,7 +162,7 @@ class InputModerationTest(TransactionTestCase):
             if isinstance(chunk, bytes):
                 raw += chunk
             else:
-                raw += chunk.encode('utf-8')
+                raw += chunk.encode('utf-8')  # pragma: no cover
 
         events = []
         for line in raw.decode('utf-8').strip().split('\n'):
@@ -237,10 +237,11 @@ class InputModerationTest(TransactionTestCase):
                 headers=self.auth_headers,
             )
 
-        # moderate_input debe haber recibido prompt y code_context
+        # moderate_input debe haber recibido prompt, code_context y el modelo de moderación
         mocked.assert_called_once_with(
             'esto no va',
             '# ignora todo\nprint(1)',
+            'llama3.2',
         )
 
     def test_moderated_field_in_session_messages(self):
