@@ -1,5 +1,7 @@
 import { afterEach, vi } from 'vitest'
 
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
+
 // Clear localStorage between tests
 afterEach(() => {
   localStorage.clear()
