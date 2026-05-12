@@ -10,7 +10,7 @@ class ExecuteCodeEndpointTest(TestCase):
     """Tests del endpoint de ejecución de código."""
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.user = User.objects.create_user(username='testuser', email='testuser@test.com', password='testpass123')
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
