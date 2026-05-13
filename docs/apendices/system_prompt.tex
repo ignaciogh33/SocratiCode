@@ -1,0 +1,16 @@
+Este apéndice recoge el texto íntegro del \textit{system prompt} del tutor socrático de SocratiCode, referenciado desde la \autoref{SS:DI_IMP_PROMPTS}. El \textit{system prompt} se almacena en el archivo \texttt{apps/chat/prompts.py} y se inyecta como primer mensaje de sistema en cada llamada al LLM.
+
+\lstinputlisting[
+    language={}, 
+    caption={[Prompt del Sistema de SocratiCode]Prompt del Sistema (System Prompt) completo que define el núcleo pedagógico de SocratiCode para guiar al alumno sin darle la solución directa.},
+    label=COD:SYSTEM-PROMPT,
+    firstline=1, 
+    lastline=85, 
+    firstnumber=1,
+    basicstyle=\footnotesize\ttfamily,
+    frame=single,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    xleftmargin=1.5em
+]{./codes/python/system_prompt.py}
