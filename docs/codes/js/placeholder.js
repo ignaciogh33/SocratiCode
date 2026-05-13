@@ -1,5 +1,5 @@
 const assistantMessage = {
-  id: `temp-assistant-${Date.now()}`,
+  id: 'temp-assistant-' + Date.now(),
   role: 'assistant',
   content: '',
   created_at: new Date().toISOString(),

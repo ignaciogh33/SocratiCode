@@ -1,4 +1,4 @@
-Las capacidades de aislamiento y sandboxing de Piston ya se describieron en la Sección~\ref{SS:DI_TEC_MOTOR}. Este apartado se centra exclusivamente en cómo se integra ese motor en el flujo de la aplicación desde que el alumno pulsa el botón de ejecución hasta que el resultado aparece en la terminal.
+Las capacidades de aislamiento y sandboxing de Piston ya se describieron en la \autoref{SS:DI_TEC_MOTOR}. Este apartado se centra exclusivamente en cómo se integra ese motor en el flujo de la aplicación desde que el alumno pulsa el botón de ejecución hasta que el resultado aparece en la terminal.
 
 \paragraph{Flujo de datos end-to-end.}
 
@@ -10,8 +10,8 @@ La URL del servicio se lee de la variable de entorno \texttt{PISTON\_URL}, lo qu
 
 \PythonCode[lst:piston_parse]{Extracción de stdout/stderr}{Normalización de la respuesta JSON de Piston en campos manejables (\texttt{compiler/views.py}).}{python/piston_parse.py}{1}{4}{1}
 
-El campo \texttt{status} de Piston codifica el motivo de finalización del proceso: \texttt{TO} indica \textit{timeout}, \texttt{CE} error de compilación, \texttt{SG} señal del sistema operativo (típicamente desbordamiento de memoria o fallo de segmentación), \texttt{OL} salida demasiado larga, entre otros. Django mapea cada código a un mensaje en español orientado al alumno que se concatena al \texttt{stderr} antes de enviarlo al \textit{frontend}, de modo que el alumno recibe una explicación comprensible en lugar de un código opaco.
+El campo \texttt{status} de Piston codifica el motivo de finalización del proceso. El valor \texttt{TO} indica \textit{timeout}, \texttt{CE} señala error de compilación, \texttt{SG} corresponde a una señal del sistema operativo (desbordamiento de memoria o fallo de segmentación) y \texttt{OL} advierte de una salida demasiado extensa, entre otros. Django mapea cada código a un mensaje en español orientado al alumno que se concatena al \texttt{stderr} antes de enviarlo al \textit{frontend}, de modo que el alumno recibe una explicación comprensible en lugar de un código opaco.
 
 \paragraph{Cierre del ciclo con el tutor.}
 
-La respuesta normalizada \texttt{\{stdout, stderr, exit\_code, language\}} llega al \textit{frontend} y se muestra en el panel de salida integrado. Pinia almacena la última salida en el estado del editor; cuando el alumno envía el siguiente mensaje al tutor, ese valor se incluye automáticamente en el campo \texttt{last\_output} del \textit{payload} del chat. Django lo inyecta como segundo mensaje de sistema en el contexto del LLM (Sección~\ref{SS:DI_IMP_PROMPTS}), cerrando el ciclo en el que el tutor puede razonar sobre el comportamiento real del código del alumno sin que este tenga que copiar y pegar ninguna traza de error.
+La respuesta normalizada \texttt{\{stdout, stderr, exit\_code, language\}} llega al \textit{frontend} y se muestra en el panel de salida integrado. Pinia almacena la última salida en el estado del editor. Cuando el alumno envía el siguiente mensaje al tutor, ese valor se incluye automáticamente en el campo \texttt{last\_output} del \textit{payload} del chat. Django lo inyecta como segundo mensaje de sistema en el contexto del LLM (\autoref{SS:DI_IMP_PROMPTS}), cerrando el ciclo en el que el tutor puede razonar sobre el comportamiento real del código del alumno sin que este tenga que copiar y pegar ninguna traza de error.

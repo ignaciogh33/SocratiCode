@@ -1,0 +1,14 @@
+La pantalla principal de SocratiCode se organiza en tres paneles horizontales que ocupan la totalidad de la ventana del navegador, tal y como se muestra en la \autoref{fig:interfaz-principal}.
+
+\begin{figure}[Interfaz principal]{fig:interfaz-principal}{Vista principal de SocratiCode con los tres paneles activos: \textit{sidebar}, editor con terminal y chat socrático.}
+    \centering
+    \includegraphics[width=0.95\textwidth]{./pantallas/Pantalla_prncipal.pdf}
+\end{figure}
+
+El \textbf{panel izquierdo} es el \textit{sidebar} de navegación. Muestra el historial de sesiones de chat del usuario, ordenadas por actividad reciente, y permite crear nuevas conversaciones o cambiar entre las existentes. Cada sesión recibe automáticamente el texto del primer mensaje como título, sin que el alumno tenga que nombrarla manualmente. Este panel es colapsable pulsando el botón de menú, cediendo todo el espacio horizontal a los paneles centrales y derecho, algo especialmente útil en pantallas de menor resolución.
+
+El \textbf{panel central} contiene el editor de código Monaco y, debajo, la terminal de salida. El editor ofrece resaltado de sintaxis, numeración de líneas e indentación automática para los lenguajes soportados. La terminal muestra la salida estándar y los errores de la última ejecución, con los mensajes de estado de Piston traducidos al español para facilitar su comprensión. El panel puede ajustarse al tamaño deseado u ocultarse por completo mediante el botón ``Ocultar editor''. Esta acción no es un simple cambio estético, cuando el editor no está visible el tutor recibe únicamente el historial de la conversación, sin el código fuente actual como contexto. Esto permite al alumno mantener conversaciones conceptuales o teóricas sin que el código interfiera en las respuestas.
+
+El \textbf{panel derecho} aloja el chat socrático. En la parte superior aparece el historial de la conversación activa y en la inferior el campo de entrada de texto y el botón de envío. Cuando el sistema está generando una respuesta, el \textit{streaming} de \textit{tokens} produce el efecto de escritura en tiempo real descrito en la \autoref{SS:DI_IMP_SSE}. Al cargar una sesión existente, la interfaz muestra un saludo personalizado con el nombre del usuario, reforzando la sensación de continuidad y contexto personal.
+
+Las distintas versiones de visualización de la pantalla principal, así como un ejemplo de interacción con el chat se recogen en el \autoref{CAP:AP_INTERFACES}.
