@@ -9,7 +9,7 @@ El referente más consolidado es el CS50 Duck, un asistente integrado en el ento
     \includegraphics[width=0.85\textwidth]{./img/CS50-arq.png}
 \end{figure}
 
-Para gestionar los costes de la API comercial, Harvard implementó un sistema de ``corazones'' que limita las consultas de los estudiantes, obteniendo un doble beneficio, por un lado obliga a los estudiantes a reflexionar sobre su pregunta antes de enviarla y por otro evita un elevado coste operativo \cite{liu2024cs50}.
+Para gestionar los costes de la API comercial, Harvard implementó un sistema de <<corazones>> que limita las consultas de los estudiantes, obteniendo un doble beneficio, por un lado obliga a los estudiantes a reflexionar sobre su pregunta antes de enviarla y por otro evita un elevado coste operativo \cite{liu2024cs50}.
 
 \subsubsection{CodeAid}
 \label{sec:codeaid}
@@ -23,9 +23,9 @@ El asistente CodeAid propone un modelo de ayuda estructurada basado en herramien
 \subsubsection{TreeInstruct}
 \label{sec:treeinstruct}
 
-Una de las investigaciones más recientes en este ámbito propone \textit{TreeInstruct}, un \textit{framework} de cuestionamiento guiado por árboles diseñado para el \textit{debugging} educativo \cite{kargupta2024instruct}. A diferencia de las herramientas comerciales anteriores, este modelo se basa en dos agentes que trabajan de forma coordinada. Por un lado hay un Instructor que diseña la secuencia de preguntas y por otro lado un Verificador que analiza si el estudiante realmente está comprendiendo cada paso en tiempo real.
+Una de las investigaciones más recientes en este ámbito propone \textit{TreeInstruct}, un \textit{framework} de cuestionamiento guiado por árboles diseñado para el \textit{debugging} educativo \cite{kargupta2024instruct}. A diferencia de las herramientas comerciales anteriores, este modelo se basa en dos agentes que trabajan de forma coordinada. Por un lado, hay un Instructor que diseña la secuencia de preguntas y por otro lado un Verificador que analiza si el estudiante realmente está comprendiendo cada paso en tiempo real.
 
-Para lograr esto, el \textit{framework} utiliza variables de estado que funcionan como indicadores del nivel de conocimiento alcanzado en cada momento. Estas variables representan hitos específicos como entender el origen de un fallo o ser capaz de proponer una corrección lógica. Al principio de la sesión estas variables se inicializan en falso y según las respuestas del alumno, el agente Verificador va actualizando los indicadores para que el agente Instructor pueda seleccionar las preguntas más adecuadas dentro del árbol de decisión y asegurar así un aprendizaje progresivo. Tal como se detalla en la \autoref{fig:arquitectura_treeinstruct}, esta estructura garantiza que el progreso dependa del dominio real de los conceptos por parte del alumno para fomentar un descubrimiento del error basado en su propio razonamiento lógico \cite{kargupta2024instruct}.
+Para lograr esto, el \textit{framework} utiliza variables de estado que funcionan como indicadores del nivel de conocimiento alcanzado en cada momento. Estas variables representan hitos específicos como entender el origen de un fallo o ser capaz de proponer una corrección lógica. Al principio de la sesión, estas variables se inicializan en falso y según las respuestas del alumno, el agente Verificador va actualizando los indicadores para que el agente Instructor pueda seleccionar las preguntas más adecuadas dentro del árbol de decisión y asegurar así un aprendizaje progresivo. Tal como se detalla en la \autoref{fig:arquitectura_treeinstruct}, esta estructura garantiza que el progreso dependa del dominio real de los conceptos por parte del alumno para fomentar un descubrimiento del error basado en su propio razonamiento lógico \cite{kargupta2024instruct}.
 
 \begin{figure}[Arquitectura del sistema TreeInstruct]{fig:arquitectura_treeinstruct}{Esquema de la arquitectura de TreeInstruct, mostrando la estructura jerárquica de árbol y el flujo de cuestionamiento. Tomado de \cite{kargupta2024instruct}}
     \centering

@@ -66,7 +66,7 @@ Este apéndice recoge los diagramas de secuencia de los tres casos de uso princi
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
   1. El usuario accede a la vista de registro. \newline
-  2. Introduce nombre de usuario, email, y repite dos veces una contraseña segura. \newline
+  2. Introduce nombre de usuario, correo electrónico, y repite dos veces una contraseña segura. \newline
   3. Pulsa el botón "Registrarse". \newline
   4. El sistema valida el formato del email y la seguridad de la contraseña (longitud mínima, caracteres alfanuméricos). \newline
   5. El sistema verifica que el nombre de usuario y el email no estén duplicados en la base de datos. \newline
@@ -535,7 +535,7 @@ Este apéndice recoge los diagramas de secuencia de los tres casos de uso princi
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
   1. El usuario hace clic en el botón de eliminar (ícono de papelera) junto a una sesión en el panel lateral. \newline
-  2. El frontend muestra un cuadro de diálogo de confirmación (¿Eliminar esta conversación? Esta acción no se puede deshacer.). \newline
+  2. El frontend muestra un cuadro de diálogo de confirmación \textit{«¿Eliminar esta conversación? Esta acción no se puede deshacer.»}. \newline
   3. El usuario confirma la eliminación. \newline
   4. La interfaz envía una solicitud HTTP DELETE al backend. \newline
   5. El sistema verifica la propiedad y borra el registro de la sesión y, en cascada, todos sus mensajes asociados en la base de datos. \newline
