@@ -8,11 +8,11 @@
 % arara: clean: {files: [TFG_Ignacio_Garcia_Hernanz.aux, TFG_Ignacio_Garcia_Hernanz.idx, TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.ind, TFG_Ignacio_Garcia_Hernanz.bbl, TFG_Ignacio_Garcia_Hernanz.bcf, TFG_Ignacio_Garcia_Hernanz.blg, TFG_Ignacio_Garcia_Hernanz.run.xml, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk, TFG_Ignacio_Garcia_Hernanz.fls, TFG_Ignacio_Garcia_Hernanz.loe, TFG_Ignacio_Garcia_Hernanz.lof, TFG_Ignacio_Garcia_Hernanz.lol, TFG_Ignacio_Garcia_Hernanz.lot, TFG_Ignacio_Garcia_Hernanz.ltb, TFG_Ignacio_Garcia_Hernanz.out, TFG_Ignacio_Garcia_Hernanz.toc, TFG_Ignacio_Garcia_Hernanz.upa, TFG_Ignacio_Garcia_Hernanz.upb, TFG_Ignacio_Garcia_Hernanz.acn, TFG_Ignacio_Garcia_Hernanz.acr, TFG_Ignacio_Garcia_Hernanz.alg, TFG_Ignacio_Garcia_Hernanz.glg, TFG_Ignacio_Garcia_Hernanz.glo, TFG_Ignacio_Garcia_Hernanz.gls, TFG_Ignacio_Garcia_Hernanz.glsdefs, TFG_Ignacio_Garcia_Hernanz.idx,  TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.xdy, TFG_Ignacio_Garcia_Hernanz.loa, TFG_Ignacio_Garcia_Hernanz.gnuploterrors , TFG_Ignacio_Garcia_Hernanz.mw, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk ]}
 
 
-\documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot]{tfgtfmthesisuam}
+\documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot,lof,lot,loc]{tfgtfmthesisuam}
 
 \advisor{Oscar Delgado Ben Mohatar}
 \levelin{Ingeniería Informática}
-\title{Desarrollo de un tutor socrático basado en LLMs para la enseñanza de programación}
+\title{Desarrollo de un tutor socrático basado en LLMs \\ para la enseñanza de programación}
 \subtitle{SocratiCode}
 \author{Ignacio García Hernanz}
 \privateaddress{C\textbackslash\ Francisco Tomás y Valiente Nº 11}
@@ -30,8 +30,8 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{listings}
 
-\keywords{Algunas} % TODO: Añadir palabras clave
-\palabrasclave{Otras} % TODO: Añadir keywords en inglés
+\keywords{Socratic tutor, local language models, programming education, prompt engineering, artificial intelligence in education, Server-Sent Events, secure code execution}
+\palabrasclave{tutor socrático, modelos de lenguaje locales, enseñanza de programación, prompt engineering, inteligencia artificial en educación, Server-Sent Events, ejecución de código segura}
 
 \coverdata
 {
@@ -115,7 +115,7 @@
 
 \chapter{Diagramas y casos de uso\label{CAP:AP_DIAGRAMAS}}{apendices/diagramas}
 \chapter{Navegación e interfaces extra\label{CAP:AP_INTERFACES}}{apendices/interfaces}
-\chapter{Resultados de encuesta y auditoría de seguridad\label{CAP:AP_RESULTADOS}}{apendices/resultados}
+% \chapter{Resultados de encuesta y auditoría de seguridad\label{CAP:AP_RESULTADOS}}{apendices/resultados}
 \chapter{System prompt del tutor socrático\label{CAP:AP_PROMPT}}{apendices/system_prompt}
 
 \nocite{*}
