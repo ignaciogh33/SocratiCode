@@ -1,6 +1,12 @@
-Una vez garantizada la estabilidad y el correcto funcionamiento interno del sistema mediante las pruebas unitarias, este apartado aborda la validación externa de SocratiCode. Para ello, se ha diseñado una fase de pruebas de usuario respaldada por una encuesta de evaluación, cuyo objetivo es medir la usabilidad de la interfaz y la efectividad pedagógica del método socrático. Para garantizar una cobertura completa, se propuso a los participantes una batería de ejercicios representativos que incluyeron: el desarrollo desde cero de un script en Python con estructuras de datos (diccionarios), la identificación y corrección de errores lógicos en código preexistente y, finalmente, la simulación de escenarios adversarios. En estos últimos, los usuarios intentaron forzar al modelo a revelar la solución directa o vulnerar la moderación de salida para extraer respuestas ajenas al ámbito de la programación.
+Este apartado aborda la validación externa de SocratiCode mediante una encuesta de evaluación que mide la usabilidad y la efectividad pedagógica del método socrático. Los participantes realizaron tres tipos de ejercicios: desarrollo de un script en Python con diccionarios, corrección de errores lógicos en código preexistente y simulación de escenarios adversarios en los que intentaron forzar al modelo a revelar la solución directa o extraer respuestas ajenas al ámbito de la programación.
+
+Para llevar a cabo esta evaluación, se desarrolló una versión de la aplicación web que usaba la API de \textbf{OpenRouter}\footnote{\url{https://openrouter.ai/}} para facilitar el acceso a modelos que serían totalmente viables de ejecutar de forma local para una institución, pero que resultaban inasumibles por limitaciones propias de hardware.
 
 \begin{figure}[Encuesta]{fig:encuesta}{Encuesta de evaluación de SocratiCode.}
     \centering
     \includegraphics[width=0.95\textwidth]{./img/encuesta.png}
 \end{figure}
+
+Para realizar la encuesta se distinguió entre tres perfiles de usuarios, personas sin formación en ingeniería, ingenieros de otras especialidades no centrados en el desarrollo de software y estudiantes de Ingeniería Informática con conocimientos específicos en la materia.
+
+Los resultados de los ejercicios prácticos confirman el éxito del modelo pedagógico y de seguridad. La inteligencia artificial se abstuvo sistemáticamente de proporcionar el código final, priorizando la guía deductiva del alumno. Asimismo, el sistema demostró una solidez absoluta frente a los intentos de manipulación de contexto (\textit{jailbreak}), manteniendo intacto su rol como tutor de programación en todos los escenarios evaluados.
