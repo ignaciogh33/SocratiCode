@@ -33,7 +33,6 @@ const routes = [
     meta: { requiresGuest: true },
   },
   {
-    // Redirect cualquier ruta desconocida
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },
@@ -44,7 +43,6 @@ const router = createRouter({
   routes,
 })
 
-// ─── NAVIGATION GUARDS ───
 router.beforeEach((to) => {
   const auth = useAuthStore()
 
@@ -54,7 +52,6 @@ router.beforeEach((to) => {
   if (to.meta.requiresGuest && auth.isAuthenticated) {
     return { name: 'Dashboard' }
   }
-  // Allow navigation
   return true
 })
 

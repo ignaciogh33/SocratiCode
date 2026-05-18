@@ -1,20 +1,17 @@
 <template>
   <div class="message-list" ref="listRef">
-    <!-- Loading more (top) -->
     <div v-if="chatStore.isLoadingMessages" class="message-list__loading">
       <SkeletonLoader width="60%" height="60px" />
       <SkeletonLoader width="45%" height="40px" />
       <SkeletonLoader width="70%" height="80px" />
     </div>
 
-    <!-- Messages -->
     <MessageBubble
       v-for="msg in chatStore.sortedMessages"
       :key="msg.id"
       :message="msg"
     />
 
-    <!-- Typing indicator -->
     <TypingIndicator v-if="chatStore.isStreaming && !lastMessageIsStreaming" />
 
     <!-- Scroll anchor -->
@@ -38,7 +35,6 @@ const lastMessageIsStreaming = computed(() => {
   return msgs.length > 0 && msgs[msgs.length - 1]._isStreaming
 })
 
-// Auto-scroll cuando cambian los mensajes o el streamBuffer
 watch(
   () => [chatStore.messages.length, chatStore.streamBuffer],
   () => {
@@ -49,14 +45,12 @@ watch(
   { deep: true }
 )
 
-// Scroll inicial
 onMounted(() => {
   nextTick(() => {
     scrollAnchor.value?.scrollIntoView()
   })
 })
 
-// Re-scroll cuando cambia la sesión activa
 watch(
   () => chatStore.activeSessionId,
   () => {

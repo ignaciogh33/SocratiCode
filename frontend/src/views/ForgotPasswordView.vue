@@ -1,13 +1,11 @@
 <template>
   <div class="auth-page">
-    <!-- Fondo decorativo -->
     <div class="auth-page__bg">
       <div class="auth-page__bg-orb auth-page__bg-orb--1"></div>
       <div class="auth-page__bg-orb auth-page__bg-orb--2"></div>
     </div>
 
     <div class="auth-page__container">
-      <!-- Logo -->
       <div class="auth-page__brand">
         <img
           src="../assets/images/logo-circular.svg"
@@ -17,14 +15,12 @@
         <h1 class="auth-page__title">SocratiCode</h1>
       </div>
 
-      <!-- Card -->
       <div class="auth-page__card">
         <h2 class="auth-page__heading">Recuperar contraseña</h2>
         <p class="auth-page__description">
           Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.
         </p>
 
-        <!-- Mensaje de éxito -->
         <div v-if="sent" class="auth-page__success">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -33,9 +29,7 @@
           Si el email existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.
         </div>
 
-        <!-- Formulario -->
         <form v-else @submit.prevent="handleSubmit" class="auth-page__form">
-          <!-- Error -->
           <div v-if="error" class="auth-page__error">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
@@ -60,7 +54,6 @@
           </AppButton>
         </form>
 
-        <!-- Link volver -->
         <div class="auth-page__links">
           <router-link :to="{ name: 'Login' }" class="auth-page__link">
             ← Volver a Iniciar Sesión
@@ -118,7 +111,6 @@ async function handleSubmit() {
   padding: 40px 20px;
 }
 
-/* ─── Background orbs ─── */
 .auth-page__bg {
   position: absolute;
   inset: 0;
@@ -156,7 +148,6 @@ async function handleSubmit() {
   50% { transform: translate(30px, -30px); }
 }
 
-/* ─── Container ─── */
 .auth-page__container {
   position: relative;
   z-index: 1;
@@ -168,7 +159,6 @@ async function handleSubmit() {
   max-width: 420px;
 }
 
-/* ─── Brand ─── */
 .auth-page__brand {
   text-align: center;
   display: flex;
@@ -190,7 +180,6 @@ async function handleSubmit() {
   letter-spacing: -0.5px;
 }
 
-/* ─── Card ─── */
 .auth-page__card {
   width: 100%;
   background-color: var(--color-surface-chat);
@@ -216,14 +205,12 @@ async function handleSubmit() {
   margin-top: -8px;
 }
 
-/* ─── Form ─── */
 .auth-page__form {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-/* ─── Messages ─── */
 .auth-page__error {
   display: flex;
   align-items: center;
@@ -254,7 +241,6 @@ async function handleSubmit() {
   margin-top: 2px;
 }
 
-/* ─── Links ─── */
 .auth-page__links {
   display: flex;
   justify-content: center;

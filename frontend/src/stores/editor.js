@@ -5,7 +5,6 @@ import { compilerService } from '../services/compilerService'
  * Store del editor de código — Estado del editor, terminal y ejecución.
  */
 
-// Lenguajes soportados por Piston
 export const SUPPORTED_LANGUAGES = [
   { id: 'python', label: 'Python', version: '3.10.0', monacoId: 'python' },
   { id: 'c', label: 'C', version: '10.2.0', monacoId: 'c' },
@@ -24,12 +23,9 @@ export const useEditorStore = defineStore('editor', {
     language: 'python',
     version: '3.10.0',
 
-    // Terminal output
     stdout: '',
     stderr: '',
     exitCode: null,
-
-    // UI state
     isExecuting: false,
     terminalVisible: false,
     editorVisible: true,

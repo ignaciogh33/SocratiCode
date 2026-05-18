@@ -1,11 +1,7 @@
 <template>
   <div class="dashboard" :class="{ 'dashboard--sidebar-collapsed': uiStore.sidebarCollapsed }">
-    <!-- Sidebar -->
     <AppSidebar />
-
-    <!-- Main content area -->
     <div class="dashboard__content">
-      <!-- Editor panel (center) -->
       <div
         v-if="editorStore.editorVisible"
         class="dashboard__editor"
@@ -14,7 +10,6 @@
         <CodeEditor />
       </div>
 
-      <!-- Resize handle -->
       <div
         v-if="editorStore.editorVisible"
         class="dashboard__resize-handle"
@@ -23,7 +18,6 @@
         <div class="dashboard__resize-handle-line"></div>
       </div>
 
-      <!-- Chat panel (right) -->
       <div
         class="dashboard__chat"
         :style="{ flexBasis: editorStore.editorVisible ? (100 - editorWidth) + '%' : '100%' }"
@@ -50,12 +44,10 @@ const uiStore = useUIStore()
 const editorWidth = ref(50) // porcentaje
 let isResizing = false
 
-// Cargar sesiones al montar
 onMounted(() => {
   chatStore.fetchSessions()
 })
 
-// ─── Resize logic ───
 function startResize(e) {
   isResizing = true
   document.body.style.cursor = 'col-resize'
@@ -103,7 +95,6 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-/* ─── Editor Panel ─── */
 .dashboard__editor {
   display: flex;
   flex-direction: column;
@@ -112,7 +103,6 @@ onUnmounted(() => {
   background-color: var(--color-surface-editor);
 }
 
-/* ─── Resize Handle ─── */
 .dashboard__resize-handle {
   width: 6px;
   cursor: col-resize;
@@ -140,7 +130,6 @@ onUnmounted(() => {
   background-color: var(--color-text-on-primary);
 }
 
-/* ─── Chat Panel ─── */
 .dashboard__chat {
   display: flex;
   flex-direction: column;

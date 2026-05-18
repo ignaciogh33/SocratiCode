@@ -14,7 +14,6 @@ const api = axios.create({
   },
 })
 
-// ─── REQUEST INTERCEPTOR: Inyectar token JWT ───
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token')
@@ -26,7 +25,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// ─── RESPONSE INTERCEPTOR: Auto-refresh en 401 ───
 let isRefreshing = false
 let refreshSubscribers = []
 
@@ -57,7 +55,6 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem('refresh_token')
 
         if (!refreshToken) {
-          // No hay refresh token → logout
           localStorage.removeItem('access_token')
           localStorage.removeItem('refresh_token')
           window.location.href = '/login'
@@ -72,7 +69,6 @@ api.interceptors.response.use(
           isRefreshing = false
           onRefreshed(data.access)
 
-          // Reintentar la request original con el nuevo token
           originalRequest.headers.Authorization = `Bearer ${data.access}`
           return api(originalRequest)
         } catch (refreshError) {

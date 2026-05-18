@@ -72,7 +72,6 @@ class SystemConfig(models.Model):
         return 'Configuración del sistema'
 
     def save(self, *args, **kwargs):
-        # Forzar que solo exista una fila (singleton)
         self.pk = 1
         super().save(*args, **kwargs)
 

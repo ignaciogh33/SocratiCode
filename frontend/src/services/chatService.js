@@ -115,7 +115,6 @@ export const chatService = {
 
           const data = trimmed.slice(6) // quitar "data: "
 
-          // Señal de fin
           if (data === '[DONE]') {
             onDone?.()
             return
@@ -129,12 +128,10 @@ export const chatService = {
               return
             }
 
-            // Token individual del streaming
             if (parsed.token !== undefined) {
               onToken?.(parsed.token)
             }
 
-            // Respuesta moderada por el moderador de output
             if (parsed.moderated) {
               onModerated?.(parsed.response)
             }
@@ -143,7 +140,6 @@ export const chatService = {
               onToken?.(parsed.response)
             }
 
-            // session_id al final del stream
             if (parsed.session_id !== undefined) {
               onDone?.(parsed.session_id, parsed.session_title)
             }

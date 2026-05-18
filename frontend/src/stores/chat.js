@@ -6,22 +6,15 @@ import { chatService } from '../services/chatService'
  */
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    // Sesiones
     sessions: [],
     sessionsCount: 0,
     sessionsNextPage: null,
     isLoadingSessions: false,
-
-    // Sesión activa
     activeSessionId: null,
-
-    // Mensajes de la sesión activa
     messages: [],
     messagesCount: 0,
     messagesNextPage: null,
     isLoadingMessages: false,
-
-    // Streaming
     isStreaming: false,
     streamBuffer: '',
     abortController: null,
@@ -46,8 +39,6 @@ export const useChatStore = defineStore('chat', {
   },
 
   actions: {
-    // ─── SESIONES ───
-
     async fetchSessions(page = 1) {
       this.isLoadingSessions = true
       try {
@@ -99,8 +90,6 @@ export const useChatStore = defineStore('chat', {
       this.fetchMessages(sessionId)
     },
 
-    // ─── MENSAJES ───
-
     async fetchMessages(sessionId, page = 1) {
       if (sessionId !== this.activeSessionId) return
       this.isLoadingMessages = true
@@ -120,14 +109,11 @@ export const useChatStore = defineStore('chat', {
       }
     },
 
-    // ─── STREAMING SSE ───
-
     /**
      * Envía un mensaje y procesa la respuesta en streaming.
      * Los tokens se acumulan en streamBuffer para el efecto máquina de escribir.
      */
     async sendMessage({ prompt, codeContext = '', lastOutput = '', language = 'python' }) {
-      // Crear sesión si no hay una activa
       if (!this.activeSessionId) {
         await this.createSession()
       }
@@ -142,7 +128,6 @@ export const useChatStore = defineStore('chat', {
       }
       this.messages.push(userMessage)
 
-      // Iniciar streaming
       this.isStreaming = true
       this.streamBuffer = ''
       this.abortController = new AbortController()
@@ -171,7 +156,6 @@ export const useChatStore = defineStore('chat', {
 
         onToken: (token) => {
           this.streamBuffer += token
-          // Actualizar el mensaje del asistente en tiempo real
           const msg = this.messages.find((m) => m.id === assistantMessage.id)
           if (msg) msg.content = this.streamBuffer
         },
@@ -190,21 +174,18 @@ export const useChatStore = defineStore('chat', {
           // Actualizar session_id si la sesión fue creada por el backend
           if (sessionId && sessionId !== this.activeSessionId) {
             this.activeSessionId = sessionId
-            // Actualizar la sesión en la lista
             const session = this.sessions.find((s) => s.id === sessionId)
             if (!session) {
               this.fetchSessions()
             }
           }
 
-          // Actualizar título y timestamp de la sesión activa
           const activeSession = this.sessions.find((s) => s.id === this.activeSessionId)
           if (activeSession) {
             if (sessionTitle) activeSession.title = sessionTitle
             activeSession.updated_at = new Date().toISOString()
           }
 
-          // Marcar como finalizado
           const msg = this.messages.find((m) => m.id === assistantMessage.id)
           if (msg) {
             msg._isStreaming = false
@@ -234,7 +215,6 @@ export const useChatStore = defineStore('chat', {
         this.isStreaming = false
         this.abortController = null
         
-        // Finalizar el cursor de streaming en el mensaje actual
         const lastMsg = this.messages[this.messages.length - 1]
         if (lastMsg && lastMsg.role === 'assistant' && lastMsg._isStreaming) {
           lastMsg._isStreaming = false

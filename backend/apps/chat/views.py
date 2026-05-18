@@ -144,7 +144,6 @@ async def chat_view(request):
     last_output = serializer.validated_data.get('last_output', '')
     language = serializer.validated_data.get('language', 'python')
 
-    # 2. OBTENER / CREAR SESIÓN (sync → async)
     session, error = await sync_to_async(_get_or_create_session)(session_id, request.user)
     if error:
         return error
@@ -152,12 +151,10 @@ async def chat_view(request):
     # Extraer ID primitivo ANTES del generador (evita SynchronousOnlyOperation)
     safe_session_id = session.id
 
-    # 3. GUARDAR MENSAJE DEL USUARIO + AUTO-NAMING + TOUCH updated_at
     await sync_to_async(Message.objects.create)(
         session_id=safe_session_id, role="user", content=user_text
     )
 
-    # Auto-naming: si es el primer mensaje, usar el texto como título
     def _auto_name_and_touch(sid, text):
         s = ChatSession.objects.get(id=sid)
         msg_count = s.messages.filter(role='user').count()
@@ -169,14 +166,12 @@ async def chat_view(request):
 
     session_title = await sync_to_async(_auto_name_and_touch)(safe_session_id, user_text)
 
-    # 4. LEER CONFIGURACIÓN DEL SISTEMA
     config = await sync_to_async(SystemConfig.get)()
     do_input_mod = config.moderation_mode in ('both', 'input')
     do_output_mod = config.moderation_mode in ('both', 'output')
     llm_model = config.llm_model
     mod_model = config.moderation_model
 
-    # ── DEBUG: Encabezado del flujo ──
     if settings.DEBUG:
         mod_mode_label = {'both': 'Input + Output', 'input': 'Solo Input', 'output': 'Solo Output', 'none': 'Desactivada'}
         print("\n" + "═"*60)
@@ -189,7 +184,6 @@ async def chat_view(request):
             print(f"   Código: {len(lines)} líneas ({language})")
         print("─"*60)
 
-    # 5. MODERACIÓN DEL INPUT
     if do_input_mod:
         if settings.DEBUG:  # pragma: no cover
             print(f"\n① INPUT MOD ({mod_model})")
@@ -218,7 +212,6 @@ async def chat_view(request):
     elif settings.DEBUG:
         print(f"\n① INPUT MOD — desactivado")
 
-    # 6. CONSTRUIR PAYLOAD DE MENSAJES (sync → async)
     messages_payload = await sync_to_async(_build_messages_payload)(
         session, code_context, last_output, language
     )
@@ -226,10 +219,9 @@ async def chat_view(request):
     if settings.DEBUG:
         print(f"\n② LLM PRINCIPAL ({llm_model}) — streaming...")
 
-    # 7. STREAMING DEL LLM PRINCIPAL (async, token a token, con moderación paralela)
     async def event_stream():
         global _output_mod_counter
-        _output_mod_counter = 0  # Reset counter per request
+        _output_mod_counter = 0
 
         full_response = ""
         mod_buffer = ""
@@ -248,7 +240,6 @@ async def chat_view(request):
                 messages=messages_payload,
                 stream=True,
             ):
-                # ── Comprobar tareas de moderación completadas ──
                 if do_output_mod:
                     for task in moderation_tasks:
                         if task.done() and not task.result():
@@ -256,18 +247,16 @@ async def chat_view(request):
                             break
 
                 if flagged:
-                    break  # Cortar generación del LLM
+                    break
 
                 token = chunk['message']['content']
                 full_response += token
 
-                # Enviar token al usuario inmediatamente
                 yield f"data: {json.dumps({'token': token})}\n\n"
 
                 # Dar al event loop oportunidad de completar tasks de moderación
                 await asyncio.sleep(0)
 
-                # ── Cada ~word_window palabras, lanzar moderación async ──
                 if do_output_mod:
                     mod_buffer += token
                     if len(mod_buffer.split()) >= word_window:
@@ -281,7 +270,6 @@ async def chat_view(request):
         except Exception as e:
             yield f"data: {json.dumps({'error': f'Error en motor IA: {str(e)}', 'details': None})}\n\n"
 
-        # ── Moderar buffer restante + esperar tareas pendientes ──
         if do_output_mod and not flagged:
             if mod_buffer.strip():
                 task = asyncio.create_task(moderate_output_async(full_response, mod_model))
@@ -292,7 +280,6 @@ async def chat_view(request):
                 if not all(results):
                     flagged = True
 
-        # ── Moderado → reemplazar con mensaje predeterminado ──
         if flagged:
             yield f"data: {json.dumps({'moderated': True, 'response': MODERATED_RESPONSE})}\n\n"
             yield "data: [DONE]\n\n"
@@ -322,7 +309,6 @@ async def chat_view(request):
                 )
             return
 
-        # ── Happy path: stream completado sin moderación ──
         yield f"data: {json.dumps({'session_id': safe_session_id, 'session_title': session_title})}\n\n"
         yield "data: [DONE]\n\n"
 

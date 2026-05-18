@@ -1,6 +1,5 @@
 <template>
   <div class="chat-panel">
-    <!-- Empty state: no session selected -->
     <div v-if="!chatStore.activeSessionId" class="chat-panel__empty">
       <img src="../../assets/images/logo-circular.svg" alt="SocratiCode" class="chat-panel__empty-logo" />
       <h2 class="chat-panel__empty-title">¡Bienvenido a SocratiCode!</h2>
@@ -13,9 +12,7 @@
       </AppButton>
     </div>
 
-    <!-- Active session -->
     <template v-else>
-      <!-- "New" active session state (0 messages) -->
       <div v-if="chatStore.messages.length === 0" class="chat-panel__active-empty">
         <div class="chat-panel__greeting">
           <img src="../../assets/images/logo-circular.svg" alt="SocratiCode" class="chat-panel__greeting-logo" />
@@ -26,7 +23,6 @@
         </div>
       </div>
       
-      <!-- Normal chat layout -->
       <template v-else>
         <MessageList />
         <ChatInput />
@@ -47,7 +43,7 @@ const chatStore = useChatStore()
 const authStore = useAuthStore()
 
 const getGreeting = () => {
-  const name = authStore.user?.username || 'Ignacio' // fallback
+  const name = authStore.user?.username || 'Ignacio'
   const hour = new Date().getHours()
   let timeStr = ''
   if (hour < 12) timeStr = 'Buenos días'
@@ -81,7 +77,6 @@ watch(() => chatStore.activeSessionId, () => {
   overflow: hidden;
 }
 
-/* ─── Empty state ─── */
 .chat-panel__empty {
   flex: 1;
   display: flex;
@@ -112,7 +107,6 @@ watch(() => chatStore.activeSessionId, () => {
   max-width: 300px;
 }
 
-/* ─── Active Empty State (Greeting) ─── */
 .chat-panel__active-empty {
   flex: 1;
   display: flex;

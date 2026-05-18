@@ -1,6 +1,5 @@
 <template>
   <div class="profile-view">
-    <!-- Header -->
     <header class="profile-view__header">
       <button class="profile-view__back" @click="router.push({ name: 'Dashboard' })">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -14,20 +13,14 @@
       </div>
     </header>
 
-    <!-- Main content -->
     <main class="profile-view__main">
-
-      <!-- Avatar -->
       <div class="profile-view__avatar">
         <span class="profile-view__avatar-initials">{{ initials }}</span>
       </div>
-
-      <!-- Section 1: Profile Info -->
       <section class="profile-card">
         <h2 class="profile-card__title">Información personal</h2>
 
         <form class="profile-card__form" @submit.prevent="handleUpdateProfile">
-          <!-- Username -->
           <div class="profile-field">
             <label class="profile-field__label" for="username">Nombre de usuario</label>
             <input
@@ -40,7 +33,6 @@
             />
           </div>
 
-          <!-- Email (read-only) -->
           <div class="profile-field">
             <label class="profile-field__label" for="email">
               Correo electrónico
@@ -56,7 +48,6 @@
             />
           </div>
 
-          <!-- Bio -->
           <div class="profile-field">
             <label class="profile-field__label" for="bio">Sobre mí</label>
             <textarea
@@ -69,7 +60,6 @@
             ></textarea>
           </div>
 
-          <!-- Theme -->
           <div class="profile-field">
             <label class="profile-field__label">Tema preferido</label>
             <div class="profile-theme-toggle">
@@ -106,7 +96,6 @@
             </div>
           </div>
 
-          <!-- Feedback -->
           <Transition name="fade-msg">
             <p v-if="profileSuccess" class="profile-feedback profile-feedback--success">
               ✓ Perfil actualizado correctamente
@@ -127,7 +116,6 @@
         </form>
       </section>
 
-      <!-- Section 2: Change Password -->
       <section class="profile-card">
         <h2 class="profile-card__title">Cambiar contraseña</h2>
 
@@ -171,7 +159,6 @@
             />
           </div>
 
-          <!-- Feedback -->
           <Transition name="fade-msg">
             <p v-if="passSuccess" class="profile-feedback profile-feedback--success">
               ✓ Contraseña cambiada correctamente
@@ -203,7 +190,6 @@ import { useAuthStore } from '../stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-// ─── Profile form ───
 const form = ref({
   username: '',
   bio: '',
@@ -242,7 +228,6 @@ async function handleUpdateProfile() {
   }
 }
 
-// ─── Password form ───
 const passForm = ref({
   current_password: '',
   new_password: '',
@@ -278,7 +263,6 @@ async function handleChangePassword() {
 </script>
 
 <style scoped>
-/* ─── Layout ─── */
 .profile-view {
   height: 100vh;
   background-color: var(--color-surface-chat);
@@ -288,7 +272,6 @@ async function handleChangePassword() {
   overflow: hidden;
 }
 
-/* ─── Header ─── */
 .profile-view__header {
   display: flex;
   align-items: center;
@@ -336,7 +319,6 @@ async function handleChangePassword() {
   letter-spacing: -0.3px;
 }
 
-/* ─── Main ─── */
 .profile-view__main {
   flex: 1;
   overflow-y: auto;
@@ -355,7 +337,6 @@ async function handleChangePassword() {
   margin: 0;
 }
 
-/* ─── Avatar ─── */
 .profile-view__avatar {
   width: 80px;
   height: 80px;
@@ -374,7 +355,6 @@ async function handleChangePassword() {
   letter-spacing: 1px;
 }
 
-/* ─── Cards ─── */
 .profile-card {
   width: 100%;
   max-width: 560px;
@@ -399,7 +379,6 @@ async function handleChangePassword() {
   gap: 16px;
 }
 
-/* ─── Fields ─── */
 .profile-field {
   display: flex;
   flex-direction: column;
@@ -461,7 +440,6 @@ async function handleChangePassword() {
   min-height: 80px;
 }
 
-/* ─── Theme toggle ─── */
 .profile-theme-toggle {
   display: flex;
   gap: 8px;
@@ -493,7 +471,6 @@ async function handleChangePassword() {
   color: var(--color-text-body);
 }
 
-/* ─── Buttons ─── */
 .profile-btn {
   display: flex;
   align-items: center;
@@ -535,7 +512,6 @@ async function handleChangePassword() {
   cursor: not-allowed;
 }
 
-/* ─── Spinner ─── */
 .profile-btn__spinner {
   display: inline-block;
   width: 14px;
@@ -550,7 +526,6 @@ async function handleChangePassword() {
   to { transform: rotate(360deg); }
 }
 
-/* ─── Feedback messages ─── */
 .profile-feedback {
   font-size: 13px;
   padding: 10px 14px;
@@ -570,7 +545,6 @@ async function handleChangePassword() {
   border: 1px solid var(--color-error);
 }
 
-/* ─── Fade transitions ─── */
 .fade-msg-enter-active,
 .fade-msg-leave-active {
   transition: opacity 0.3s ease, transform 0.3s ease;

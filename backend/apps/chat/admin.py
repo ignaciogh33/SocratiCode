@@ -32,7 +32,6 @@ class SystemConfigForm(forms.ModelForm):
         self.ollama_available = choices is not None
 
         if choices:
-            # Ollama disponible: reemplazar los CharField por ChoiceField con los modelos instalados
             for field_name in ('llm_model', 'moderation_model'):
                 current = self.initial.get(field_name) or self.fields[field_name].initial
                 field_choices = list(choices)
@@ -45,7 +44,6 @@ class SystemConfigForm(forms.ModelForm):
                     help_text=self.fields[field_name].help_text,
                 )
         else:
-            # Ollama no disponible: mantener CharField pero indicarlo en el help_text
             no_conn_note = ' (Ollama sin conexión — introduce el nombre manualmente.)'
             for field_name in ('llm_model', 'moderation_model'):
                 original_help = self.fields[field_name].help_text or ''
@@ -103,7 +101,6 @@ class SystemConfigAdmin(admin.ModelAdmin):
     )
 
     def has_add_permission(self, request):
-        # No permitir crear más de una fila
         return not SystemConfig.objects.exists()
 
     def has_delete_permission(self, request, obj=None):

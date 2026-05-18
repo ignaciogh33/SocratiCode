@@ -16,7 +16,6 @@ def custom_exception_handler(exc, context):
             "details": response.data
         }
         
-        # If it's a standard DRF error object with context
         if isinstance(response.data, dict):
             # If it's a generic APIException with a 'detail' string (like NotFound or PermissionDenied)
             if 'detail' in response.data:

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { authService } from '../services/authService'
-import { useRouter } from 'vue-router'
 
 /**
  * Store de autenticación — Gestiona JWT tokens y datos del usuario.
@@ -20,10 +19,6 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    /**
-     * Login con username y password.
-     * Guarda tokens y obtiene datos del usuario.
-     */
     async login(username, password) {
       this.isLoading = true
       this.error = null
@@ -43,9 +38,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    /**
-     * Registrar un nuevo usuario.
-     */
     async register({ username, email, password, re_password }) {
       this.isLoading = true
       this.error = null
@@ -68,9 +60,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    /**
-     * Obtener datos del usuario autenticado.
-     */
     async fetchUser() {
       if (!this.accessToken) return
       try {
@@ -80,9 +69,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    /**
-     * Cerrar sesión. Limpia todo y redirige a login.
-     */
     logout() {
       this.accessToken = null
       this.refreshToken = null
@@ -91,9 +77,6 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('refresh_token')
     },
 
-    /**
-     * Actualizar datos del perfil.
-     */
     async updateProfile(profileData) {
       this.isLoading = true
       this.error = null
@@ -110,9 +93,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    /**
-     * Cambiar contraseña del usuario.
-     */
     async changePassword(passwordData) {
       this.isLoading = true
       this.error = null
@@ -132,9 +112,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    /**
-     * Intentar restaurar sesión al arrancar la app.
-     */
     async initialize() {
       if (this.accessToken && !this.user) {
         await this.fetchUser()

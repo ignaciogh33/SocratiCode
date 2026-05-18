@@ -1,6 +1,5 @@
 <template>
   <div :class="['message-bubble', `message-bubble--${message.role}`]">
-    <!-- Avatar -->
     <div class="message-bubble__avatar">
       <template v-if="message.role === 'assistant'">
         <img src="../../assets/images/logo-circular.svg" alt="Sócrates" class="message-bubble__avatar-img" />
@@ -15,7 +14,6 @@
       </template>
     </div>
 
-    <!-- Content -->
     <div class="message-bubble__content">
       <div class="message-bubble__header" v-if="message.moderated">
         <span class="message-bubble__moderated" title="Mensaje moderado">
@@ -24,7 +22,6 @@
       </div>
       <div class="message-bubble__body" v-html="renderedContent"></div>
 
-      <!-- Streaming cursor -->
       <span v-if="message._isStreaming" class="message-bubble__cursor">▊</span>
     </div>
   </div>
@@ -41,7 +38,6 @@ import xml from 'highlight.js/lib/languages/xml'
 import bash from 'highlight.js/lib/languages/bash'
 import 'highlight.js/styles/github-dark.min.css'
 
-// Register languages
 hljs.registerLanguage('python', python)
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)
@@ -95,7 +91,6 @@ const renderedContent = computed(() => {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── Layout by role ─── */
 .message-bubble--assistant {
   align-self: flex-start;
 }
@@ -111,7 +106,6 @@ const renderedContent = computed(() => {
   align-items: flex-end;
 }
 
-/* ─── Avatar ─── */
 .message-bubble__avatar {
   flex-shrink: 0;
   margin-top: 4px;
@@ -134,7 +128,6 @@ const renderedContent = computed(() => {
   color: var(--color-text-muted);
 }
 
-/* ─── Content ─── */
 .message-bubble__content {
   min-width: 0;
 }
@@ -166,7 +159,6 @@ const renderedContent = computed(() => {
   border-top-right-radius: 2px;
 }
 
-/* ─── Streaming cursor ─── */
 .message-bubble__cursor {
   animation: blink 0.8s step-end infinite;
   color: var(--color-primary);
@@ -177,7 +169,6 @@ const renderedContent = computed(() => {
   50% { opacity: 0; }
 }
 
-/* ─── Markdown rendered content ─── */
 .message-bubble__body :deep(p) {
   margin-bottom: 8px;
 }
@@ -201,7 +192,6 @@ const renderedContent = computed(() => {
   font-weight: 600;
 }
 
-/* ─── Code blocks ─── */
 .message-bubble__body :deep(.code-block) {
   margin: 8px 0;
   border-radius: var(--radius-md);

@@ -1,8 +1,6 @@
 <template>
   <aside class="sidebar" :class="{ 'sidebar--collapsed': uiStore.sidebarCollapsed }">
-    <!-- Header: Logo + Toggle -->
     <div class="sidebar__header" :class="{ 'sidebar__header--collapsed': uiStore.sidebarCollapsed }">
-      <!-- Expanded Mode -->
       <template v-if="!uiStore.sidebarCollapsed">
         <div class="sidebar__brand">
           <img src="../../assets/images/logo-circular.svg" alt="SocratiCode" class="sidebar__logo" />
@@ -17,7 +15,6 @@
         </button>
       </template>
 
-      <!-- Collapsed Mode -->
       <template v-else>
         <button class="sidebar__logo-toggle" @click="uiStore.toggleSidebar" title="Expandir sidebar">
           <img src="../../assets/images/logo-circular.svg" alt="SC" class="sidebar__logo sidebar__logo--small" />
@@ -32,7 +29,6 @@
       </template>
     </div>
 
-    <!-- New conversation button -->
     <button class="sidebar__new-chat" @click="handleNewChat" :title="uiStore.sidebarCollapsed ? 'Nueva conversación' : ''">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <line x1="12" y1="5" x2="12" y2="19"/>
@@ -41,7 +37,6 @@
       <span v-if="!uiStore.sidebarCollapsed">Nueva conversación</span>
     </button>
 
-    <!-- Toggle editor button -->
     <button class="sidebar__toggle-editor" @click="editorStore.toggleEditor" :title="editorStore.editorVisible ? 'Ocultar editor' : 'Mostrar editor'">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <polyline points="16,18 22,12 16,6"/>
@@ -50,17 +45,14 @@
       <span v-if="!uiStore.sidebarCollapsed">{{ editorStore.editorVisible ? 'Ocultar editor' : 'Mostrar editor' }}</span>
     </button>
 
-    <!-- Sessions list -->
     <div ref="sessionsContainer" class="sidebar__sessions" @scroll="onSessionsScroll">
       <template v-if="!uiStore.sidebarCollapsed">
-        <!-- Skeleton loading -->
         <template v-if="chatStore.isLoadingSessions && chatStore.sessions.length === 0">
           <div v-for="i in 5" :key="i" class="sidebar__session-skeleton">
             <SkeletonLoader width="100%" height="38px" />
           </div>
         </template>
 
-        <!-- Session items -->
         <template v-else>
           <div
             v-for="session in chatStore.sortedSessions"
@@ -68,7 +60,6 @@
             :class="['sidebar__session', { 'sidebar__session--active': session.id === chatStore.activeSessionId }]"
             @click="chatStore.setActiveSession(session.id)"
           >
-            <!-- Edit mode -->
             <input
               v-if="editingSessionId === session.id"
               ref="editInput"
@@ -78,10 +69,7 @@
               @keyup.escape="cancelRename"
               @blur="saveRename(session.id)"
             />
-            <!-- Normal display -->
             <span v-else class="sidebar__session-title">{{ session.title }}</span>
-
-            <!-- Actions -->
             <div class="sidebar__session-actions" v-if="editingSessionId !== session.id">
               <button @click.stop="startRename(session)" title="Renombrar" class="sidebar__session-action">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -98,7 +86,6 @@
             </div>
           </div>
 
-          <!-- Infinite scroll loading -->
           <div v-if="chatStore.isLoadingSessions && chatStore.sessions.length > 0" class="sidebar__session-skeleton">
             <SkeletonLoader width="100%" height="38px" />
           </div>
@@ -106,7 +93,6 @@
       </template>
     </div>
 
-    <!-- Footer -->
     <div class="sidebar__footer">
       <button class="sidebar__footer-btn sidebar__footer-btn--profile" :title="uiStore.sidebarCollapsed ? 'Perfil' : ''" @click="router.push({ name: 'Profile' })">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -147,7 +133,6 @@ const editingSessionId = ref(null)
 const editTitle = ref('')
 const sessionsContainer = ref(null)
 
-// Auto-cargar más sesiones si el contenedor no tiene scroll
 watch(
   () => chatStore.sessions.length,
   () => {
@@ -223,7 +208,6 @@ function onSessionsScroll(e) {
   min-width: var(--sidebar-width-collapsed);
 }
 
-/* ─── Header ─── */
 .sidebar__header {
   display: flex;
   align-items: center;
@@ -324,7 +308,6 @@ function onSessionsScroll(e) {
   opacity: 1;
 }
 
-/* ─── New Chat Button ─── */
 .sidebar__new-chat {
   display: flex;
   align-items: center;
@@ -350,7 +333,6 @@ function onSessionsScroll(e) {
   padding: 10px;
 }
 
-/* ─── Toggle Editor Button ─── */
 .sidebar__toggle-editor {
   display: flex;
   align-items: center;
@@ -377,7 +359,6 @@ function onSessionsScroll(e) {
   padding: 8px;
 }
 
-/* ─── Sessions List ─── */
 .sidebar__sessions {
   flex: 1;
   overflow-y: auto;
@@ -437,7 +418,6 @@ function onSessionsScroll(e) {
   min-width: 0;
 }
 
-/* Actions (visible on hover) */
 .sidebar__session-actions {
   display: none;
   gap: 2px;
@@ -464,12 +444,10 @@ function onSessionsScroll(e) {
   color: var(--color-error);
 }
 
-/* Skeleton */
 .sidebar__session-skeleton {
   padding: 4px 8px;
 }
 
-/* ─── Footer ─── */
 .sidebar__footer {
   padding: 12px;
   display: flex;

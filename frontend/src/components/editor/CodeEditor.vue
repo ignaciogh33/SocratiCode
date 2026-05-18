@@ -1,6 +1,5 @@
 <template>
   <div class="code-editor">
-    <!-- Header -->
     <div class="code-editor__header">
       <LanguageSelector />
       <button
@@ -21,10 +20,7 @@
       </button>
     </div>
 
-    <!-- Monaco Editor -->
     <div class="code-editor__container" ref="editorContainer"></div>
-
-    <!-- Terminal Output -->
     <TerminalOutput v-if="editorStore.terminalVisible" />
   </div>
 </template>
@@ -40,7 +36,6 @@ const editorContainer = ref(null)
 let monacoEditor = null
 
 onMounted(async () => {
-  // Lazy load Monaco
   const loader = await import('@monaco-editor/loader')
   const monaco = await loader.default.init()
 
@@ -78,7 +73,6 @@ onMounted(async () => {
   })
 })
 
-// Watch language changes to update Monaco
 watch(
   () => editorStore.language,
   (newLang) => {
@@ -121,7 +115,6 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-/* ─── Header ─── */
 .code-editor__header {
   display: flex;
   align-items: center;
@@ -171,7 +164,6 @@ onUnmounted(() => {
   to { transform: rotate(360deg); }
 }
 
-/* ─── Editor Container ─── */
 .code-editor__container {
   flex: 1;
   min-height: 0;

@@ -21,19 +21,15 @@
       </div>
     </div>
     <div class="terminal__output">
-      <!-- Executing spinner -->
       <div v-if="editorStore.isExecuting" class="terminal__loading">
         <span class="terminal__spinner"></span>
         Ejecutando...
       </div>
 
-      <!-- stdout -->
       <pre v-if="editorStore.stdout" class="terminal__stdout">{{ editorStore.stdout }}</pre>
 
-      <!-- stderr -->
       <pre v-if="editorStore.stderr" class="terminal__stderr">{{ editorStore.stderr }}</pre>
 
-      <!-- Empty state -->
       <p v-if="!editorStore.isExecuting && !editorStore.stdout && !editorStore.stderr" class="terminal__empty">
         Pulsa <strong>EJECUTAR</strong> para ver la salida aquí
       </p>

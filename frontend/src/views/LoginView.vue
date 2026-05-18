@@ -1,13 +1,11 @@
 <template>
   <div class="login-view">
-    <!-- Fondo decorativo -->
     <div class="login-view__bg">
       <div class="login-view__bg-orb login-view__bg-orb--1"></div>
       <div class="login-view__bg-orb login-view__bg-orb--2"></div>
     </div>
 
     <div class="login-view__container">
-      <!-- Logo -->
       <div class="login-view__brand">
         <img
           src="../assets/images/logo-circular.svg"
@@ -18,9 +16,7 @@
         <p class="login-view__slogan">Tu código. Tus pistas. Tu aprendizaje.</p>
       </div>
 
-      <!-- Card principal -->
       <div class="login-view__card">
-        <!-- Tabs -->
         <div class="login-view__tabs">
           <button
             :class="['login-view__tab', { 'login-view__tab--active': activeTab === 'login' }]"
@@ -36,7 +32,6 @@
           </button>
         </div>
 
-        <!-- Error global -->
         <div v-if="error" class="login-view__error">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
@@ -46,7 +41,6 @@
           {{ error }}
         </div>
 
-        <!-- Formularios -->
         <LoginForm
           v-if="activeTab === 'login'"
           :is-loading="auth.isLoading"
@@ -60,7 +54,6 @@
           @submit="handleRegister"
         />
 
-        <!-- Links -->
         <div class="login-view__links">
           <template v-if="activeTab === 'login'">
             <router-link :to="{ name: 'ForgotPassword' }" class="login-view__link">¿Olvidaste tu contraseña?</router-link>
@@ -168,7 +161,6 @@ async function handleRegister(data) {
   padding: 40px 20px;
 }
 
-/* ─── Background orbs ─── */
 .login-view__bg {
   position: absolute;
   inset: 0;
@@ -206,7 +198,6 @@ async function handleRegister(data) {
   50% { transform: translate(30px, -30px); }
 }
 
-/* ─── Container ─── */
 .login-view__container {
   position: relative;
   z-index: 1;
@@ -218,7 +209,6 @@ async function handleRegister(data) {
   max-width: 420px;
 }
 
-/* ─── Brand ─── */
 .login-view__brand {
   text-align: center;
   display: flex;
@@ -246,7 +236,6 @@ async function handleRegister(data) {
   font-style: italic;
 }
 
-/* ─── Card ─── */
 .login-view__card {
   width: 100%;
   background-color: var(--color-surface-chat);
@@ -259,7 +248,6 @@ async function handleRegister(data) {
   box-shadow: var(--shadow-lg);
 }
 
-/* ─── Tabs ─── */
 .login-view__tabs {
   display: flex;
   background-color: var(--color-surface-input);
@@ -288,7 +276,6 @@ async function handleRegister(data) {
   color: var(--color-text-on-primary);
 }
 
-/* ─── Error ─── */
 .login-view__error {
   display: flex;
   align-items: center;
@@ -301,7 +288,6 @@ async function handleRegister(data) {
   line-height: 1.4;
 }
 
-/* ─── Links ─── */
 .login-view__links {
   display: flex;
   justify-content: space-between;

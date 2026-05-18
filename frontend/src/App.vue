@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-// App shell — solo contiene router-view con transición entre páginas
 </script>
 
 <style>

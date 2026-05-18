@@ -10,7 +10,6 @@ from .serializers import ExecuteInputSerializer, ExecuteOutputSerializer
 @permission_classes([IsAuthenticated])
 def execute_code(request):
     """Ejecuta código del alumno vía Piston. No pasa por Ollama."""
-    # 1. VALIDACIÓN
     serializer = ExecuteInputSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
@@ -18,7 +17,6 @@ def execute_code(request):
     language = serializer.validated_data['language']
     version = serializer.validated_data['version']
 
-    # 2. LLAMADA A PISTON
     piston_url = f"{settings.PISTON_URL}/api/v2/execute"
     payload = {
         "language": language,
@@ -64,7 +62,6 @@ def execute_code(request):
             status=500,
         )
 
-    # 3. PROCESAR RESPUESTA DE PISTON
     if "message" in piston_data:
         return Response(
             {"error": piston_data["message"], "details": None},
@@ -83,11 +80,9 @@ def execute_code(request):
     signal = run_data.get("signal")
     status = run_data.get("status")
 
-    # Si exit_code es None, le asignamos -1
     if exit_code is None:
         exit_code = -1
 
-    # Mensajes de error según el status de Piston
     PISTON_STATUS_MESSAGES = {
         'CE': (
             '\n[Error de compilación]: El código no se ha podido compilar. '
