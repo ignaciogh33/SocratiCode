@@ -55,6 +55,24 @@ El estudio aborda la dificultad que enfrentan los estudiantes principiantes de i
   url          = {https://link.springer.com/chapter/10.1007/978-3-030-52240-7_3}
 }
 
+@article{beaubouef2005why,
+  author     = {Beaubouef, Theresa and Mason, John},
+  title      = {Why the high attrition rate for computer science students: some thoughts and observations},
+  year       = {2005},
+  issue_date = {June 2005},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {37},
+  number     = {2},
+  issn       = {0097-8418},
+  url        = {https://doi.org/10.1145/1083431.1083474},
+  doi        = {10.1145/1083431.1083474},
+  journal    = {SIGCSE Bull.},
+  month      = jun,
+  pages      = {103--106},
+  numpages   = {4}
+}
+
 Datasets de ejemplos de conversaciones con código
 @inproceedings{al-hossami-etal-2023-socratic,
   title     = {Socratic Questioning of Novice Debuggers: A Benchmark Dataset and Preliminary Evaluations},
@@ -89,12 +107,19 @@ El estudio parte de una crítica necesaria: la mayoría de los asistentes de có
 SACAR DE AQUÍ COMO HACER EL SYSTEM PROMPT
 2
 @inproceedings{kargupta2024instruct,
-  title     = {Instruct, not assist: LLM-based multi-turn planning and hierarchical questioning for socratic code debugging},
-  author    = {Kargupta, P. and Agarwal, I. and Tur, D. H. and Han, J.},
+  title     = {Instruct, Not Assist: {LLM}-based Multi-Turn Planning and Hierarchical Questioning for Socratic Code Debugging},
+  author    = {Kargupta, Priyanka  and
+               Agarwal, Ishika  and
+               Tur, Dilek Hakkani  and
+               Han, Jiawei},
+  editor    = {Al-Onaizan, Yaser  and
+               Bansal, Mohit  and
+               Chen, Yun-Nung},
   booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2024},
   year      = {2024},
   url       = {https://aclanthology.org/2024.findings-emnlp.553},
-  pages     = {9443--9458}
+  pages     = {9475--9495},
+  abstract  = {Socratic questioning is an effective teaching strategy, encouraging critical thinking and problem-solving. The conversational capabilities of large language models (LLMs) show great potential for providing scalable, real-time student guidance. However, current LLMs often give away solutions directly, making them ineffective instructors. We tackle this issue in the code debugging domain with TreeInstruct, an Instructor agent guided by a novel state space-based planning algorithm. TreeInstruct asks probing questions to help students independently identify and resolve errors. It estimates a student{'}s conceptual and syntactical knowledge to dynamically construct a question tree based on their responses and current knowledge state, effectively addressing both independent and dependent mistakes concurrently in a multi-turn interaction setting. In addition to using an existing single-bug debugging benchmark, we construct a more challenging multi-bug dataset of 150 coding problems, incorrect solutions, and bug fixes{--} all carefully constructed and annotated by experts. Extensive evaluation shows TreeInstruct{'}s state-of-the-art performance on both datasets, proving it to be a more effective instructor than baselines. Furthermore, a real-world case study with five students of varying skill levels further demonstrates TreeInstruct{'}s ability to guide students to debug their code efficiently with minimal turns and highly Socratic questioning.}
 }
 
 Este trabajo analiza cómo ha cambiado el fraude académico en los cursos introductorios de informática (CS1) desde la llegada de herramientas como ChatGPT. Los autores estudiaron a miles de estudiantes y descubrieron que, aunque el porcentaje total de copias no ha subido drásticamente, la forma de hacerlo ha cambiado por completo: ya no se copian entre ellos, sino que le piden la solución a la IA.
@@ -118,7 +143,7 @@ Este estudio advierte que la IA generativa puede, irónicamente, empeorar las co
   booktitle = {Proceedings of the 2024 on Innovation and Technology in Computer Science Education V. 1},
   pages     = {276--282},
   year      = {2024},
-  url       = {https://dl.acm.org/doi/pdf/10.1145/3632620.3671116},
+  url       = {https://dl.acm.org/doi/pdf/10.1145/3632620.3671116}
 }
 
 Este artículo describe cómo el curso CS50 de Harvard integró la IA para ayudar a sus estudiantes mediante el "CS50 Duck". Lo más importante es que no usan la tecnología para dar respuestas, sino para actuar como un tutor personal que está disponible a cualquier hora.
@@ -128,7 +153,7 @@ Este artículo describe cómo el curso CS50 de Harvard integró la IA para ayuda
   author    = {Liu, Rongxin and Zenke, Carter and Liu, Charlie and Malan, David J},
   booktitle = {Proceedings of the 55th ACM Technical Symposium on Computer Science Education V. 1},
   year      = {2024},
-  url = {https://dl.acm.org/doi/pdf/10.1145/3626252.3630938},
+  url       = {https://dl.acm.org/doi/pdf/10.1145/3626252.3630938}
 }
 
 Video explicativo de David Malan sobre el uso de IA en CS50
@@ -160,10 +185,11 @@ El autor, Edward Y. Chang, sostiene que los LLM suelen "regalar" la solución, l
 @inproceedings{chang2023prompting,
   title     = {Prompting Large Language Models With the Socratic Method},
   author    = {Chang, Edward Y.},
-  booktitle = {IEEE Computing and Communication Workshop and Conference (CCWC)},
+  booktitle = {2023 IEEE 13th Annual Computing and Communication Workshop and Conference (CCWC)},
   year      = {2023},
-  doi       = {10.48550/arXiv.2303.08769},
-  url       = {https://arxiv.org/pdf/2303.08769}
+  pages     = {351--360},
+  doi       = {10.1109/CCWC57344.2023.10099179},
+  url       = {https://ieeexplore.ieee.org/document/10099179}
 }
 
 
@@ -174,35 +200,25 @@ El autor, Edward Y. Chang, sostiene que los LLM suelen "regalar" la solución, l
 • Optimización por cuantización: Demuestra cómo reducir la precisión del modelo disminuye drásticamente los requisitos de VRAM sin sacrificar capacidad de razonamiento.
 • Soberanía y cumplimiento: Destaca la soberanía de datos y el cumplimiento del GDPR como beneficios estratégicos que justifican la inversión frente a soluciones en la nube.
 @inproceedings{pan2025cost,
-  title       = {A Cost-Benefit Analysis of On-Premise Large Language Model Deployment: Breaking Even with Commercial LLM Services},
-  author      = {Pan, Guanzhong and Wang, Haibo},
-  booktitle   = {2025 IEEE International Conference on Big Data (BigData)},
-  year        = {2025},
-  url         = {https://arxiv.org/pdf/2509.18101.pdf}
-}
-
-• Inferencia privada de extremo a extremo: Los datos nunca abandonan el perímetro local, eliminando riesgos de filtración hacia servidores de terceros.
-• Soberanía y cumplimiento del GDPR: Solución técnica definitiva para evitar transferencias internacionales de datos sensibles en el ámbito educativo.
-• Optimización con cuantización: Ejecución de modelos potentes en hardware de bajo coste, equilibrando la privacidad física con el rendimiento.
-• Prevención de Shadow AI: Creación de un entorno institucional controlado que sustituye el uso de herramientas externas no supervisadas.
-@article{wada2025retrieval,
-  title={Local LLM Deployment for Enhanced Privacy},
-  author={Wada, Aki and others},
-  journal={arXiv preprint},
-  year={2025}
+  title     = {A Cost-Benefit Analysis of On-Premise Large Language Model Deployment: Breaking Even with Commercial LLM Services},
+  author    = {Pan, Guanzhong and Wang, Haibo},
+  booktitle = {2025 IEEE International Conference on Big Data (BigData)},
+  year      = {2025},
+  pages     = {2234--2239},
+  url       = {https://ieeexplore.ieee.org/document/11400957}
 }
 
 Introducción del concepto de razonamiento Chain of Thought (CoT).
 @inproceedings{wei2022chain,
-  author = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and ichter, brian and Xia, Fei and Chi, Ed and Le, Quoc V and Zhou, Denny},
+  author    = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and ichter, brian and Xia, Fei and Chi, Ed and Le, Quoc V and Zhou, Denny},
   booktitle = {Advances in Neural Information Processing Systems},
-  editor = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
-  pages = {24824--24837},
+  editor    = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
+  pages     = {24824--24837},
   publisher = {Curran Associates, Inc.},
-  title = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
-  url = {https://proceedings.neurips.cc/paper_files/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf},
-  volume = {35},
-  year = {2022}
+  title     = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf},
+  volume    = {35},
+  year      = {2022}
 }
 
 Modelos ligeros (1B y 3B): Diseñados para dispositivos con recursos limitados, permiten la inferencia local rápida. Son ideales para tu proyecto ya que pueden gestionar tareas de tutoría básica sin necesidad de hardware empresarial masivo.
@@ -212,141 +228,150 @@ Ventana de contexto de 128K: A pesar de su tamaño reducido, estos modelos sopor
 Privacidad y Baja Latencia: Al procesar los datos localmente en el dispositivo o servidor del centro, se garantiza que la información nunca salga de la red institucional, eliminando los riesgos de privacidad asociados a la nube.
 
 Optimización Técnica: El uso de destilación (aprender de modelos más grandes como el 70B o 405B) asegura que el modelo 3B supere a competidores de su tamaño en tareas de resumen, reescritura de código y uso de herramientas.
-@article{meta2024llama32,
-  title={Llama 3.2: Vision, Edge, and Mobile Devices},
-  author={{Meta AI}},
-  journal={Meta AI Blog},
-  year={2024},
-  url={https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/}
+@misc{meta2024llama32,
+  title   = {Llama 3.2: Vision, Edge, and Mobile Devices},
+  author  = {{Meta AI}},
+  journal = {Meta AI Blog},
+  year    = {2024},
+  url     = {https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/}
 }
 
-@article{gemma_2025,
-    title={Gemma 3},
-    url={https://goo.gle/Gemma3Report},
-    publisher={Kaggle},
-    author={Gemma Team},
-    year={2025}
+@misc{gemma_2025,
+  title  = {Gemma 3},
+  url    = {https://storage.googleapis.com/deepmind-media/gemma/Gemma3Report.pdf},
+  author = {Gemma Team},
+  year   = {2025}
 }
 
 @misc{deepseekai2025deepseekr1,
-    title={DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning}, 
-    author={DeepSeek-AI},
-    year={2025},
-    eprint={2501.12948},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL},
-    url={https://arxiv.org/abs/2501.12948}, 
+  title         = {DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning},
+  author        = {DeepSeek-AI},
+  year          = {2025},
+  eprint        = {2501.12948},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2501.12948}
 }
 
 @misc{qwen3.5,
-    title  = {{Qwen3.5}: Towards Native Multimodal Agents},
-    author = {{Qwen Team}},
-    month  = {February},
-    year   = {2026},
-    url    = {https://qwen.ai/blog?id=qwen3.5}
+  title  = {{Qwen3.5}: Towards Native Multimodal Agents},
+  author = {{Qwen Team}},
+  month  = {February},
+  year   = {2026},
+  url    = {https://qwen.ai/blog?id=qwen3.5}
 }
 
 @misc{qwen3.6-27b,
-    title  = {{Qwen3.6-27B}: Flagship-Level Coding in a {27B} Dense Model},
-    author = {{Qwen Team}},
-    month  = {April},
-    year   = {2026},
-    url    = {https://qwen.ai/blog?id=qwen3.6-27b}
+  title  = {{Qwen3.6-27B}: Flagship-Level Coding in a {27B} Dense Model},
+  author = {{Qwen Team}},
+  month  = {April},
+  year   = {2026},
+  url    = {https://qwen.ai/blog?id=qwen3.6-27b}
 }
 
 @misc{qwen36_35b_a3b,
-    title = {{Qwen3.6-35B-A3B}: Agentic Coding Power, Now Open to All},
-    url = {https://qwen.ai/blog?id=qwen3.6-35b-a3b},
-    author = {{Qwen Team}},
-    month = {April},
-    year = {2026}
+  title  = {{Qwen3.6-35B-A3B}: Agentic Coding Power, Now Open to All},
+  url    = {https://qwen.ai/blog?id=qwen3.6-35b-a3b},
+  author = {{Qwen Team}},
+  month  = {April},
+  year   = {2026}
 }
 
 @techreport{microsoft2025phi4,
-  title={Phi-4 Technical Report: Reasoning and Instruction Following at Scale},
-  author={{Microsoft Research}},
-  year={2025},
-  institution={Microsoft},
-  eprint={2504.21318},
-  archivePrefix={arXiv},
-  url={https://arxiv.org/abs/2504.21318}
+  title         = {Phi-4 Technical Report: Reasoning and Instruction Following at Scale},
+  author        = {{Microsoft Research}},
+  year          = {2025},
+  institution   = {Microsoft},
+  eprint        = {2504.21318},
+  archiveprefix = {arXiv},
+  url           = {https://arxiv.org/abs/2504.21318}
 }
 
 @techreport{microsoft2025phi4mini,
-  title={Phi-4-mini Technical Report},
-  author={{Microsoft Research}},
-  year={2025},
-  institution={Microsoft},
-  eprint={2504.21233},
-  archivePrefix={arXiv},
-  primaryClass={cs.CL},
-  url={https://arxiv.org/abs/2504.21233}
+  title         = {Phi-4-mini Technical Report},
+  author        = {{Microsoft Research}},
+  year          = {2025},
+  institution   = {Microsoft},
+  eprint        = {2504.21233},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2504.21233}
 }
 
 % --- Benchmarks y Evaluadores ---
 
 @misc{llmstats2026ifeval,
   author = {{LLM-Stats}},
-  title = {LLM-Stats: Instruction Following Evaluation (IFEval) Benchmark Leaderboard},
-  year = {2026},
-  url = {https://llm-stats.com/benchmarks/ifeval},
-  note = {Consultado el 28 de abril de 2026}
+  title  = {LLM-Stats: Instruction Following Evaluation (IFEval) Benchmark Leaderboard},
+  year   = {2026},
+  url    = {https://llm-stats.com/benchmarks/ifeval},
+  note   = {Consultado el 28 de abril de 2026}
 }
 
 @misc{jain2024livecodebench,
-  title={LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code}, 
-  author={Naman Jain and King Han and Alex Gu and Wen-Ding Li and Fanjia Yan and Tianjun Zhang and Sida Wang and Armando Solar-Lezama and Koushik Sen and Ion Stoica},
-  year={2024},
-  eprint={2403.07974},
-  archivePrefix={arXiv},
-  primaryClass={cs.SE},
-  url={https://arxiv.org/abs/2403.07974}
+  title         = {LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code},
+  author        = {Naman Jain and King Han and Alex Gu and Wen-Ding Li and Fanjia Yan and Tianjun Zhang and Sida Wang and Armando Solar-Lezama and Koushik Sen and Ion Stoica},
+  year          = {2024},
+  eprint        = {2403.07974},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.SE},
+  url           = {https://arxiv.org/abs/2403.07974}
 }
 
-@article{zhou2023ifeval,
-  title={Instruction-Following Evaluation through Constraint Checklists},
-  author={Zhou, Jeffrey and others},
-  journal={arXiv preprint arXiv:2311.07911},
-  year={2023}
+@misc{zhou2023ifeval,
+  title         = {Instruction-Following Evaluation for Large Language Models},
+  author        = {Jeffrey Zhou and Tianjian Lu and Swaroop Mishra and Siddhartha Brahma and Sujoy Basu and Yi Luan and Denny Zhou and Le Hou},
+  year          = {2023},
+  eprint        = {2311.07911},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2311.07911}
 }
 
-@article{rein2023gpqa,
-  title={GPQA: A Graduate-Level Google-Proof Q\&A Benchmark},
-  author={Rein, David and others},
-  journal={arXiv preprint arXiv:2311.12022},
-  year={2023}
+@misc{rein2023gpqa,
+  title         = {GPQA: A Graduate-Level Google-Proof Q\&A Benchmark},
+  author        = {David Rein and Betty Li Hou and Asa Cooper Stickland and Jackson Petty and Richard Yuanzhe Pang and Julien Dirani and Julian Michael and Samuel R. Bowman},
+  year          = {2023},
+  eprint        = {2311.12022},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2311.12022}
 }
 
-@misc{maa2026aime,
-  author = {{Mathematical Association of America}},
-  title = {American Invitational Mathematics Examination (AIME) Standards},
-  year = {2026},
-  url = {https://www.maa.org/math-competitions/aime}
+@misc{dekoninck2026matharena,
+  title         = {Beyond Benchmarks: MathArena as an Evaluation Platform for Mathematics with LLMs},
+  author        = {Jasper Dekoninck and Nikola Jovanović and Tim Gehrunger and Kári Rögnvaldsson and Ivo Petrov and Chenhao Sun and Martin Vechev},
+  year          = {2026},
+  eprint        = {2605.00674},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2605.00674}
 }
+
 
 @misc{huggingface_hub,
   author = {{Hugging Face}},
-  title = {Hugging Face Model Hub: Central Repository for Pre-trained Models and Benchmarks},
-  year = {2026},
-  url = {https://huggingface.co/models},
-  note = {Used for technical specifications, model cards, and benchmark verification. Accessed: 2026-04-28}
+  title  = {Hugging Face Model Hub: Central Repository for Pre-trained Models and Benchmarks},
+  year   = {2026},
+  url    = {https://huggingface.co/models},
+  note   = {Used for technical specifications, model cards, and benchmark verification. Accessed: 2026-04-28}
 }
 
 @misc{artificialanalysis2026,
   author = {{Artificial Analysis}},
-  title = {AI Model Intelligence and Performance Index},
-  year = {2026},
-  url = {https://artificialanalysis.ai/},
-  note = {Accessed: 2026-04-28}
+  title  = {AI Model Intelligence and Performance Index},
+  year   = {2026},
+  url    = {https://artificialanalysis.ai/},
+  note   = {Accessed: 2026-04-28}
 }
 
 % --- Software y Despliegue ---
 
 @software{ollama2026,
   author = {{Ollama Team}},
-  title = {Ollama: Get up and running with large language models locally},
-  url = {https://ollama.com/},
-  year = {2026}
+  title  = {Ollama: Get up and running with large language models locally},
+  url    = {https://ollama.com/},
+  year   = {2026}
 }
 
 
@@ -359,127 +384,142 @@ Reducción de la huella de memoria: La investigación aporta datos sobre cómo l
 Benchmarking de rendimiento: Los autores presentan comparativas que demuestran que un modelo ligero cuantizado ofrece una experiencia de usuario mucho más satisfactoria gracias a la velocidad de generación de texto instantánea.
 Cuantización de parámetros
 @inproceedings{yadav2025optimizing,
-  title={Optimizing LLMs Using Quantization For Mobile Execution},
-  author={Yadav, Agatsya and Bhargavi, Renta Chintala},
-  booktitle={Proceedings of ICT4SD 2025},
-  publisher={Springer},
-  year={2025},
-  doi={10.1007/978-3-032-06697-8_33},
-  url={https://arxiv.org/pdf/2512.06490}
+  title     = {Optimizing LLMs Using Quantization For Mobile Execution},
+  author    = {Yadav, Agatsya and Bhargavi, Renta Chintala},
+  booktitle = {Proceedings of ICT4SD 2025},
+  publisher = {Springer},
+  year      = {2025},
+  doi       = {10.1007/978-3-032-06697-8_33},
+  url       = {https://arxiv.org/pdf/2512.06490}
 }
 
 @article{nguyen2026parameter,
-  author = {Nguyen, Viet and The-Vinh, Nguyen and Nguyen, Huu-Khanh and Vu,
-  Duc-Quang},
-  year = {2026},
-  month = {02},
-  pages = {278},
-  title = {Parameter-efficient fine-tuning of small language models for
-  code generation: a comparative study of Gemma, Qwen 2.5 and Llama 3.2},
-  volume = {16},
+  author  = {Nguyen, Viet and The-Vinh, Nguyen and Nguyen, Huu-Khanh and Vu,
+             Duc-Quang},
+  year    = {2026},
+  month   = {02},
+  pages   = {278},
+  title   = {Parameter-efficient fine-tuning of small language models for
+             code generation: a comparative study of Gemma, Qwen 2.5 and Llama 3.2},
+  volume  = {16},
   journal = {International Journal of Electrical and Computer Engineering (IJECE)},
-  doi = {10.11591/ijece.v16i1.pp278-287},
-  url={https://www.researchgate.net/publication/400327943_Parameter-efficient_fine-tuning_of_small_language_models_for_code_generation_a_comparative_study_of_Gemma_Qwen_25_and_Llama_32}
+  doi     = {10.11591/ijece.v16i1.pp278-287},
+  url     = {https://www.researchgate.net/publication/400327943_Parameter-efficient_fine-tuning_of_small_language_models_for_code_generation_a_comparative_study_of_Gemma_Qwen_25_and_Llama_32}
 }
 
 MoE
-@article{shazeer2017outrageously,
-  title={Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer},
-  author={Shazeer, Noam and Mirhoseini, Azade and Maziarz, Krzysztof and Davis, Andy and Le, Quoc and Hinton, Geoffrey and Dean, Jeff},
-  journal={arXiv preprint arXiv:1701.06538},
-  year={2017},
-  note={Referencia fundamental sobre modelos MoE y parámetros activos.}
+@inproceedings{shazeer2017outrageously,
+  title     = {Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer},
+  author    = {Shazeer, Noam and Mirhoseini, Azade and Maziarz, Krzysztof and Davis, Andy and Le, Quoc and Hinton, Geoffrey and Dean, Jeff},
+  booktitle = {5th International Conference on Learning Representations (ICLR 2017)},
+  pages     = {3387--3396},
+  year      = {2017},
+  url       = {https://arxiv.org/abs/1701.06538},
+  note      = {Referencia fundamental sobre modelos MoE y parámetros activos.}
 }
 
 Formatos de precisión BF16 y FP8
-@article{micikevicius2017mixed,
-  title={Mixed Precision Training},
-  author={Micikevicius, Paulius and Narang, Sharan and Alben, Jonah and Diamos, Gregory and Elsen, Erich and Garcia, David and others},
-  journal={arXiv preprint arXiv:1710.03740},
-  year={2018},
-  note={Explica la base técnica de los formatos FP16, BF16 y la reducción de precisión.}
+@misc{micikevicius2022fp8formatsdeeplearning,
+  title         = {FP8 Formats for Deep Learning},
+  author        = {Paulius Micikevicius and Dusan Stosic and Neil Burgess and Marius Cornea and Pradeep Dubey and Richard Grisenthwaite and Sangwon Ha and Alexander Heinecke and Patrick Judd and John Kamalu and Naveen Mellempudi and Stuart Oberman and Mohammad Shoeybi and Michael Siu and Hao Wu},
+  year          = {2022},
+  eprint        = {2209.05433},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2209.05433}
 }
 
 --- Sandboxing ---
 
 @inproceedings{sun2018security,
-  title={Security namespace: Making Linux security frameworks available to containers},
-  author={Sun, Yu and Nanda, Susmit and Jaeger, Trent},
-  booktitle={27th USENIX Security Symposium (USENIX Security 18)},
-  pages={1423--1439},
-  year={2018},
-  url={https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-sun.pdf}
+  title     = {Security namespace: Making Linux security frameworks available to containers},
+  author    = {Sun, Yu and Nanda, Susmit and Jaeger, Trent},
+  booktitle = {27th USENIX Security Symposium (USENIX Security 18)},
+  pages     = {1423--1439},
+  year      = {2018},
+  url       = {https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-sun.pdf}
 }
 
 @article{wan2019practical,
-  title={Practical and effective sandboxing for Linux containers},
-  author={Wan, Zhiyuan and Lo, David and Xia, Xin and Cai, Liang},
-  journal={Empirical Software Engineering},
-  volume={24},
-  number={6},
-  pages={4034--4070},
-  year={2019},
-  publisher={Springer},
-  doi={10.1007/s10664-019-09737-2},
-  url={https://link.springer.com/article/10.1007/s10664-019-09737-2}
+  title     = {Practical and effective sandboxing for Linux containers},
+  author    = {Wan, Zhiyuan and Lo, David and Xia, Xin and Cai, Liang},
+  journal   = {Empirical Software Engineering},
+  volume    = {24},
+  number    = {6},
+  pages     = {4034--4070},
+  year      = {2019},
+  publisher = {Springer},
+  doi       = {10.1007/s10664-019-09737-2},
+  url       = {https://link.springer.com/article/10.1007/s10664-019-09737-2}
 }
 
-@article{rosen2013resource,
-  title={Resource management: Linux kernel namespaces and cgroups},
-  author={Rosen, Rami},
-  journal={Haifux},
-  volume={186},
-  year={2013}
+@misc{rosen2013resource,
+  title        = {Resource management: Linux kernel namespaces and cgroups},
+  author       = {Rosen, Rami},
+  howpublished = {Material divulgativo del Haifa Linux Club (Haifux)},
+  year         = {2013},
+  url          = {https://sites.cs.ucsb.edu/~rich/class/old.cs290/papers/lxc-namespace.pdf},
+  note         = {Documento técnico de referencia sobre la arquitectura interna de virtualización en Linux.}
 }
 
 @misc{engineerman_piston,
-  title={{Piston: A high performance general purpose code execution engine}},
-  author={{Engineer Man}},
-  year={2025},
-  publisher={GitHub},
-  journal={GitHub repository},
-  url={https://github.com/engineer-man/piston}
+  title     = {{Piston: A high performance general purpose code execution engine}},
+  author    = {{Engineer Man}},
+  year      = {2025},
+  publisher = {GitHub},
+  journal   = {GitHub repository},
+  url       = {https://github.com/engineer-man/piston}
 }
 
 --- Web ---
 
 @misc{openai_streaming_2024,
-  author       = {{OpenAI}},
-  title        = {API Reference: Streaming Responses},
-  year         = {2024},
-  url          = {https://platform.openai.com/docs/api-reference/streaming},
-  note         = {Accedido: 30-04-2026}
+  author = {{OpenAI}},
+  title  = {API Reference: Streaming Responses},
+  year   = {2024},
+  url    = {https://platform.openai.com/docs/api-reference/streaming},
+  note   = {Accedido: 30-04-2026}
 }
 
-@article{mackovivccomparative,
-  title={Comparative Analysis of WebSockets and Server-Sent Events: Performance, Use Cases, and Best Practices},
-  author={MACKOVI{\v{C}}, MARTIN},
-  url={https://is.muni.cz/th/c2gv9/comparative-analysis-of-websockets-and-server-sent-events_Archive.pdf},
-  note={Análisis técnico de los protocolos WebSockets y Server-Sent Events (SSE), evaluando su rendimiento, casos de uso y mejores prácticas para aplicaciones web modernas.}
+@misc{anthropic_streaming_2024,
+  author = {{Anthropic}},
+  title  = {Streaming Messages - Anthropic API Documentation},
+  year   = {2024},
+  url    = {https://docs.anthropic.com/en/api/messages-streaming},
+  note   = {Documentación oficial sobre la implementación de streaming de respuestas mediante Server-Sent Events (SSE).}
+}
+
+@mastersthesis{mackovivccomparative,
+  title  = {Comparative Analysis of WebSockets and Server-Sent Events: Performance, Use Cases, and Best Practices},
+  author = {MACKOVI{\v{C}}, MARTIN},
+  school = {Masaryk University},
+  year   = {2025},
+  url    = {https://is.muni.cz/th/c2gv9/comparative-analysis-of-websockets-and-server-sent-events_Archive.pdf},
+  note   = {Análisis técnico de los protocolos WebSockets y Server-Sent Events (SSE), evaluando su rendimiento, casos de uso y mejores prácticas para aplicaciones web modernas.}
 }
 
 @misc{sse_llm_streaming,
-  title={Server-Sent Events for LLMs: The Backbone of AI Applications},
-  author={Procedure Tech},
-  year={2025},
-  note={Reporte técnico de ingeniería arquitectónica sobre por qué SSE supera a WebSockets y gRPC en la entrega optimizada y escalable de tokens generados por LLMs.},
-  howpublished={\url{https://procedure.tech/blogs/sse-for-llms/}}
+  title        = {Server-Sent Events for LLMs: The Backbone of AI Applications},
+  author       = {Procedure Tech},
+  year         = {2025},
+  note         = {Reporte técnico de ingeniería arquitectónica sobre por qué SSE supera a WebSockets y gRPC en la entrega optimizada y escalable de tokens generados por LLMs.},
+  howpublished = {\url{https://procedure.tech/blogs/sse-for-llms/}}
 }
 
 @inproceedings{django_sse_2024,
-  title={Django 5.0: Elevating Experiences with Server-Sent Events – A Journey from Polling to Real-Time Vibes},
-  author={Ahammad, Melhin},
-  booktitle={DjangoCon Europe 2024},
-  year={2024},
-  note={Ponencia detallada sobre la integración asíncrona de Server-Sent Events directamente en arquitecturas Django (ASGI) para alta concurrencia prescindiendo de WebSockets y Django Channels.}
+  title     = {Django 5.0: Elevating Experiences with Server-Sent Events – A Journey from Polling to Real-Time Vibes},
+  author    = {Ahammad, Melhin},
+  booktitle = {DjangoCon Europe 2024},
+  year      = {2024},
+  note      = {Ponencia detallada sobre la integración asíncrona de Server-Sent Events directamente en arquitecturas Django (ASGI) para alta concurrencia prescindiendo de WebSockets y Django Channels.}
 }
 
 @book{mikowski2013single,
-  title={Single page web applications: JavaScript end-to-end},
-  author={Mikowski, Michael and Powell, Josh},
-  year={2013},
-  publisher={Manning Publications},
-  url={https://books.google.es/books?hl=es&lr=&id=eDszEAAAQBAJ&oi=fnd&pg=PT16&dq=Single+page+web+applications:+JavaScript+end-to-end&ots=_FzIF-enx4&sig=XD9K-c5KeqdQDc8h-xDzQ_-hH1o#v=onepage&q=Single%20page%20web%20applications%3A%20JavaScript%20end-to-end&f=false}
+  title     = {Single page web applications: JavaScript end-to-end},
+  author    = {Mikowski, Michael and Powell, Josh},
+  year      = {2013},
+  publisher = {Manning Publications},
+  url       = {https://books.google.es/books?hl=es&lr=&id=eDszEAAAQBAJ&oi=fnd&pg=PT16&dq=Single+page+web+applications:+JavaScript+end-to-end&ots=_FzIF-enx4&sig=XD9K-c5KeqdQDc8h-xDzQ_-hH1o#v=onepage&q=Single%20page%20web%20applications%3A%20JavaScript%20end-to-end&f=false}
 }
 
 --- Metodología ---
@@ -490,24 +530,24 @@ Sistemas parciales ejecutables: Un punto clave del paper es que cada iteración 
 
 Gestión de riesgos: Explican que el desarrollo iterativo permite atacar los riesgos técnicos más difíciles al principio. Si el motor de ejecución de código (tu sandbox) iba a fallar, mejor saberlo en la iteración 2 que en la 10.
 @article{larman2003iterative,
-  title={Iterative and incremental development: a brief history},
-  author={Larman, Craig and Basili, Victor R},
-  journal={Computer},
-  volume={36},
-  number={6},
-  pages={47--56},
-  year={2003},
-  publisher={IEEE},
-  url={https://ieeexplore.ieee.org/document/1203073}
+  title     = {Iterative and incremental development: a brief history},
+  author    = {Larman, Craig and Basili, Victor R},
+  journal   = {Computer},
+  volume    = {36},
+  number    = {6},
+  pages     = {47--56},
+  year      = {2003},
+  publisher = {IEEE},
+  url       = {https://ieeexplore.ieee.org/document/1203073}
 }
 
 Definición de MVP
 @inproceedings{hokkanen2016mvp,
-  title={Minimum Viable Product (MVP) as a tool for software product development},
-  author={Hokkanen, Laura and Kuuvia, Eero and M{\"a}nnist{\"o}, Tomi},
-  booktitle={Agile Processes, in Software Engineering, and Extreme Programming: 17th International Conference, XP 2016},
-  pages={1--12},
-  year={2016},
-  organization={Springer},
-  url={https://link.springer.com/chapter/10.1007/978-3-319-33515-5_14}
+  title        = {Minimum Viable Product (MVP) as a tool for software product development},
+  author       = {Hokkanen, Laura and Kuuvia, Eero and M{\"a}nnist{\"o}, Tomi},
+  booktitle    = {Agile Processes, in Software Engineering, and Extreme Programming: 17th International Conference, XP 2016},
+  pages        = {1--12},
+  year         = {2016},
+  organization = {Springer},
+  url          = {https://link.springer.com/chapter/10.1007/978-3-319-33515-5_14}
 }
