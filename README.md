@@ -133,7 +133,6 @@ SECRET_KEY=your-secret-key-here
 DEBUG=True
 DATABASE_URL=postgres://admin:secret@localhost:5433/tutor_django
 PISTON_URL=http://localhost:2000
-LLM_MOD=True
 ```
 
 ### 3. Start infrastructure (database + code runner)
