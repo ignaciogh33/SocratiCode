@@ -19,7 +19,6 @@ coverage/
 *.out
 *.toc
 *.synctex.gz
-*.pdf
 *.blg
 *.bbl
 *.fdb_latexmk
