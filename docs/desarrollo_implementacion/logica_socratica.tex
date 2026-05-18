@@ -1,0 +1,19 @@
+El comportamiento socrático del tutor no reside en el modelo de lenguaje en sí, sino en las instrucciones que lo condicionan. Como se adelantó en el análisis comparativo (\autoref{SS:EA_IA_COMPARATIVA}), SocratiCode no requiere reentrenar ningún modelo. Toda la lógica pedagógica se inyecta en tiempo de ejecución a través de un \textit{system prompt} cuidadosamente diseñado y del contexto que se construye en cada petición.
+
+\paragraph{El \textit{system prompt}.}
+
+El \textit{system prompt} es el documento que el servidor inyecta como primer mensaje de sistema en cada llamada al LLM, antes de que el modelo lea la conversación real. Su texto íntegro se recoge en el \autoref{CAP:AP_PROMPT} y se encarga de definir la personalidad completa del agente en cuatro capas consecutivas.
+
+La primera capa asigna al modelo el papel de ``núcleo pedagógico de SocratiCode'', un tutor cuya directiva principal es \textit{instruir, no asistir}. La segunda capa describe un proceso interno de evaluación del nivel del estudiante (fase conceptual, lógica o sintáctica) que el modelo debe ejecutar antes de responder, pero que nunca debe verbalizar en la respuesta final. De este modo, las pistas se calibran al punto exacto donde el alumno está bloqueado sin que este vea el razonamiento interno. La tercera capa proporciona ejemplos de interacción reales (\textit{few-shot prompting}) que anclan el tono, el estilo y la estrategia esperados, reduciendo la variabilidad de las respuestas. La cuarta y más crítica es el conjunto de reglas de comportamiento estrictas que se enumeran explícitamente, sin dejar ambigüedad sobre qué está permitido y qué no. Estas reglas son fundamentales porque dotan al modelo de una conciencia del entorno para revisar el código y los errores en tiempo real sin pedirlos al alumno. Además, establecen la prohibición absoluta de entregar soluciones directas y aplican una condición de parada que detiene el interrogatorio socrático con un refuerzo positivo cuando el estudiante resuelve el problema. Finalmente, las directrices blindan al agente mediante un estricto límite de dominio enfocado en la programación para prevenir cualquier intento de engaño o manipulación. 
+
+\paragraph{Manejo del contexto.}
+
+Para que el tutor recuerde lo que el alumno ha intentado durante la sesión, cada petición al LLM no envía únicamente el último mensaje del usuario, sino toda la conversación acumulada. La función \texttt{\_build\_messages\_payload()} del módulo \texttt{views.py} construye este \textit{array} de mensajes siguiendo el protocolo de roles de Ollama:
+
+\begin{enumerate}
+    \item \textbf{Mensaje de sistema principal} (\texttt{role: system}): el \textit{system prompt} socrático descrito anteriormente.
+    \item \textbf{Mensaje de contexto de código} (\texttt{role: system}): si el alumno tiene código en el editor, se inserta un segundo mensaje de sistema entre el \textit{system prompt} y el historial con el código fuente actual y la última traza de ejecución, ambos formateados en bloques de código con el lenguaje activo. Al tratarse de un mensaje de sistema, el alumno nunca lo ve en el chat.
+    \item \textbf{Historial de la conversación}: los últimos diez intercambios de la sesión, recuperados de la base de datos con los roles \texttt{user} y \texttt{assistant} tal y como los almacena el modelo \texttt{Message}.
+\end{enumerate}
+
+La ventana de diez mensajes equilibra coherencia conversacional y coste computacional, proporcionando suficiente contexto para que el tutor recuerde los intentos anteriores del alumno sin saturar el contexto del LLM en sesiones largas.

@@ -1,0 +1,257 @@
+A partir de los requisitos establecidos en la \autoref{SEC:AD_REQUISITOS}, en este apartado se detallan los principales casos de uso de la aplicación. Mediante estos casos de uso se modelan las interacciones entre los diferentes actores y el sistema, lo que permite representar de forma estructurada las funcionalidades centrales de la plataforma. Además, estos procesos se complementan con diagramas de secuencia, los cuales se encuentran detallados en el \autoref{CAP:AP_DIAGRAMAS} junto al resto de casos de uso del sistema, para ilustrar el flujo de comunicación interno y las llamadas al motor de IA paso a paso.
+
+Los casos de uso expuestos en esta sección conforman los pilares de la aplicación: la interacción conversacional con el tutor socrático (\autoref{TB:CU1_TUTOR} y \autoref{FIG:CU1_SEQ}), la compilación y ejecución remota de código en entornos aislados (\autoref{TB:CU2_PISTON} y \autoref{FIG:CU2_SEQ}) y la configuración global de los modelos por parte de la administración (\autoref{TB:CU3_SINGLETON} y \autoref{FIG:CU3_SEQ}). Para consultar la especificación detallada del resto de casos de uso (tales como la autenticación, la gestión del perfil o el manejo de sesiones), véase el \autoref{CAP:AP_DIAGRAMAS}.
+
+\vspace{0.5cm}
+
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  
+  % --- PIE DE PÁGINA (mientras no sea la última) ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- PIE FINAL (Donde aparece el nombre ahora) ---
+  \hline
+  \caption{Caso de uso 1 — Interacción con el tutor socrático.}
+  \label{TB:CU1_TUTOR}
+  \endlastfoot
+
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU1 & \textbf{Actor principal:} Alumno 
+  \end{tabularx} \\ \hline
+
+  % Fila 2: Nombre
+  \textbf{Nombre:} Interacción con el tutor socrático \\ \hline
+
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El alumno envía una pregunta al tutor socrático, opcionalmente acompañada del código de su editor y la última salida de ejecución. El sistema modera la entrada, genera una respuesta pedagógica en streaming (SSE) y opcionalmente modera la salida en paralelo. \\ \hline
+
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
+  -- El servicio Ollama está activo y los modelos (principal y moderador) configurados están disponibles. \newline
+  -- Existe una sesión de chat activa o se creará una nueva automáticamente. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El alumno escribe un mensaje en el chat y pulsa enviar.\newline
+  2. El sistema valida que el mensaje no exceda la longitud permitida (2000 caracteres).\newline
+  3. El sistema obtiene o crea la sesión de chat si esta no existe.\newline
+  4. El sistema guarda el mensaje del alumno en la base de datos.\newline
+  5. El sistema comprueba si es el primer mensaje de usuario y si es el caso asigna los primeros 50 caracteres como título. Actualiza la fecha de la última modificación.\newline
+  6. El sistema lee la configuración global para determinar los modelos a utilizar, los modos de moderación y el umbral de palabras para la moderación de output.\newline
+  7. Si la moderación de input está activada envía el texto del alumno al LLM de moderación, si el veredicto es OK, continúa.\newline
+  8. El sistema construye el array de mensajes para Ollama: \texttt{SYSTEM\_PROMPT} + contexto de código (si existe) + últimos 10 mensajes del historial.\newline
+  9. El sistema inicia el streaming asíncrono.\newline
+  10. Por cada token recibido, el sistema lo transmite en tiempo real hacia la interfaz del usuario vía SSE.\newline
+  11. Si la moderación de salida está activada, el sistema evalúa periódicamente el texto acumulado de forma asíncrona.\newline
+  12. La interfaz de usuario recibe los fragmentos de manera progresiva y los visualiza de forma continua en el chat.\newline
+  13. Al finalizar la generación de la respuesta, el sistema notifica el cierre de la transmisión y guarda la respuesta completa del asistente en la base de datos.\newline
+  14. La interfaz de usuario actualiza el estado de la sesión activa y refresca el historial de conversaciones en la barra lateral. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Moderación de input rechaza el mensaje (Paso 7):  \newline
+  1. El sistema marca el mensaje como moderado en la base de datos. \newline
+  2. Se envía respuesta predeterminada y no se invoca al LLM tutor. \newline
+  \textbf{FA-02:} Moderación de output rechaza un fragmento (Paso 11):  \newline
+  1. El sistema marca la respuesta como moderada en la base de datos. \newline
+  2. Se interrumpe la generación y se envía respuesta predeterminada. \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El mensaje del alumno se almacena en la base de datos. \newline
+  2. La respuesta del tutor se almacena en la base de datos. \newline
+  3. La sesión se actualiza o renombra si es necesario. \\ \hline
+
+\end{longtable}
+\endgroup
+
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor}
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor}
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+
+  % --- PIE DE PÁGINA INTERMEDIO ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+
+  % --- PIE FINAL (Caption abajo) ---
+  \hline
+  \caption{Caso de uso 2 — Compilación y ejecución de código en Piston.}
+  \label{TB:CU2_PISTON}
+  \endlastfoot
+
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU2 & \textbf{Actor principal:} Alumno 
+  \end{tabularx} \\ \hline
+
+  % Fila 2: Nombre
+  \textbf{Nombre:} Compilación y ejecución de código en sandbox \\ \hline
+
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El alumno ejecuta el código de su editor en un entorno sandbox aislado (Piston). El sistema envía el código fuente, el lenguaje y la versión al contenedor, y devuelve la salida estándar (\texttt{stdout}), los errores (\texttt{stderr}) y el código de salida. \\ \hline
+
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  -- El alumno ha iniciado sesión en la plataforma. \newline
+  -- El contenedor Piston está activo. \newline
+  -- El lenguaje solicitado está instalado en el contenedor Piston. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El alumno pulsa el botón ``Ejecutar'' en el editor con código en el editor y el lenguaje seleccionado.\newline
+  2. El sistema valida los datos de entrada.\newline
+  3. El sistema construye el payload y lo envía a la API de Piston.\newline
+  4. Piston ejecuta el código en un sub-contenedor aislado (compila primero si es necesario).\newline
+  5. Piston devuelve la respuesta JSON con \texttt{stdout}, \texttt{stderr} y \texttt{exit\_code}.\newline
+  6. El sistema procesa la respuesta: concatena errores de compilación y ejecución si existen.\newline
+  7. El sistema devuelve al frontend el objeto JSON con la salida procesada.\newline
+  8. El frontend muestra la salida en el panel correspondiente. Si hay errores, los resalta. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Error en tiempo de ejecución o interrupción del sistema: \newline
+    1. El sistema evalúa el campo \texttt{status} devuelto por Piston. \newline
+    2. El sistema añade al \texttt{stderr} un mensaje de error según el código de estado detectado. \newline
+    3. Se devuelve al frontend un JSON con la respuesta procesada. \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El alumno recibe la salida de ejecución detallada. \newline
+  2. Operación efímera: no se persiste el código ni el resultado en la base de datos. \newline
+  3. Los archivos temporales del contenedor se eliminan automáticamente. \\ \hline
+
+\end{longtable}
+\endgroup
+
+\begingroup
+\shorthandoff{"<>} % Previene errores con babel y caracteres especiales en \texttt
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  
+  % --- CABECERA INICIAL ---
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  
+  % --- CABECERA EN PÁGINAS SIGUIENTES ---
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  
+  % --- PIE DE PÁGINA INTERMEDIO ---
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  
+  % --- PIE FINAL (Caption abajo) ---
+  \hline
+  \caption{Caso de uso 3 — Configuración global por el administrador.}
+  \label{TB:CU3_SINGLETON}
+  \endlastfoot
+
+  % Fila 1: ID y Actor
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU3 & \textbf{Actor principal:} Administrador
+  \end{tabularx} \\ \hline
+
+  % Fila 2: Nombre
+  \textbf{Nombre:} Configuración global del sistema (patrón Singleton) \\ \hline
+
+  % Fila 3: Descripción
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El administrador accede al panel de Django Admin para configurar los parámetros globales del sistema: modelo LLM del tutor, modelo LLM de moderación, modo de moderación y umbral de palabras para la moderación de salida. \\ \hline
+
+  % Fila 4: Precondiciones
+  \textbf{Precondiciones:} \newline
+  1. El administrador tiene acceso al panel de Django Admin. \newline
+  2. El usuario tiene permisos de staff. \\ \hline
+
+  % Fila 5: Flujo principal
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El administrador inicia sesión en el panel de Django Admin con credenciales de staff.\newline
+  2. El sistema muestra el panel de administración con la sección ``Configuración del sistema''.\newline
+  3. El administrador hace clic en ``Configuración del sistema''. El sistema redirige automáticamente al formulario de edición de la única fila existente. \newline
+  4. El sistema muestra el formulario organizado en dos fieldsets:\newline
+  --- \textbf{Moderación de contenido}: campo \texttt{moderation\_mode} (desplegable: Input + Output, Solo Input, Solo Output, Desactivada) y el campo \texttt{mod\_word\_window} (entero positivo) que determina cada cuántas palabras se realiza el análisis asíncrono.\newline
+  --- \textbf{Modelos LLM (Ollama)}: campos \texttt{llm\_model} y \texttt{moderation\_model}. El sistema consulta a Ollama en tiempo real para poblar estos campos como listas desplegables dinámicas con los modelos disponibles. \newline
+  5. El administrador modifica los valores deseados y pulsa ``Guardar''.\newline
+  6. El sistema sobreescribe el registro principal y actualiza los parámetros en la base de datos, garantizando que solo exista una fila (Singleton). \newline
+  7. El sistema muestra confirmación de guardado exitoso. \\ \hline
+
+  % Fila 6: Flujos alternativos
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Servicio Ollama inaccesible al cargar: \newline
+  1. El sistema consulta a Ollama la lista de modelos disponibles. \newline
+  2. El servicio Ollama no responde o da error de conexión. \newline
+  3. El sistema muestra los campos de selección como campos de texto libre para no bloquear al administrador. \newline
+  4. El administrador modifica los datos si es necesario y el guardado se realiza sin errores. \newline
+  \textbf{FA-02:} Modelo previamente guardado borrado: \newline
+  1. El sistema consulta a Ollama la lista de modelos y obtiene los resultados correctamente. \newline
+  2. El sistema detecta que el modelo guardado en la base de datos ya no se encuentra en la lista de instalados. \newline
+  3. El sistema añade dicho modelo al desplegable, lo deja preseleccionado e incluye la advertencia «$\triangle$ no disponible». \\ \hline
+
+  % Fila 7: Postcondiciones
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. Las peticiones de chat siguientes utilizarán los nuevos parámetros. \\ \hline
+
+\end{longtable}
+\endgroup
+

@@ -1,0 +1,17 @@
+La naturaleza autorregresiva de los LLMs hace que una respuesta extensa pueda tardar varios segundos en generarse. Esperar a que Ollama termine por completo antes de enviar el bloque de texto al cliente produciría una pantalla congelada inaceptable en un entorno de tutoría interactiva. La solución es abrir una conexión de larga duración y enviar cada fragmento de texto en el instante exacto en que el modelo lo produce, de modo que el alumno ve la respuesta construirse progresivamente.
+
+El flujo de datos del tutor socrático es estrictamente unidireccional durante la generación, ya que el servidor empuja \textit{tokens} al cliente y el cliente no necesita enviar nada hasta que el \textit{stream} ha terminado. Esta asimetría hace que \textbf{WebSockets}, un protocolo \textit{full-duplex}, añada complejidad innecesaria. Requiere un \textit{protocol upgrade} explícito, mantener el estado de la conexión en el servidor y gestionar la reconexión manualmente \cite{mackovivccomparative}. La alternativa de \textit{polling} periódico implicaría peticiones continuas aunque no haya datos nuevos. \textbf{Server-Sent Events (SSE)} se ajusta de forma natural al problema, puesto que utiliza una conexión HTTP estándar de larga duración con el tipo de contenido \texttt{text/event-stream}, el navegador la maneja de forma nativa y el servidor puede cerrarla cuando el \textit{stream} termina sin ningún protocolo adicional. Este último ha sido la solución adoptada por los líderes de la industria, tales como OpenAI (ChatGPT) o Anthropic (Claude) \cite{openai_streaming_2024}.
+
+\paragraph{\textit{Backend}.}
+
+En el servidor, la respuesta no se construye en memoria para enviarse al final, sino que una función generadora asíncrona emite los fragmentos conforme los recibe de Ollama. Django envuelve ese generador en un \texttt{StreamingHttpResponse} con el tipo de contenido adecuado. Dentro del generador, el cliente asíncrono de Ollama itera sobre el \textit{stream} de \textit{chunks} y reenvía cada \textit{token} al cliente en formato SSE estándar:
+
+\PythonCode[lst:streaming_loop]{Bucle de streaming}{Iteración \textit{token} a \textit{token} sobre el stream de Ollama con reenvío SSE inmediato (\texttt{views.py}).}{python/streaming_loop.py}{1}{9}{1}
+
+La llamada a \texttt{asyncio.sleep(0)} tras cada \textit{yield} cede el control al \textit{event loop}, lo que permite que las tareas de moderación de la salida descritas en la \autoref{SS:DI_IMP_MOD} se ejecuten de forma concurrente sin bloquear el flujo de \textit{tokens}.
+
+\paragraph{\textit{Frontend}.}
+
+En el cliente, la API estándar \texttt{EventSource} no es adecuada porque solo admite peticiones GET, mientras que el envío del mensaje del alumno requiere un POST con cuerpo JSON. Por ello, \texttt{chatService.js} utiliza la \textit{Fetch API} nativa, que expone el cuerpo de la respuesta como un flujo de bytes que se lee de forma incremental, decodificando el texto conforme llega y extrayendo los fragmentos de cada evento SSE.
+
+Antes de que llegue el primer \textit{token}, el \textit{store} de Pinia inserta un mensaje vacío en el panel de chat a modo de reserva de espacio. Cada fragmento recibido se acumula y se vuelca sobre ese mensaje. Al ser el estado del chat reactivo, Vue 3 redibuja el componente automáticamente con cada actualización, produciendo el efecto de máquina de escribir que percibe el alumno.

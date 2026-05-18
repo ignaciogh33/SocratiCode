@@ -1,0 +1,57 @@
+\begingroup
+\shorthandoff{"<>"}
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  \hline
+  \caption{Caso de Uso CU5 — Inicio de sesión en la plataforma.}
+  \label{TB:CU5_LOGIN}
+  \endlastfoot
+
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU5 & \textbf{Actor principal:} Usuario
+  \end{tabularx} \\ \hline
+
+  \textbf{Nombre:} Inicio de sesión en la plataforma \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El usuario se autentica en la plataforma mediante sus credenciales. \\ \hline
+
+  \textbf{Precondiciones:} \newline
+  1. El usuario debe existir en el sistema. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El usuario accede a la vista de "Inicio de sesión". \newline
+  2. Introduce su usuario y su contraseña. \newline
+  3. Pulsa "Ingresar". \newline
+  4. El sistema valida las credenciales verificando el hash almacenado. \newline
+  5. El sistema genera los tokens JWT de acceso y refresco correspondientes. \newline
+  6. El sistema devuelve los tokens y redirige al panel principal del tutor. \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Credenciales incorrectas: \newline
+  1. El sistema detecta que el usuario no existe o la contraseña no es válida. \newline
+  2. Se deniega el acceso, no se generan los tokens y se muestra un error al usuario. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El usuario tiene acceso a la plataforma. \\ \hline
+
+\end{longtable}
+\endgroup

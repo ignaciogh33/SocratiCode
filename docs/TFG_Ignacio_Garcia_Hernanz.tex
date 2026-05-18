@@ -1,0 +1,122 @@
+% arara: clean: {files: [TFG_Ignacio_Garcia_Hernanz.aux, TFG_Ignacio_Garcia_Hernanz.idx, TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.ind, TFG_Ignacio_Garcia_Hernanz.bbl, TFG_Ignacio_Garcia_Hernanz.bcf, TFG_Ignacio_Garcia_Hernanz.blg, TFG_Ignacio_Garcia_Hernanz.run.xml, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk, TFG_Ignacio_Garcia_Hernanz.fls, TFG_Ignacio_Garcia_Hernanz.loe, TFG_Ignacio_Garcia_Hernanz.lof, TFG_Ignacio_Garcia_Hernanz.lol, TFG_Ignacio_Garcia_Hernanz.lot, TFG_Ignacio_Garcia_Hernanz.ltb, TFG_Ignacio_Garcia_Hernanz.out, TFG_Ignacio_Garcia_Hernanz.toc, TFG_Ignacio_Garcia_Hernanz.upa, TFG_Ignacio_Garcia_Hernanz.upb, TFG_Ignacio_Garcia_Hernanz.acn, TFG_Ignacio_Garcia_Hernanz.acr, TFG_Ignacio_Garcia_Hernanz.alg, TFG_Ignacio_Garcia_Hernanz.glg, TFG_Ignacio_Garcia_Hernanz.glo, TFG_Ignacio_Garcia_Hernanz.gls, TFG_Ignacio_Garcia_Hernanz.glsdefs, TFG_Ignacio_Garcia_Hernanz.idx,  TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.xdy, TFG_Ignacio_Garcia_Hernanz.loa, TFG_Ignacio_Garcia_Hernanz.gnuploterrors , TFG_Ignacio_Garcia_Hernanz.mw, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk ]}
+% arara: pdflatex: {shell: yes}
+% arara: makeglossaries
+% arara: makeindex: {style: tfgtfmthesisuam.ist }
+% arara: bibtex
+% arara: pdflatex: {shell: yes}
+% arara: pdflatex: {shell: yes}
+% arara: clean: {files: [TFG_Ignacio_Garcia_Hernanz.aux, TFG_Ignacio_Garcia_Hernanz.idx, TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.ind, TFG_Ignacio_Garcia_Hernanz.bbl, TFG_Ignacio_Garcia_Hernanz.bcf, TFG_Ignacio_Garcia_Hernanz.blg, TFG_Ignacio_Garcia_Hernanz.run.xml, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk, TFG_Ignacio_Garcia_Hernanz.fls, TFG_Ignacio_Garcia_Hernanz.loe, TFG_Ignacio_Garcia_Hernanz.lof, TFG_Ignacio_Garcia_Hernanz.lol, TFG_Ignacio_Garcia_Hernanz.lot, TFG_Ignacio_Garcia_Hernanz.ltb, TFG_Ignacio_Garcia_Hernanz.out, TFG_Ignacio_Garcia_Hernanz.toc, TFG_Ignacio_Garcia_Hernanz.upa, TFG_Ignacio_Garcia_Hernanz.upb, TFG_Ignacio_Garcia_Hernanz.acn, TFG_Ignacio_Garcia_Hernanz.acr, TFG_Ignacio_Garcia_Hernanz.alg, TFG_Ignacio_Garcia_Hernanz.glg, TFG_Ignacio_Garcia_Hernanz.glo, TFG_Ignacio_Garcia_Hernanz.gls, TFG_Ignacio_Garcia_Hernanz.glsdefs, TFG_Ignacio_Garcia_Hernanz.idx,  TFG_Ignacio_Garcia_Hernanz.ilg, TFG_Ignacio_Garcia_Hernanz.xdy, TFG_Ignacio_Garcia_Hernanz.loa, TFG_Ignacio_Garcia_Hernanz.gnuploterrors , TFG_Ignacio_Garcia_Hernanz.mw, TFG_Ignacio_Garcia_Hernanz.fdb_latexmk ]}
+
+
+\documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot,lof,lot,loc]{tfgtfmthesisuam}
+
+\advisor{Oscar Delgado Ben Mohatar}
+\levelin{Ingeniería Informática}
+\title{Desarrollo de un tutor socrático basado en LLMs \\ para la enseñanza de programación}
+\subtitle{SocratiCode}
+\author{Ignacio García Hernanz}
+\privateaddress{C\textbackslash\ Francisco Tomás y Valiente Nº 11}
+\copyrightdate{18 de Mayo de 2026}
+
+\dedication{A mis padres, por su apoyo incondicional.}
+\famouscite{No puedo enseñar nada a nadie. Solo puedo hacerles pensar. \\[0.1em] \begin{flushright}Sócrates\end{flushright}}
+\prefacefile{inicio/prefacio}
+\ackfile{inicio/agradecimientos}
+\resumenfile{inicio/resumen}
+\abstractfile{inicio/abstract}
+
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings}
+
+\keywords{Socratic tutor, local language models, programming education, prompt engineering, artificial intelligence in education, Server-Sent Events, secure code execution}
+\palabrasclave{tutor socrático, modelos de lenguaje locales, enseñanza de programación, prompt engineering, inteligencia artificial en educación, Server-Sent Events, ejecución de código segura}
+
+\coverdata
+{
+  Escuela Politécnica Superior \\
+  Universidad Autónoma de Madrid \\
+  C\textbackslash Francisco Tomás y Valiente nº 11
+}
+
+\bibliographyconfig{bibliografia}
+
+\datadir{data}
+\graphicsdir{img}
+\logosdir{img}
+\codesdir{codes}
+
+\begin{document}
+
+\chapter{Introducción\label{CAP:INTRO}}{introduccion/introduccion}
+  \section{Motivación\label{SEC:INTRO_MOTIVACION}}{introduccion/motivacion}
+  \section{Objetivos\label{SEC:INTRO_OBJETIVOS}}{introduccion/objetivos}
+  \section{Estructura del proyecto\label{SEC:INTRO_ESTRUCTURA}}{introduccion/estructura_proyecto}
+
+\chapter{Estado del arte\label{CAP:ESTADO_ARTE}}{estado_arte/estado_arte}
+  \section{Fundamentos pedagógicos en la enseñanza de la programación\label{SEC:EA_FUNDAMENTOS}}{estado_arte/fundamentos}
+    \subsection{Dificultades en el aprendizaje inicial (CS1)\label{SS:EA_FUND_DIFICULTADES}}{estado_arte/dificultades}
+    \subsection{El método socrático como mitigación\label{SS:EA_FUND_SOCRATICO}}{estado_arte/metodo_socratico}
+  \section{Modelos de lenguaje extenso (LLMs) y despliegue local\label{SEC:EA_LLMS}}{estado_arte/llms}
+    \subsection{APIs en la nube vs. inferencia local\label{SS:EA_LLM_APIS}}{estado_arte/apis_vs_local}
+    \subsection{Ecosistema y clasificación de modelos de lenguaje \\ de código abierto\label{SS:EA_LLM_ECOSISTEMA}}{estado_arte/ecosistema_modelos}
+    \subsection{Optimización de modelos ligeros\label{SS:EA_LLM_OPTIMIZACION}}{estado_arte/optimizacion_modelos}
+  % \section{Seguridad y aislamiento en la ejecución de código\label{SEC:EA_SANDBOX}}{estado_arte/sandboxing}
+  % \section{Arquitecturas web para entornos interactivos\label{SEC:EA_ARQUITECTURA}}{estado_arte/arquitectura_web}
+  %   \subsection{Paradigma de aplicación de página única (SPA)\label{SS:EA_ARQ_DESACOPLADA}}{estado_arte/web_desacoplada}
+  %   \subsection{Protocolos de comunicación en tiempo real\label{SS:EA_ARQ_PROTOCOLOS}}{estado_arte/protocolos}
+  \section{Inteligencia artificial generativa en la educación\label{SEC:EA_IA_EDU}}{estado_arte/ia_educacion}
+    \subsection{Riesgos del facilismo algorítmico\label{SS:EA_IA_RIESGOS}}{estado_arte/riesgos}
+    \subsection{Sistemas de tutoría guiada (casos de éxito)\label{SS:EA_IA_TUTORIA}}{estado_arte/sistemas_tutoria}
+    \subsection{Análisis comparativo con SocratiCode\label{SS:EA_IA_COMPARATIVA}}{estado_arte/comparativa_socraticode}
+  \section{Conclusiones del estado del arte\label{SEC:EA_CONCLUSIONES}}{estado_arte/conclusiones}
+
+\chapter{Análisis y diseño\label{CAP:ANALISIS_DISENO}}{analisis_diseno/analisis_diseno}
+  \section{Metodología\label{SEC:AD_METODOLOGIA}}{analisis_diseno/metodologia}
+  \section{Descripción del sistema - SocratiCode\label{SEC:AD_DESCRIPCION}}{analisis_diseno/descripcion_sistema}
+  \section{Requisitos funcionales y no funcionales\label{SEC:AD_REQUISITOS}}{analisis_diseno/requisitos}
+    \subsection{Requisitos funcionales\label{SS:AD_REQ_FUNCIONALES}}{analisis_diseno/requisitos_funcionales}
+    \subsection{Requisitos no funcionales\label{SS:AD_REQ_NOFUNCIONALES}}{analisis_diseno/requisitos_no_funcionales}
+  \section{Casos de uso\label{SEC:AD_CASOSUSO}}{analisis_diseno/casos_uso}
+  \section{Diagrama de modelo de datos (clases/entidad-relación)\label{SEC:AD_MODELO}}{analisis_diseno/modelo_datos}
+  \section{Diagrama de componentes y arquitectura\label{SEC:AD_ARQ}}{analisis_diseno/arquitectura}
+  \section{Conclusiones\label{SEC:AD_CONCLUSIONES}}{analisis_diseno/conclusiones}
+
+\chapter{Desarrollo e implementación\label{CAP:DESARROLLO}}{desarrollo_implementacion/desarrollo_implementacion}
+  \section{Entorno de programación\label{SEC:DI_ENTORNO}}{desarrollo_implementacion/entorno}
+  \section{Tecnologías y librerías\label{SEC:DI_TECNOLOGIAS}}{desarrollo_implementacion/tecnologias}
+    \subsection{\textit{Backend}: Django REST Framework\label{SS:DI_TEC_BACKEND}}{desarrollo_implementacion/backend}
+    \subsection{Autenticación y seguridad: Djoser y JWT\label{SS:DI_TEC_AUTH}}{desarrollo_implementacion/autenticacion}
+    \subsection{Desarrollo del frontend: Vue 3 y Vite\label{SS:DI_TEC_FRONTEND}}{desarrollo_implementacion/frontend}
+    \subsection{Motor de inteligencia artificial: Ollama\label{SS:DI_TEC_IA}}{desarrollo_implementacion/ia}
+    \subsection{Entorno de ejecución de código: Piston\label{SS:DI_TEC_MOTOR}}{desarrollo_implementacion/motor}
+  \section{Implementación\label{SEC:DI_IMPLEMENTACION}}{desarrollo_implementacion/implementacion}
+    \subsection{Gestión de la lógica socrática (\textit{prompt engineering})\label{SS:DI_IMP_PROMPTS}}{desarrollo_implementacion/logica_socratica}
+    \subsection{Implementación del flujo de datos en tiempo real (SSE)\label{SS:DI_IMP_SSE}}{desarrollo_implementacion/flujo_datos_sse}
+    \subsection{Sistema de moderación dinámica\label{SS:DI_IMP_MOD}}{desarrollo_implementacion/moderacion}
+    \subsection{Integración y aislamiento del motor de ejecución (Docker/Piston)\label{SS:DI_IMP_MOTOR}}{desarrollo_implementacion/aislamiento_motor}
+  \section{Interfaz\label{SEC:DI_INTERFAZ}}{desarrollo_implementacion/interfaz}
+    \subsection{Pantalla principal\label{SS:DI_INT_NAVEGACION}}{desarrollo_implementacion/navegacion}
+    \subsection{Pantallas de autenticación y gestión de usuarios\label{SS:DI_INT_EDITOR}}{desarrollo_implementacion/personalizacion}
+    \subsection{Administración del sistema\label{SS:DI_INT_ADMIN}}{desarrollo_implementacion/administracion}
+  \section{Conclusiones\label{SEC:DI_CONCLUSIONES}}{desarrollo_implementacion/conclusiones}
+
+\chapter{Pruebas\label{CAP:PRUEBAS}}{pruebas/pruebas}
+  \section{Pruebas automatizadas\label{SEC:PR_AUTOMATIZADAS}}{pruebas/pruebas_automatizadas}
+  % \section{Pruebas de seguridad e integridad (pentesting del sandbox)\label{SEC:PR_SEGURIDAD}}{pruebas/seguridad}
+  \section{Encuesta de experiencia de usuario y validación pedagógica\label{SEC:PR_ENCUESTA}}{pruebas/encuesta}
+
+\chapter{Conclusiones y trabajo futuro\label{CAP:CONCLUSIONES_FUTURO}}{conclusiones_futuro/conclusiones_futuro}
+  \section{Conclusiones\label{SEC:CF_CONCLUSIONES}}{conclusiones_futuro/conclusiones}
+  \section{Trabajo futuro\label{SEC:CF_FUTURO}}{conclusiones_futuro/trabajo_futuro}
+
+\appendix
+
+\chapter{Diagramas y casos de uso\label{CAP:AP_DIAGRAMAS}}{apendices/diagramas}
+\chapter{Navegación e interfaces extra\label{CAP:AP_INTERFACES}}{apendices/interfaces}
+% \chapter{Resultados de encuesta y auditoría de seguridad\label{CAP:AP_RESULTADOS}}{apendices/resultados}
+\chapter{System prompt del tutor socrático\label{CAP:AP_PROMPT}}{apendices/system_prompt}
+
+\nocite{*}
+\end{document}

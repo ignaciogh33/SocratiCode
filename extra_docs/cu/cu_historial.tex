@@ -1,0 +1,57 @@
+\begingroup
+\shorthandoff{"<>"}
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  \hline
+  \caption{Caso de Uso CU12 — Consulta del historial de sesiones y mensajes.}
+  \label{TB:CU12_HISTORIAL}
+  \endlastfoot
+
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU12 & \textbf{Actor principal:} Usuario
+  \end{tabularx} \\ \hline
+
+  \textbf{Nombre:} Consulta del historial de sesiones y mensajes \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El usuario accede a la plataforma y recupera automáticamente la lista de sus sesiones pasadas. Al seleccionar una, el sistema recupera todos los mensajes asociados y los visualiza cronológicamente en el chat. \\ \hline
+
+  \textbf{Precondiciones:} \newline
+  1. El usuario ha iniciado sesión y existen sesiones en su cuenta. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El usuario accede a la interfaz principal de la aplicación. \newline
+  2. El frontend solicita el listado paginado de sesiones asociadas a la cuenta. \newline
+  3. El backend valida la autenticación y retorna los registros ordenados por fecha de última actualización. \newline
+  4. La interfaz pinta este historial de conversaciones en el panel lateral. \newline
+  5. El usuario hace clic sobre una de las sesiones anteriores. \newline
+  6. El frontend envía una petición al backend para obtener los mensajes de esa sesión concreta. \newline
+  7. El backend devuelve la lista de mensajes ordenados cronológicamente (con su contenido, remitente y fecha). \newline
+  8. La interfaz principal limpia la vista actual y renderiza el historial recuperado, permitiendo al usuario retomar la conversación o revisarla. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. El estado activo de la interfaz se sincroniza con la sesión seleccionada, preparándose para recibir nuevos mensajes (enlaza con el CU1). \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  Ninguno. \\ \hline
+
+\end{longtable}
+\endgroup

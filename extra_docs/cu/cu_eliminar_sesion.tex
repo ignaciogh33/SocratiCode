@@ -1,0 +1,59 @@
+\begingroup
+\shorthandoff{"<>"}
+\setlength{\arrayrulewidth}{1pt}
+\arrayrulecolor{vlepsbased}
+\begin{longtable}{|p{15cm}|}
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso}}} \\
+  \hline
+  \endfirsthead
+  \multicolumn{1}{c}{{\tablename\ \thetable{} -- Continuación}} \\
+  \hline
+  \rowcolor{maincolor} 
+  \multicolumn{1}{|l|}{\textcolor{white}{\textbf{Caso de Uso (Continuación)}}} \\
+  \hline
+  \endhead
+  \hline \multicolumn{1}{|r|}{\textit{Continúa en la siguiente página...}} \\ \hline
+  \endfoot
+  \hline
+  \caption{Caso de Uso CU11 — Eliminación permanente de sesión de chat.}
+  \label{TB:CU11_ELIMINAR_SESION}
+  \endlastfoot
+
+  \rowcolor{ulepsbased}
+  \begin{tabularx}{\linewidth}{@{}X X@{}}
+    \textbf{Identificador:} CU11 & \textbf{Actor principal:} Usuario
+  \end{tabularx} \\ \hline
+
+  \textbf{Nombre:} Eliminación permanente de sesión de chat \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Descripción:} \newline 
+  El usuario decide eliminar permanentemente una sesión de chat completa de su historial, provocando el borrado de todos los mensajes asociados a la misma. \\ \hline
+
+  \textbf{Precondiciones:} \newline
+  1. El usuario ha iniciado sesión. \newline
+  2. Existe al menos una sesión de chat. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Flujo principal:} \newline
+  1. El usuario hace clic en el botón de eliminar (ícono de papelera) junto a una sesión en el panel lateral. \newline
+  2. El frontend muestra un cuadro de diálogo de confirmación (¿Eliminar esta conversación? Esta acción no se puede deshacer.). \newline
+  3. El usuario confirma la eliminación. \newline
+  4. La interfaz envía una solicitud HTTP DELETE al backend. \newline
+  5. El sistema verifica la propiedad y borra el registro de la sesión y, en cascada, todos sus mensajes asociados en la base de datos. \newline
+  6. El sistema devuelve HTTP 204 (No Content). \newline
+  7. El frontend elimina la sesión de la lista visual y, si el usuario estaba visualizando la sesión eliminada, limpia la pantalla y lo devuelve a la vista inicial (pantalla de creación de "Nueva conversación"), independientemente de si hay más sesiones en el historial. \\ \hline
+
+  \textbf{Flujos alternativos:} \newline
+  \textbf{FA-01:} Cancelación del borrado: \newline
+  1. En el paso 2, el usuario pulsa "Cancelar". \newline
+  2. Se cierra el cuadro de diálogo y no se envía ninguna solicitud al backend. \\ \hline
+
+  \rowcolor{ulepsbased}
+  \textbf{Postcondiciones:} \newline
+  1. La sesión y todo su historial de mensajes desaparecen permanentemente del sistema. \\ \hline
+
+\end{longtable}
+\endgroup

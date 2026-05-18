@@ -1,0 +1,17 @@
+SocratiCode constituye una base funcional sobre la que se pueden incorporar mejoras tanto en seguridad como en funcionalidad pedagógica. Las líneas de trabajo futuro más relevantes son las siguientes.
+
+\begin{itemize}
+    \item \textbf{Lista negra de tokens JWT.} El sistema de autenticación actual invalida el \textit{refresh token} al cerrar sesión, pero no existe un mecanismo de \textit{blacklist} que impida el uso de \textit{access tokens} aún vigentes tras el cierre. Implementar esta lista en base de datos o caché eliminaría ese margen de exposición.
+
+    \item \textbf{Límites de recursos por usuario en Piston.} Actualmente los límites de CPU y memoria de Piston son globales. Establecer cuotas por usuario o por sesión reduciría el riesgo de que un único alumno agote los recursos del servidor con ejecuciones intensivas.
+
+    \item \textbf{Inicio de sesión institucional (UAM SSO).} Integrar el sistema de autenticación de la UAM permitiría que los alumnos accedieran con sus credenciales universitarias, simplificando el alta y facilitando la adopción en contextos académicos reales.
+
+    \item \textbf{Ejercicios integrados en la plataforma.} La incorporación de una biblioteca de ejercicios con enunciados y criterios de corrección permitiría guiar la sesión de tutoría hacia objetivos concretos, enriqueciendo la experiencia más allá del código libre.
+
+    \item \textbf{Tema claro.} La interfaz actual utiliza exclusivamente un modo oscuro. Ofrecer un tema claro ampliaría la accesibilidad de la herramienta a entornos y preferencias de usuario distintos.
+
+    \item \textbf{Sistema RAG con contenido de la asignatura.} Como evolución más ambiciosa, implementar un sistema de \textit{Retrieval-Augmented Generation} permitiría al tutor recuperar fragmentos relevantes del temario, los objetivos de aprendizaje o los enunciados de prácticas de la asignatura, dotando al diálogo socrático de un contexto curricular preciso.
+\end{itemize}
+
+Con estas mejoras, SocratiCode podría evolucionar de una herramienta de propósito general a un tutor verdaderamente integrado en el ecosistema académico de una institución, con pleno conocimiento del temario, acceso nativo con credenciales universitarias y un modelo de seguridad robusto para su uso en producción a escala.

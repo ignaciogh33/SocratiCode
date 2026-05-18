@@ -1,0 +1,7 @@
+Las capacidades de aislamiento y sandboxing de Piston ya se describieron en la \autoref{SS:DI_TEC_MOTOR}. Este apartado se centra en cómo se integra ese motor en el flujo de la aplicación desde que el alumno pulsa el botón de ejecución hasta que el resultado aparece en la terminal.
+
+El alumno escribe código en el editor Monaco y pulsa ejecutar. Vue envía una petición POST autenticada al \textit{endpoint} \texttt{/compiler/execute/} de Django con el código fuente, el lenguaje y la versión del \textit{runtime}. Django construye el \textit{payload} conforme al contrato de la API interna de Piston y lo reenvía:
+
+\PythonCode[lst:piston_call]{Llamada a Piston}{Construcción del \textit{payload} y llamada a la API de ejecución de Piston (\texttt{compiler/views.py}).}{python/p.py}{1}{8}{1}
+
+La URL del servicio se lee de \texttt{PISTON\_URL}, lo que permite cambiar de instancia sin tocar el código. Piston devuelve un JSON con los campos \texttt{compile} y \texttt{run}. Django extrae \texttt{stdout}, \texttt{stderr} y el código de salida, y traduce los códigos de estado (\texttt{status}) a mensajes en español comprensibles para el alumno. La salida normalizada se muestra en el panel de terminal y queda almacenada en Pinia, de modo que el siguiente mensaje al tutor la incluye como contexto en el LLM sin que el alumno tenga que copiar y pegar ninguna traza de error.
