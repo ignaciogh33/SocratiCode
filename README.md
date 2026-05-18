@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="frontend/src/assets/images/logo-circular.png" alt="SocratiCode logo" width="120"/>
+  <img src="frontend/src/assets/images/logo-circular.svg" alt="SocratiCode logo" width="120"/>
 
   # SocratiCode
 
