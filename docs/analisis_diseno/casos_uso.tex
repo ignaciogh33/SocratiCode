@@ -75,10 +75,10 @@ Los casos de uso expuestos en esta sección conforman los pilares de la aplicaci
 
   % Fila 6: Flujos alternativos
   \textbf{Flujos alternativos:} \newline
-  \textbf{FA-01:} Moderación de input rechaza el mensaje (Paso 7):  \newline
+  \textbf{FA-01:} Moderación de input rechaza el mensaje (Paso 7): \newline
   1. El sistema marca el mensaje como moderado en la base de datos. \newline
   2. Se envía respuesta predeterminada y no se invoca al LLM tutor. \newline
-  \textbf{FA-02:} Moderación de output rechaza un fragmento (Paso 11):  \newline
+  \textbf{FA-02:} Moderación de output rechaza un fragmento (Paso 11): \newline
   1. El sistema marca la respuesta como moderada en la base de datos. \newline
   2. Se interrumpe la generación y se envía respuesta predeterminada. \\ \hline
 
@@ -146,7 +146,7 @@ Los casos de uso expuestos en esta sección conforman los pilares de la aplicaci
   % Fila 5: Flujo principal
   \rowcolor{ulepsbased}
   \textbf{Flujo principal:} \newline
-  1. El alumno pulsa el botón ``Ejecutar'' en el editor con código en el editor y el lenguaje seleccionado.\newline
+  1. El alumno pulsa el botón ``Ejecutar'' en el editor con código y el lenguaje seleccionado.\newline
   2. El sistema valida los datos de entrada.\newline
   3. El sistema construye el payload y lo envía a la API de Piston.\newline
   4. Piston ejecuta el código en un sub-contenedor aislado (compila primero si es necesario).\newline
